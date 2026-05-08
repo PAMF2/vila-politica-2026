@@ -21,6 +21,11 @@ Seed = 42. n=394 events for Vila baseline / BART / Stan DLM (governadores + pres
 | Vila_MRP_avg_non_BR | - | - | - | - | ~6 + state baselines | - | - | - | cross_country_results.json |
 | BART | 0.1108 | 0.8503 | 0.3049 | 0.5294 | 400 | 140.00 | 0.0000 | 394 | bench_bart.json |
 | Pure-Python Kalman DLM (Linzer 2013 equivalent) (honest) | 0.0786 | 0.8680 | 0.2961 | 0.3529 | ~31 + 2 sigmas | 0.06 | 0.0671 | 394 | bench_stan_dlm.json |
+| ML_LogReg | 0.0948 | 0.8579 | 0.1928 | 0.7500 | 37 (1 bias + 36 weights) | 0.19 | 0.0075 | 394 | bench_ml_baselines.json |
+| ML_RandomForest | 0.0915 | 0.8604 | 0.0273 | 1.0000 | 200 trees | 3.67 | 0.8789 | 394 | bench_ml_baselines.json |
+| ML_XGBoost | 0.1022 | 0.8756 | 0.0819 | 0.8382 | 200 trees | 0.45 | 0.0424 | 394 | bench_ml_baselines.json |
+| ML_MLP_32_16 | 0.0499 | 0.9442 | 0.0037 | 1.0000 | (36->32->16->1) ~1700 | 3.93 | 0.0102 | 394 | bench_ml_baselines.json |
+| ML_GaussianNB | 0.4139 | 0.4619 | 0.4233 | 0.4559 | ~74 (mean+var per feat per class) | 0.01 | 0.0167 | 394 | bench_ml_baselines.json |
 
 ## Notes
 
@@ -32,3 +37,11 @@ Seed = 42. n=394 events for Vila baseline / BART / Stan DLM (governadores + pres
 - 2024 is the hardest cycle (Sao Paulo prefeitura, 3-way Boulos/Marcal/Nunes volatility).
   All models lose accuracy here vs 2010-2022 cycles.
 - Vila MRP wins overall accuracy; BART (proper) is second in Brier on the cross-cycle test.
+- ML baselines (`bench_ml_baselines.json`) cover LogReg / RandomForest / XGBoost /
+  MLP / GaussianNB on the same year-fold CV. XGBoost falls back to sklearn
+  GradientBoosting (labelled 'XGB proxy (GBM)') and `honest_proxy=true` in JSON
+  when xgboost is not installed. MLP uses hidden=(32,16); RF n_estimators=200.
+- Continuous features (`poll_lead_pp`, `days_to`) are standardized per fold.
+  Categoricals (regime, uf) are one-hot. Total features = 36, n=394 events.
+
+Total rows in headline table: 19 (was 10 pre-Phase-2-ML).

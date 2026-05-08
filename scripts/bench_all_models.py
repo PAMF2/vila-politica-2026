@@ -8,6 +8,7 @@ Inputs (any missing files are skipped with a TODO row):
   - data/political_stats_v2.json      (baseline + MRP w/ stats)
   - data/bench_bart.json              (this paper)
   - data/bench_stan_dlm.json          (this paper)
+  - data/bench_ml_baselines.json      (5 ML baselines: LR/RF/XGB/MLP/NB)
 
 Output:
   - docs/BENCHMARKS.md  (overwrites; previous content saved as .bak)
@@ -166,6 +167,42 @@ def collect_bart():
     }]
 
 
+def collect_ml_baselines():
+    d = safe_load(DATA / "bench_ml_baselines.json")
+    if not d:
+        return []
+    rows = []
+    backend = d.get("backend_xgboost", "?")
+    honest = bool(d.get("honest_proxy"))
+    for mid, mdata in (d.get("models") or {}).items():
+        s = mdata.get("summary") or {}
+        py = mdata.get("per_year") or {}
+        py24 = py.get("2024") or py.get(2024) or {}
+        label = mdata.get("label") or mid
+        if mid == "L3_xgboost" and honest:
+            label = label + " (honest)"
+        n_params = {
+            "L1_logreg": "37 (1 bias + 36 weights)",
+            "L2_random_forest": "200 trees",
+            "L3_xgboost": "200 trees" + (" (GBM proxy)" if honest else ""),
+            "L4_mlp": "(36->32->16->1) ~1700",
+            "L5_naive_bayes": "~74 (mean+var per feat per class)",
+        }.get(mid, "?")
+        rows.append({
+            "model": f"ML_{label}",
+            "source": "bench_ml_baselines.json",
+            "brier_avg": s.get("brier_avg"),
+            "acc_avg": s.get("acc_avg"),
+            "brier_2024": py24.get("brier"),
+            "acc_2024": py24.get("acc"),
+            "n_params": n_params,
+            "fit_time_s": s.get("fit_time_s_total"),
+            "predict_time_ms": s.get("predict_time_ms_per_event_avg"),
+            "n": s.get("n"),
+        })
+    return rows
+
+
 def collect_stan_dlm():
     d = safe_load(DATA / "bench_stan_dlm.json")
     if not d:
@@ -248,7 +285,17 @@ def render_md(rows):
     out.append("- 2024 is the hardest cycle (Sao Paulo prefeitura, 3-way Boulos/Marcal/Nunes volatility).")
     out.append("  All models lose accuracy here vs 2010-2022 cycles.")
     out.append("- Vila MRP wins overall accuracy; BART (proper) is second in Brier on the cross-cycle test.")
+    out.append("- ML baselines (`bench_ml_baselines.json`) cover LogReg / RandomForest / XGBoost /")
+    out.append("  MLP / GaussianNB on the same year-fold CV. XGBoost falls back to sklearn")
+    out.append("  GradientBoosting (labelled 'XGB proxy (GBM)') and `honest_proxy=true` in JSON")
+    out.append("  when xgboost is not installed. MLP uses hidden=(32,16); RF n_estimators=200.")
+    out.append("- Continuous features (`poll_lead_pp`, `days_to`) are standardized per fold.")
+    out.append("  Categoricals (regime, uf) are one-hot. Total features = 36, n=394 events.")
     out.append("")
+    n_ml = sum(1 for r in rows if (r.get("source") == "bench_ml_baselines.json"))
+    out.append("")
+    out.append(f"Total rows in headline table: {len(rows)} "
+               f"({n_ml} new ML baselines from `bench_ml_baselines.json`).")
     return "\n".join(out)
 
 
@@ -260,6 +307,7 @@ def main():
     rows.extend(collect_cross_country())
     rows.extend(collect_bart())
     rows.extend(collect_stan_dlm())
+    rows.extend(collect_ml_baselines())
 
     md = render_md(rows)
 

@@ -187,102 +187,272 @@
   "murphy_per_cycle": {
     "baseline": {
       "2010": {
-        "REL": 0.021706602066896525,
+        "REL": 0.021561603769441155,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.021706602066896535,
+        "WBV": 0.00016900155327161706,
+        "BRIER_decomposed": 0.02173060532271278,
         "BRIER_actual": 0.02173060532271276,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 6
       },
       "2016": {
-        "REL": 0.1159523245427679,
-        "RES": 0.16666666666666669,
+        "REL": 0.1518835021884367,
+        "RES": 0.2,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.1992856578761012,
+        "WBV": 0.0002913077010700479,
+        "BRIER_decomposed": 0.20217480988950673,
         "BRIER_actual": 0.19973819249100455,
-        "identity_check": false
+        "identity_check": false,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2018": {
-        "REL": 0.024659475060129814,
+        "REL": 0.024372689818657877,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.024659475060129804,
+        "WBV": 0.00040645153912555307,
+        "BRIER_decomposed": 0.02477914135778342,
         "BRIER_actual": 0.02477914135778343,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2020": {
-        "REL": 0.03778582718805058,
-        "RES": 0.25,
+        "REL": 0.01158923450019014,
+        "RES": 0.20555555555555557,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.03778582718805057,
+        "WBV": 0.002663764335249393,
+        "BRIER_decomposed": 0.05869744327988396,
         "BRIER_actual": 0.03791218660078973,
-        "identity_check": false
+        "identity_check": false,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2022": {
-        "REL": 0.026503090839141073,
+        "REL": 0.026334855240458716,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.02650309083914107,
+        "WBV": 0.00038143199980300314,
+        "BRIER_decomposed": 0.02671628724026173,
         "BRIER_actual": 0.026716287240261725,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2024": {
-        "REL": 0.04436464116194812,
-        "RES": 0.050401069518716576,
+        "REL": 0.07930873637097761,
+        "RES": 0.08482142857142856,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.24396357164323154,
+        "WBV": 0.0006321092902455425,
+        "BRIER_decomposed": 0.2451194170897946,
         "BRIER_actual": 0.24427775594474,
-        "identity_check": false
+        "identity_check": false,
+        "bin_mode": "quantile",
+        "k_eff": 10
       }
     },
     "mrp": {
       "2010": {
-        "REL": 0.10132021896459804,
+        "REL": 0.10142132701302997,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.10132021896459803,
+        "WBV": 6.924296977486981e-05,
+        "BRIER_decomposed": 0.10149056998280484,
         "BRIER_actual": 0.10149056998280487,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 6
       },
       "2016": {
-        "REL": 0.003535550012871244,
-        "RES": 0.175,
+        "REL": 0.011259472502148099,
+        "RES": 0.15,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.07853555001287127,
+        "WBV": 0.005495553247588747,
+        "BRIER_decomposed": 0.11675502574973684,
         "BRIER_actual": 0.08456920383388132,
-        "identity_check": false
+        "identity_check": false,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2018": {
-        "REL": 0.17214529135973874,
-        "RES": 0.23633540372670808,
+        "REL": 0.1841100513383136,
+        "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.18580988763303066,
+        "WBV": 0.00016648255042582658,
+        "BRIER_decomposed": 0.18427653388873944,
         "BRIER_actual": 0.18427653388873935,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2020": {
-        "REL": 0.01700519291270642,
+        "REL": 0.014033696245128369,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.017005192912706413,
+        "WBV": 0.0030232534830360145,
+        "BRIER_decomposed": 0.017056949728164388,
         "BRIER_actual": 0.017056949728164385,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2022": {
-        "REL": 0.0845842382331005,
+        "REL": 0.0839622238409286,
         "RES": 0.25,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.08458423823310052,
+        "WBV": 0.0008723831921457046,
+        "BRIER_decomposed": 0.08483460703307431,
         "BRIER_actual": 0.08483460703307431,
-        "identity_check": false
+        "identity_check": true,
+        "bin_mode": "quantile",
+        "k_eff": 10
       },
       "2024": {
-        "REL": 0.033006324643200725,
-        "RES": 0.1804812834224599,
+        "REL": 0.036516635751799316,
+        "RES": 0.17787114845938376,
         "UNC": 0.25,
-        "BRIER_decomposed": 0.10252504122074083,
+        "WBV": 0.0011434684389548626,
+        "BRIER_decomposed": 0.10978895573137042,
         "BRIER_actual": 0.10731093829430088,
-        "identity_check": false
+        "identity_check": false,
+        "bin_mode": "quantile",
+        "k_eff": 10
+      }
+    }
+  },
+  "murphy_pooled": {
+    "baseline": {
+      "REL": 0.011372695886145407,
+      "RES": 0.18655207534318108,
+      "UNC": 0.25,
+      "WBV": 0.001081487920089761,
+      "BRIER_decomposed": 0.07590210846305408,
+      "BRIER_actual": 0.07246787632922752,
+      "identity_check": false,
+      "bin_mode": "quantile",
+      "k_eff": 10
+    },
+    "mrp": {
+      "REL": 0.07774382962964643,
+      "RES": 0.22304275673565013,
+      "UNC": 0.25,
+      "WBV": 0.0008633247678489866,
+      "BRIER_decomposed": 0.10556439766184529,
+      "BRIER_actual": 0.10484247616049978,
+      "identity_check": false,
+      "bin_mode": "quantile",
+      "k_eff": 10
+    }
+  },
+  "per_fold_significance": {
+    "2010": {
+      "n": 86,
+      "dm": {
+        "dm": -23.41034112594839,
+        "p": 0.0,
+        "n": 86,
+        "mean_brier_diff": -0.07975996466009212,
+        "interp": "baseline better - significant"
+      },
+      "mcnemar": {
+        "chi2": 0.0,
+        "p": 1.0,
+        "b_baseline_wrong_mrp_right": 0,
+        "c_baseline_right_mrp_wrong": 0,
+        "n_disc": 0,
+        "interp": "no discordance"
+      }
+    },
+    "2016": {
+      "n": 20,
+      "dm": {
+        "dm": 2.9479620439219096,
+        "p": 0.0031987633675796268,
+        "n": 20,
+        "mean_brier_diff": 0.11516898865712322,
+        "interp": "MRP better - significant"
+      },
+      "mcnemar": {
+        "chi2": 2.0833333333333335,
+        "p": 0.14891467317876567,
+        "b_baseline_wrong_mrp_right": 3,
+        "c_baseline_right_mrp_wrong": 0,
+        "n_disc": 3,
+        "interp": "MRP improves - not sig"
+      }
+    },
+    "2018": {
+      "n": 70,
+      "dm": {
+        "dm": -55.76179088728657,
+        "p": 0.0,
+        "n": 70,
+        "mean_brier_diff": -0.159497392530956,
+        "interp": "baseline better - significant"
+      },
+      "mcnemar": {
+        "chi2": 0.25,
+        "p": 0.6170750774519738,
+        "b_baseline_wrong_mrp_right": 0,
+        "c_baseline_right_mrp_wrong": 1,
+        "n_disc": 1,
+        "interp": "baseline improves - not sig"
+      }
+    },
+    "2020": {
+      "n": 30,
+      "dm": {
+        "dm": 2.387444635662489,
+        "p": 0.016965957961654565,
+        "n": 30,
+        "mean_brier_diff": 0.020855236872625353,
+        "interp": "MRP better - significant"
+      },
+      "mcnemar": {
+        "chi2": 1.125,
+        "p": 0.28884436634648486,
+        "b_baseline_wrong_mrp_right": 2,
+        "c_baseline_right_mrp_wrong": 0,
+        "n_disc": 2,
+        "interp": "MRP improves - not sig"
+      }
+    },
+    "2022": {
+      "n": 120,
+      "dm": {
+        "dm": -8.663062665274133,
+        "p": 0.0,
+        "n": 120,
+        "mean_brier_diff": -0.05811831979281258,
+        "interp": "baseline better - significant"
+      },
+      "mcnemar": {
+        "chi2": 0.0,
+        "p": 1.0,
+        "b_baseline_wrong_mrp_right": 0,
+        "c_baseline_right_mrp_wrong": 0,
+        "n_disc": 0,
+        "interp": "no discordance"
+      }
+    },
+    "2024": {
+      "n": 68,
+      "dm": {
+        "dm": 7.79095907360738,
+        "p": 6.661338147750939e-15,
+        "n": 68,
+        "mean_brier_diff": 0.13696681765043905,
+        "interp": "MRP better - significant"
+      },
+      "mcnemar": {
+        "chi2": 16.014705882352942,
+        "p": 6.285237771203328e-05,
+        "b_baseline_wrong_mrp_right": 17,
+        "c_baseline_right_mrp_wrong": 0,
+        "n_disc": 17,
+        "interp": "MRP improves - sig"
       }
     }
   }

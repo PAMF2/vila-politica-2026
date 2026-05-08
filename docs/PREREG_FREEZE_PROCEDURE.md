@@ -81,6 +81,47 @@ If GPG signing is configured (`-s`), prefer:
 git tag -s v1.2-prereg -m "..."
 ```
 
+### 4b. Re-freeze at `v1.3-prereg` (2026-05-08)
+
+If code-file SHAs drift between the original v1.2-prereg freeze and
+the paper-revision date due to non-substantive cleanup, re-freeze with
+a fresh tag while preserving the data SHAs (which must remain
+identical so the forecast snapshot is byte-identical):
+
+```bash
+cd /home/pedroafonso/vila-politica-2026
+
+# 1. Verify data SHAs still match v1.2-prereg.
+sha256sum data/political_best_config.json data/predictions_2026.json
+# Expected:
+#   5792fce8f033d42e1da4832c22bbb90e08ccd29be2f62af2a3d80328296c2dba  data/political_best_config.json
+#   9e693389e47b451feda4a5ae4f67bd65e780e817283c4dcee17f13247d3bd174  data/predictions_2026.json
+
+# 2. Capture current code SHAs for the tag message.
+sha256sum engine/political_cohort.py scripts/predict_2026.py
+
+# 3. Tag.
+git tag -a v1.3-prereg -m "Re-freeze of 2026 BR election forecast pre-registration
+
+Forecast snapshot byte-identical to v1.2-prereg; code SHAs refreshed
+after editorial cleanup that does not alter predictions.
+
+Frozen artifacts (SHA-256):
+  data/political_best_config.json: 5792fce8f033d42e1da4832c22bbb90e08ccd29be2f62af2a3d80328296c2dba
+  data/predictions_2026.json:      9e693389e47b451feda4a5ae4f67bd65e780e817283c4dcee17f13247d3bd174
+  engine/political_cohort.py:      442fb43de535b1273179dd20648bc9507268694aa7a560d734c8681c60f934d2
+  scripts/predict_2026.py:         31e536ecc1dba24ca709771f895c70a9a0cedd7df24ecc3c2c0b90d1fc36574b
+
+Original freeze: v1.2-prereg (2026-05-07).
+Re-freeze date: 2026-05-08."
+
+# 4. Push.
+git push origin v1.3-prereg
+```
+
+The original `v1.2-prereg` tag remains in git history for audit. Both
+tags resolve to byte-identical forecast snapshots.
+
 ---
 
 ## 5. Push tag to origin

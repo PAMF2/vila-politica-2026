@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Build journal-style two-column PDF from PAPER.md via weasyprint + matplotlib SVG math.
+"""Build journal-style two-column PDF from PAPER.md.
+
+Uses weasyprint (HTML/CSS engine) and matplotlib for math rendering as SVG.
+Emulates ACM/IEEE single-column-then-two-column academic layout.
 
 Output: docs/paper/PAPER.pdf
 """
@@ -27,12 +30,12 @@ def render_math(tex, display=False):
     h = hashlib.md5((str(display) + tex).encode()).hexdigest()[:14]
     path = SVG_DIR / f"m_{h}.svg"
     if not path.exists():
-        fontsize = 12 if display else 9.8
+        fontsize = 13 if display else 10.4
         fig = plt.figure(figsize=(0.01, 0.01))
         fig.text(0, 0, f"${tex}$", fontsize=fontsize)
         try:
             fig.savefig(path, format="svg", bbox_inches="tight",
-                        pad_inches=0.02, transparent=True)
+                        pad_inches=0.04, transparent=True)
         except Exception as e:
             print(f"[math fail] {tex!r}: {e}", file=sys.stderr)
             plt.close(fig)
@@ -45,45 +48,77 @@ def render_math(tex, display=False):
 with open(MD_PATH) as f:
     md_src = f.read()
 
+# Preserve Markdown title block (extract first H1) BEFORE math substitution
+title_m = re.match(r"^# (.+?)\n", md_src)
+title = title_m.group(1) if title_m else "Vila Politica 2026"
+if title_m:
+    md_src = md_src[title_m.end():]
+
+# Pull authors block
+authors_m = re.match(r"\n*## Authors\n+(.+?)(?=\n## )", md_src, flags=re.DOTALL)
+authors_html = ""
+if authors_m:
+    block = authors_m.group(1).strip()
+    lines = [l.strip() for l in block.split("\n") if l.strip()]
+    authors_html = " · ".join(lines)
+    md_src = md_src[:authors_m.start()] + md_src[authors_m.end():]
+
+# Pull abstract block, render small caps style
+abstract_m = re.search(r"## Abstract\n+(.+?)(?=\n## )", md_src, flags=re.DOTALL)
+abstract_html = ""
+if abstract_m:
+    abstract_html = abstract_m.group(1).strip()
+    md_src = md_src[:abstract_m.start()] + md_src[abstract_m.end():]
+
+# Pull keywords block
+kw_m = re.search(r"## Keywords\n+(.+?)(?=\n## )", md_src, flags=re.DOTALL)
+keywords_html = ""
+if kw_m:
+    keywords_html = kw_m.group(1).strip()
+    md_src = md_src[:kw_m.start()] + md_src[kw_m.end():]
+
 # Display math: $$...$$
-def repl_display(m):
-    tex = m.group(1).strip()
-    out = render_math(tex, display=True)
-    return f'<div class="math-block">{out}</div>' if out else m.group(0)
-
-
-md_src = re.sub(r"\$\$(.+?)\$\$", repl_display, md_src, flags=re.DOTALL)
-
-# Inline math: $...$ but not adjacent to $
-def repl_inline(m):
-    tex = m.group(1).strip()
-    if not tex:
-        return m.group(0)
-    out = render_math(tex, display=False)
-    return out if out else m.group(0)
-
-
-md_src = re.sub(r"(?<!\$)\$([^\$\n]+?)\$(?!\$)", repl_inline, md_src)
-
-# Convert MD to HTML
-body_html = markdown.markdown(
-    md_src,
-    extensions=["tables", "fenced_code", "footnotes", "toc"],
+md_src = re.sub(
+    r"\$\$(.+?)\$\$",
+    lambda m: f'<div class="math-block">{render_math(m.group(1).strip(), display=True) or m.group(0)}</div>',
+    md_src, flags=re.DOTALL,
 )
 
-# Inject figure paths (resolve relative to PAPER.md)
+# Inline math: $...$
+md_src = re.sub(
+    r"(?<!\$)\$([^\$\n]+?)\$(?!\$)",
+    lambda m: render_math(m.group(1).strip(), display=False) or m.group(0),
+    md_src,
+)
+
+body_html = markdown.markdown(
+    md_src,
+    extensions=["tables", "fenced_code", "footnotes", "smarty"],
+)
+
+# Resolve fig paths
 body_html = body_html.replace(
     'src="figs/',
     f'src="file://{ROOT / "docs" / "paper" / "figs"}/',
 )
 
-# Title block: extract first H1
-title_m = re.match(r"<h1>(.+?)</h1>", body_html)
-title = title_m.group(1) if title_m else "Vila Politica 2026"
-if title_m:
-    body_html = body_html[title_m.end():]
+# References get hanging indent class
+body_html = re.sub(
+    r"(<h2>References</h2>)",
+    r'\1<div class="references">',
+    body_html,
+)
+# Close references div before next h2 or appendix
+body_html = re.sub(
+    r'(<div class="references">.*?)(<h2>(?!References))',
+    r"\1</div>\2",
+    body_html, flags=re.DOTALL,
+)
 
-# Full HTML with academic CSS
+# Render abstract MD
+abstract_md_html = markdown.markdown(abstract_html) if abstract_html else ""
+
+# Full HTML
 html = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -92,100 +127,187 @@ html = f"""<!doctype html>
 <style>
 @page {{
   size: A4;
-  margin: 1.6cm 1.4cm 1.8cm 1.4cm;
-  @bottom-center {{ content: counter(page); font-family: serif; font-size: 9pt; }}
-  @top-right {{ content: "Vila Politica 2026"; font-family: serif; font-size: 8pt; color: #666; }}
+  margin: 1.7cm 1.5cm 2cm 1.5cm;
+  @bottom-center {{ content: counter(page); font-family: "Times New Roman", serif; font-size: 9pt; color: #555; }}
+  @top-right {{ content: "Vila Politica 2026 - Working Paper"; font-family: "Times New Roman", serif; font-size: 8pt; color: #888; }}
 }}
 @page :first {{
   @top-right {{ content: ""; }}
+  @bottom-center {{ content: counter(page); font-family: "Times New Roman", serif; font-size: 9pt; color: #555; }}
 }}
 html, body {{
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: 9.8pt;
-  line-height: 1.42;
-  color: #111;
+  font-family: "Times New Roman", "Liberation Serif", Georgia, serif;
+  font-size: 9.6pt;
+  line-height: 1.45;
+  color: #0a0a0a;
   margin: 0;
+  text-rendering: optimizeLegibility;
 }}
 .title-block {{
-  column-span: all;
   text-align: center;
-  margin: 0 0 18pt 0;
-  border-bottom: 0.5pt solid #999;
-  padding-bottom: 14pt;
+  margin: 0 0 16pt 0;
+  padding-bottom: 12pt;
 }}
 .title {{
-  font-size: 18pt;
+  font-size: 16.5pt;
   font-weight: 700;
-  line-height: 1.18;
-  margin: 0 0 8pt 0;
-  letter-spacing: -0.01em;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  margin: 0 0 10pt 0;
+  font-family: "Times New Roman", serif;
 }}
-.byline {{ font-size: 9.6pt; font-style: italic; }}
-.abstract-block {{
-  column-span: all;
-  margin: 6pt 0 14pt 0;
-  padding: 10pt 14pt;
-  background: #f8f7f3;
-  border-left: 2pt solid #888;
-}}
-.abstract-block h2 {{
-  font-variant: small-caps;
-  letter-spacing: 0.06em;
+.byline {{
   font-size: 10pt;
-  margin: 0 0 6pt 0;
+  font-style: italic;
+  color: #222;
+  margin: 0 0 4pt 0;
+}}
+.affiliation {{
+  font-size: 8.6pt;
+  color: #555;
+}}
+.abstract-block {{
+  margin: 0 14pt 18pt 14pt;
+  padding: 10pt 16pt;
+  border-top: 0.6pt solid #555;
+  border-bottom: 0.6pt solid #555;
+  font-size: 9.2pt;
+  text-align: justify;
+}}
+.abstract-block .label {{
+  font-variant: small-caps;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  font-size: 8.6pt;
+  color: #333;
+  margin-right: 6pt;
+}}
+.keywords-block {{
+  margin: 0 14pt 16pt 14pt;
+  font-size: 8.8pt;
   color: #333;
 }}
-main {{ column-count: 2; column-gap: 18pt; column-rule: 0.25pt solid #ccc; }}
-h1 {{ font-size: 13pt; font-weight: 700; margin: 14pt 0 6pt 0; }}
-h2 {{ font-size: 11pt; font-weight: 700; margin: 12pt 0 4pt 0;
-      font-variant: small-caps; letter-spacing: 0.04em; }}
-h3 {{ font-size: 10pt; font-weight: 700; margin: 8pt 0 3pt 0; font-style: italic; }}
-p  {{ margin: 0 0 6pt 0; text-align: justify; hyphens: auto; }}
-ul, ol {{ margin: 4pt 0 6pt 18pt; padding: 0; }}
-li {{ margin: 0 0 2pt 0; }}
+.keywords-block .label {{
+  font-variant: small-caps;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  margin-right: 4pt;
+}}
+main {{
+  column-count: 2;
+  column-gap: 22pt;
+  column-rule: 0.3pt solid #d0d0d0;
+}}
+h1 {{ font-size: 12.5pt; font-weight: 700; margin: 12pt 0 5pt 0; }}
+h2 {{
+  font-size: 10.6pt;
+  font-weight: 700;
+  margin: 12pt 0 4pt 0;
+  font-variant: small-caps;
+  letter-spacing: 0.045em;
+  color: #1a1a1a;
+}}
+h3 {{
+  font-size: 9.8pt;
+  font-weight: 700;
+  margin: 8pt 0 3pt 0;
+  font-style: italic;
+  color: #222;
+}}
+p {{
+  margin: 0 0 5pt 0;
+  text-align: justify;
+  hyphens: auto;
+  text-indent: 0;
+}}
+p + p {{ text-indent: 12pt; }}
+ul, ol {{ margin: 4pt 0 6pt 16pt; padding: 0; }}
+li {{ margin: 0 0 2pt 0; text-align: justify; }}
 table {{
   width: 100%;
   border-collapse: collapse;
-  font-size: 8.6pt;
-  margin: 4pt 0 6pt 0;
+  font-size: 8.4pt;
+  margin: 5pt 0 7pt 0;
+  break-inside: avoid;
 }}
+thead tr {{ border-top: 0.6pt solid #333; border-bottom: 0.4pt solid #333; }}
+tbody tr:last-child {{ border-bottom: 0.6pt solid #333; }}
 th, td {{
-  border: 0.4pt solid #999;
-  padding: 2.5pt 4pt;
+  padding: 2.6pt 5pt;
   text-align: left;
   vertical-align: top;
 }}
-th {{ background: #efefe8; font-weight: 700; }}
-td:nth-child(n+2) {{ text-align: right; font-variant-numeric: tabular-nums; }}
+th {{ font-weight: 700; font-variant: small-caps; letter-spacing: 0.03em; }}
+td:nth-child(n+2), th:nth-child(n+2) {{
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}}
 code {{
-  font-family: "JetBrains Mono", "Source Code Pro", monospace;
-  font-size: 8.6pt;
-  background: #f3f3ee;
-  padding: 0.2pt 2pt;
+  font-family: "Liberation Mono", Consolas, monospace;
+  font-size: 8.4pt;
+  background: #f4f3ec;
+  padding: 0.4pt 2.4pt;
+  border-radius: 1pt;
 }}
 pre {{
-  font-family: "JetBrains Mono", "Source Code Pro", monospace;
-  font-size: 8.4pt;
-  background: #f3f3ee;
-  padding: 4pt 6pt;
-  margin: 4pt 0;
-  border-left: 1.5pt solid #aaa;
+  font-family: "Liberation Mono", Consolas, monospace;
+  font-size: 8.0pt;
+  background: #f4f3ec;
+  padding: 5pt 7pt;
+  margin: 5pt 0;
+  border-left: 1.6pt solid #999;
   overflow-x: auto;
+  break-inside: avoid;
 }}
-blockquote {{ border-left: 2pt solid #aaa; margin: 4pt 0; padding: 0 8pt;
-              color: #444; font-style: italic; }}
-.math-display {{ display: block; margin: 6pt auto; max-width: 95%; }}
-.math-inline  {{ display: inline-block; vertical-align: middle; }}
-img {{ max-width: 100%; height: auto; }}
-figure {{ margin: 6pt 0; text-align: center; }}
-figcaption {{ font-size: 8.4pt; font-style: italic; color: #444; }}
-hr {{ border: none; border-top: 0.4pt solid #999; margin: 10pt 0; }}
-.references p {{ padding-left: 12pt; text-indent: -12pt; font-size: 8.6pt; }}
+blockquote {{
+  border-left: 2pt solid #999;
+  margin: 5pt 0;
+  padding: 0 9pt;
+  color: #333;
+  font-style: italic;
+}}
+.math-display {{
+  display: block;
+  margin: 7pt auto;
+  max-width: 92%;
+}}
+.math-inline {{
+  display: inline-block;
+  vertical-align: -0.16em;
+  height: 1em;
+}}
+img:not(.math-display):not(.math-inline) {{
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 6pt auto 4pt auto;
+  break-inside: avoid;
+}}
+hr {{ border: none; border-top: 0.4pt solid #777; margin: 9pt 0; }}
+.references {{ font-size: 8.4pt; }}
+.references p {{
+  padding-left: 14pt;
+  text-indent: -14pt !important;
+  margin: 0 0 3pt 0;
+  text-align: left;
+  hyphens: none;
+}}
+sup, sub {{ line-height: 0; }}
+strong {{ font-weight: 700; }}
+em {{ font-style: italic; }}
 </style>
 </head>
 <body>
 <div class="title-block">
   <div class="title">{title}</div>
+  <div class="byline">{authors_html}</div>
+  <div class="affiliation">Vila INTEIA Research</div>
+</div>
+<div class="abstract-block">
+  <span class="label">Abstract.</span> {abstract_md_html.replace('<p>', '').replace('</p>', ' ').strip()}
+</div>
+<div class="keywords-block">
+  <span class="label">Keywords:</span> {keywords_html}
 </div>
 <main>
 {body_html}
@@ -197,7 +319,6 @@ hr {{ border: none; border-top: 0.4pt solid #999; margin: 10pt 0; }}
 HTML_PATH.write_text(html)
 print(f"html ok -> {HTML_PATH} ({len(html)} bytes)")
 
-# Compile via weasyprint
 try:
     subprocess.run(
         ["weasyprint", str(HTML_PATH), str(PDF_PATH)],

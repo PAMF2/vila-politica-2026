@@ -1,0 +1,412 @@
+{
+  "model_family": "ML baselines (sklearn / xgboost)",
+  "backend_xgboost": "xgboost",
+  "backend_note": "xgboost 3.2.0 available",
+  "honest_proxy": false,
+  "honest_note": "xgboost installed; XGBClassifier used directly (no proxy).",
+  "seed": 42,
+  "features": [
+    "poll_lead_pp",
+    "days_to",
+    "incumbente",
+    "regime_center",
+    "regime_centro",
+    "regime_centro-esquerda",
+    "regime_left",
+    "regime_right",
+    "uf_AC",
+    "uf_AL",
+    "uf_AM",
+    "uf_AP",
+    "uf_BA",
+    "uf_BR",
+    "uf_CE",
+    "uf_DF",
+    "uf_ES",
+    "uf_GO",
+    "uf_MA",
+    "uf_MG",
+    "uf_MS",
+    "uf_MT",
+    "uf_PA",
+    "uf_PB",
+    "uf_PE",
+    "uf_PI",
+    "uf_PR",
+    "uf_RJ",
+    "uf_RN",
+    "uf_RO",
+    "uf_RR",
+    "uf_RS",
+    "uf_SC",
+    "uf_SE",
+    "uf_SP",
+    "uf_TO"
+  ],
+  "n_features": 36,
+  "regimes": [
+    "center",
+    "centro",
+    "centro-esquerda",
+    "left",
+    "right"
+  ],
+  "ufs": [
+    "AC",
+    "AL",
+    "AM",
+    "AP",
+    "BA",
+    "BR",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MG",
+    "MS",
+    "MT",
+    "PA",
+    "PB",
+    "PE",
+    "PI",
+    "PR",
+    "RJ",
+    "RN",
+    "RO",
+    "RR",
+    "RS",
+    "SC",
+    "SE",
+    "SP",
+    "TO"
+  ],
+  "years": [
+    2010,
+    2016,
+    2018,
+    2020,
+    2022,
+    2024
+  ],
+  "n_per_cycle": {
+    "2010": 86,
+    "2016": 20,
+    "2018": 70,
+    "2020": 30,
+    "2022": 120,
+    "2024": 68
+  },
+  "models": {
+    "L1_logreg": {
+      "label": "LogReg",
+      "per_year": {
+        "2010": {
+          "n": 86,
+          "brier": 0.0013959913796334992,
+          "acc": 1.0,
+          "log_loss": 0.019271777020454694,
+          "fit_time_s": 0.0676,
+          "predict_time_ms_per_event": 0.0041
+        },
+        "2016": {
+          "n": 20,
+          "brier": 0.18454678818326326,
+          "acc": 0.7,
+          "log_loss": 0.5162479315465732,
+          "fit_time_s": 0.0612,
+          "predict_time_ms_per_event": 0.0165
+        },
+        "2018": {
+          "n": 70,
+          "brier": 0.010222520331856355,
+          "acc": 1.0,
+          "log_loss": 0.07992218993406754,
+          "fit_time_s": 0.0168,
+          "predict_time_ms_per_event": 0.0063
+        },
+        "2020": {
+          "n": 30,
+          "brier": 0.005041612757099229,
+          "acc": 1.0,
+          "log_loss": 0.04017723146462646,
+          "fit_time_s": 0.006,
+          "predict_time_ms_per_event": 0.0103
+        },
+        "2022": {
+          "n": 120,
+          "brier": 0.16312860312309715,
+          "acc": 0.725,
+          "log_loss": 0.4664111718551009,
+          "fit_time_s": 0.031,
+          "predict_time_ms_per_event": 0.0031
+        },
+        "2024": {
+          "n": 68,
+          "brier": 0.19276207653794425,
+          "acc": 0.75,
+          "log_loss": 0.5842871660454775,
+          "fit_time_s": 0.0069,
+          "predict_time_ms_per_event": 0.0046
+        }
+      },
+      "summary": {
+        "label": "LogReg",
+        "n": 394,
+        "brier_avg": 0.094825,
+        "acc_avg": 0.857868,
+        "log_loss_avg": 0.290566,
+        "fit_time_s_total": 0.1894,
+        "predict_time_ms_per_event_avg": 0.0075
+      }
+    },
+    "L2_random_forest": {
+      "label": "RandomForest",
+      "per_year": {
+        "2010": {
+          "n": 86,
+          "brier": 0.07654082974447045,
+          "acc": 1.0,
+          "log_loss": 0.25344103587986117,
+          "fit_time_s": 0.6565,
+          "predict_time_ms_per_event": 0.4151
+        },
+        "2016": {
+          "n": 20,
+          "brier": 0.008587501499999999,
+          "acc": 1.0,
+          "log_loss": 0.06147613587092312,
+          "fit_time_s": 0.6378,
+          "predict_time_ms_per_event": 1.9809
+        },
+        "2018": {
+          "n": 70,
+          "brier": 0.06641104442909679,
+          "acc": 1.0,
+          "log_loss": 0.29207781646585773,
+          "fit_time_s": 0.5877,
+          "predict_time_ms_per_event": 0.5327
+        },
+        "2020": {
+          "n": 30,
+          "brier": 0.005904346333333334,
+          "acc": 1.0,
+          "log_loss": 0.04748995021523563,
+          "fit_time_s": 0.6038,
+          "predict_time_ms_per_event": 1.2507
+        },
+        "2022": {
+          "n": 120,
+          "brier": 0.1884254298967769,
+          "acc": 0.5416666666666666,
+          "log_loss": 0.5289047975567591,
+          "fit_time_s": 0.5831,
+          "predict_time_ms_per_event": 0.4643
+        },
+        "2024": {
+          "n": 68,
+          "brier": 0.027260642202991472,
+          "acc": 1.0,
+          "log_loss": 0.13785558180344126,
+          "fit_time_s": 0.6038,
+          "predict_time_ms_per_event": 0.6295
+        }
+      },
+      "summary": {
+        "label": "RandomForest",
+        "n": 394,
+        "brier_avg": 0.091485,
+        "acc_avg": 0.860406,
+        "log_loss_avg": 0.298828,
+        "fit_time_s_total": 3.6727,
+        "predict_time_ms_per_event_avg": 0.8789
+      }
+    },
+    "L3_xgboost": {
+      "label": "XGBoost",
+      "per_year": {
+        "2010": {
+          "n": 86,
+          "brier": 0.0023646429580592414,
+          "acc": 1.0,
+          "log_loss": 0.035765164757114415,
+          "fit_time_s": 0.0957,
+          "predict_time_ms_per_event": 0.0296
+        },
+        "2016": {
+          "n": 20,
+          "brier": 0.012086558177685091,
+          "acc": 1.0,
+          "log_loss": 0.05311242606093612,
+          "fit_time_s": 0.0939,
+          "predict_time_ms_per_event": 0.089
+        },
+        "2018": {
+          "n": 70,
+          "brier": 1.0069689602596307e-05,
+          "acc": 1.0,
+          "log_loss": 0.0027396120788554705,
+          "fit_time_s": 0.0516,
+          "predict_time_ms_per_event": 0.0233
+        },
+        "2020": {
+          "n": 30,
+          "brier": 6.323736245024384e-05,
+          "acc": 1.0,
+          "log_loss": 0.00405870643054539,
+          "fit_time_s": 0.067,
+          "predict_time_ms_per_event": 0.0539
+        },
+        "2022": {
+          "n": 120,
+          "brier": 0.285434214985494,
+          "acc": 0.6833333333333333,
+          "log_loss": 1.0073042101369536,
+          "fit_time_s": 0.0666,
+          "predict_time_ms_per_event": 0.0141
+        },
+        "2024": {
+          "n": 68,
+          "brier": 0.08192227116908363,
+          "acc": 0.8382352941176471,
+          "log_loss": 0.23505438999142544,
+          "fit_time_s": 0.0742,
+          "predict_time_ms_per_event": 0.0446
+        }
+      },
+      "summary": {
+        "label": "XGBoost",
+        "n": 394,
+        "brier_avg": 0.102209,
+        "acc_avg": 0.875635,
+        "log_loss_avg": 0.358659,
+        "fit_time_s_total": 0.449,
+        "predict_time_ms_per_event_avg": 0.0424
+      }
+    },
+    "L4_mlp": {
+      "label": "MLP_32_16",
+      "per_year": {
+        "2010": {
+          "n": 86,
+          "brier": 0.00015877418665485898,
+          "acc": 1.0,
+          "log_loss": 0.0030586052247052182,
+          "fit_time_s": 0.6934,
+          "predict_time_ms_per_event": 0.0049
+        },
+        "2016": {
+          "n": 20,
+          "brier": 0.010063841793867882,
+          "acc": 1.0,
+          "log_loss": 0.04843683789985265,
+          "fit_time_s": 0.7814,
+          "predict_time_ms_per_event": 0.0262
+        },
+        "2018": {
+          "n": 70,
+          "brier": 0.009318265423914372,
+          "acc": 1.0,
+          "log_loss": 0.04948249281699587,
+          "fit_time_s": 0.5688,
+          "predict_time_ms_per_event": 0.006
+        },
+        "2020": {
+          "n": 30,
+          "brier": 1.9706162146502134e-06,
+          "acc": 1.0,
+          "log_loss": 0.001026527019417879,
+          "fit_time_s": 0.6942,
+          "predict_time_ms_per_event": 0.0166
+        },
+        "2022": {
+          "n": 120,
+          "brier": 0.1544570109879335,
+          "acc": 0.8166666666666667,
+          "log_loss": 0.5325946358555473,
+          "fit_time_s": 0.473,
+          "predict_time_ms_per_event": 0.003
+        },
+        "2024": {
+          "n": 68,
+          "brier": 0.003701803409034988,
+          "acc": 1.0,
+          "log_loss": 0.02117862652872722,
+          "fit_time_s": 0.7216,
+          "predict_time_ms_per_event": 0.0044
+        }
+      },
+      "summary": {
+        "label": "MLP_32_16",
+        "n": 394,
+        "brier_avg": 0.049883,
+        "acc_avg": 0.944162,
+        "log_loss_avg": 0.177863,
+        "fit_time_s_total": 3.9324,
+        "predict_time_ms_per_event_avg": 0.0102
+      }
+    },
+    "L5_naive_bayes": {
+      "label": "GaussianNB",
+      "per_year": {
+        "2010": {
+          "n": 86,
+          "brier": 0.396023146419845,
+          "acc": 0.5,
+          "log_loss": 1.2610079943941959,
+          "fit_time_s": 0.0023,
+          "predict_time_ms_per_event": 0.0069
+        },
+        "2016": {
+          "n": 20,
+          "brier": 0.27301029757757733,
+          "acc": 0.6,
+          "log_loss": 0.8881192967742034,
+          "fit_time_s": 0.0028,
+          "predict_time_ms_per_event": 0.047
+        },
+        "2018": {
+          "n": 70,
+          "brier": 0.3610862202090936,
+          "acc": 0.5,
+          "log_loss": 1.0281225132586274,
+          "fit_time_s": 0.0037,
+          "predict_time_ms_per_event": 0.0107
+        },
+        "2020": {
+          "n": 30,
+          "brier": 0.11639582263148851,
+          "acc": 0.8,
+          "log_loss": 0.33679983001580366,
+          "fit_time_s": 0.0021,
+          "predict_time_ms_per_event": 0.022
+        },
+        "2022": {
+          "n": 120,
+          "brier": 0.5500088313237719,
+          "acc": 0.30833333333333335,
+          "log_loss": 3.8616679122431523,
+          "fit_time_s": 0.0023,
+          "predict_time_ms_per_event": 0.0068
+        },
+        "2024": {
+          "n": 68,
+          "brier": 0.42329690309704365,
+          "acc": 0.45588235294117646,
+          "log_loss": 1.3526601493837438,
+          "fit_time_s": 0.0016,
+          "predict_time_ms_per_event": 0.0067
+        }
+      },
+      "summary": {
+        "label": "GaussianNB",
+        "n": 394,
+        "brier_avg": 0.413887,
+        "acc_avg": 0.461929,
+        "log_loss_avg": 1.93823,
+        "fit_time_s_total": 0.0148,
+        "predict_time_ms_per_event_avg": 0.0167
+      }
+    }
+  }
+}

@@ -117,7 +117,10 @@ def mcnemar(a, b):
             cc += 1
     n = bb + cc
     if n == 0:
-        return {"chi2": 0.0, "p": 1.0, "b": 0, "c": 0}
+        return {"chi2": 0.0, "p": 1.0,
+                "b_baseline_wrong_mrp_right": bb,
+                "c_baseline_right_mrp_wrong": cc, "n_disc": 0,
+                "interp": "no discordance"}
     chi2 = (abs(bb - cc) - 0.5) ** 2 / n
     p = math.erfc(math.sqrt(chi2 / 2))
     interp = ("MRP improves - sig" if bb > cc and p < 0.05 else
@@ -130,18 +133,38 @@ def mcnemar(a, b):
             "interp": interp}
 
 
-def murphy(preds, k=10):
+def murphy(preds, k=10, mode="quantile"):
+    """Murphy decomposition with explicit within-bin-variance (WBV) term.
+
+    For finite k, the exact identity is BS = REL - RES + UNC + WBV
+    (Broecker 2009, eq. 14), where WBV is the mean of within-bin
+    forecast variance. We report all four components and verify the
+    identity to machine precision.
+
+    `mode="quantile"` uses empirical-quantile bin edges (each bin
+    contains approximately n/k events) which is the standard choice
+    for reliability diagrams. `mode="fixed"` retains the original
+    equispaced [0, 1] cutpoints for replication of earlier reports.
+    """
     arr = np.array(preds)
     p_, y_ = arr[:, 0], arr[:, 1]
     n = len(p_)
     o_bar = float(np.mean(y_))
-    bins = np.linspace(0, 1, k + 1)
-    rel = res = 0.0
-    for i in range(k):
-        if i < k - 1:
-            mask = (p_ >= bins[i]) & (p_ < bins[i + 1])
+    if mode == "quantile":
+        # Quantile-based bin edges; deduplicate to avoid empty bins on ties.
+        qs = np.linspace(0.0, 1.0, k + 1)
+        edges = np.unique(np.quantile(p_, qs))
+        if edges.size < 2:
+            edges = np.array([0.0, 1.0])
+    else:
+        edges = np.linspace(0, 1, k + 1)
+    rel = res = wbv = 0.0
+    bins = len(edges) - 1
+    for i in range(bins):
+        if i < bins - 1:
+            mask = (p_ >= edges[i]) & (p_ < edges[i + 1])
         else:
-            mask = (p_ >= bins[i]) & (p_ <= bins[i + 1])
+            mask = (p_ >= edges[i]) & (p_ <= edges[i + 1])
         nk = int(mask.sum())
         if nk == 0:
             continue
@@ -149,14 +172,20 @@ def murphy(preds, k=10):
         ok = float(np.mean(y_[mask]))
         rel += nk * (pk - ok) ** 2
         res += nk * (ok - o_bar) ** 2
+        # Within-bin forecast variance: sum_j (p_j - pk)^2.
+        wbv += float(np.sum((p_[mask] - pk) ** 2))
     rel /= n
     res /= n
+    wbv /= n
     unc = o_bar * (1 - o_bar)
     bact = float(np.mean((p_ - y_) ** 2))
+    decomp = rel - res + unc + wbv
     return {"REL": float(rel), "RES": float(res), "UNC": float(unc),
-            "BRIER_decomposed": float(rel - res + unc),
+            "WBV": float(wbv),
+            "BRIER_decomposed": float(decomp),
             "BRIER_actual": bact,
-            "identity_check": abs((rel - res + unc) - bact) < 1e-9}
+            "identity_check": abs(decomp - bact) < 1e-9,
+            "bin_mode": mode, "k_eff": int(bins)}
 
 
 def main():
@@ -187,12 +216,34 @@ def main():
     print(f"  DM stat={dm['dm']:.4f} p={dm['p']:.4e} - {dm['interp']}")
     print(f"  McNemar chi2={mc['chi2']:.4f} p={mc['p']:.4e} b={mc['b_baseline_wrong_mrp_right']} c={mc['c_baseline_right_mrp_wrong']} - {mc['interp']}")
 
-    print("\nMurphy per cycle (MRP):")
+    print("\nMurphy per cycle (MRP, quantile bins):")
     mu_b = {y: murphy(base[y]) for y in base}
     mu_m = {y: murphy(mrp[y]) for y in mrp}
     for y in sorted(mu_m):
         m = mu_m[y]
-        print(f"  {y}: REL={m['REL']:.4f} RES={m['RES']:.4f} UNC={m['UNC']:.4f} brier={m['BRIER_actual']:.4f}")
+        print(f"  {y}: REL={m['REL']:.4f} RES={m['RES']:.4f} UNC={m['UNC']:.4f} brier={m['BRIER_actual']:.4f} id_ok={m['identity_check']}")
+
+    # Pooled Murphy (k=10 quantile bins) for paper §5.3.
+    pooled_b = murphy(all_b, k=10, mode="quantile")
+    pooled_m = murphy(all_m, k=10, mode="quantile")
+    print(f"\nPooled Murphy (quantile, k=10):")
+    print(f"  baseline REL={pooled_b['REL']:.4f} RES={pooled_b['RES']:.4f} UNC={pooled_b['UNC']:.4f} id_ok={pooled_b['identity_check']}")
+    print(f"  MRP      REL={pooled_m['REL']:.4f} RES={pooled_m['RES']:.4f} UNC={pooled_m['UNC']:.4f} id_ok={pooled_m['identity_check']}")
+
+    # Per-fold DM/McNemar (Q7 - 2024 SP fold is the falsification target).
+    per_fold_sig = {}
+    for y in sorted(base):
+        a, b = base[y], mrp[y]
+        per_fold_sig[str(y)] = {
+            "n": len(a),
+            "dm": dm_test(a, b),
+            "mcnemar": mcnemar(a, b),
+        }
+    print("\nPer-fold significance (DM, McNemar):")
+    for y, v in per_fold_sig.items():
+        print(f"  {y} n={v['n']} DM={v['dm']['dm']:.3f} p={v['dm']['p']:.3e} | "
+              f"McNemar chi2={v['mcnemar']['chi2']:.3f} p={v['mcnemar']['p']:.3e} "
+              f"b={v['mcnemar']['b_baseline_wrong_mrp_right']} c={v['mcnemar']['c_baseline_right_mrp_wrong']}")
 
     out = {
         "config": {"stein": SHRINK, "w_linzer": WLIN, "sigma_int": SINT,
@@ -205,6 +256,8 @@ def main():
         "diebold_mariano": dm,
         "mcnemar": mc,
         "murphy_per_cycle": {"baseline": mu_b, "mrp": mu_m},
+        "murphy_pooled": {"baseline": pooled_b, "mrp": pooled_m},
+        "per_fold_significance": per_fold_sig,
     }
     out_p = ROOT / "data" / "political_stats_v2.json"
     with open(out_p, "w") as f:

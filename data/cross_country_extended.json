@@ -1,0 +1,246 @@
+{
+  "_fetch": {
+    "fr_2022": {
+      "status": "ok",
+      "n_input_rows": 327,
+      "n_polls_used": 99,
+      "n_csv_rows": 198,
+      "skipped_examples": [],
+      "source": "Wikipedia: Opinion polling for the 2022 French presidential election (Macron vs Le Pen)"
+    },
+    "ar_2023": {
+      "status": "ok",
+      "n_input_rows": 22,
+      "n_polls_used": 15,
+      "n_csv_rows": 30,
+      "skipped_examples": [
+        [
+          "pct_missing",
+          "42.4%"
+        ]
+      ],
+      "source": "Wikipedia: Opinion polling for the 2023 Argentine general election (After the primaries)"
+    },
+    "br_2014": {
+      "status": "ok",
+      "n_input_rows": 15,
+      "n_polls_used": 15,
+      "n_csv_rows": 30,
+      "skipped_examples": [],
+      "source": "Wikipedia (PT): Pesquisas de opiniao para a eleicao presidencial no Brasil em 2014 (Segundo turno)"
+    },
+    "us_2022": {
+      "status": "ok",
+      "n_input_rows": 104,
+      "n_question_pairs": 52,
+      "n_unmatched_pairs": 0,
+      "n_csv_rows": 104,
+      "states_covered": [
+        "AZ",
+        "GA",
+        "ME",
+        "MI",
+        "NM",
+        "NV",
+        "OR",
+        "PA",
+        "WI"
+      ],
+      "source": "FiveThirtyEight governor_polls.csv (2022 cycle, via Wayback Machine)"
+    }
+  },
+  "fr_2022": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.0049251670131555915,
+        "n": 198
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.002272565140085286,
+        "n": 198
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 0.98989898989899,
+        "brier": 0.0069445400534766735,
+        "n": 198
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.003114550543355843,
+        "n": 198
+      }
+    },
+    "n_states": 1,
+    "n_events": 198,
+    "data_path": "data/backtest/fr_2022_president.csv"
+  },
+  "ar_2023": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 0.9333333333333333,
+        "brier": 0.07461354024085713,
+        "n": 30
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.03738216723145905,
+        "n": 30
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 0.8,
+        "brier": 0.1392386982006111,
+        "n": 30
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.06662846541790059,
+        "n": 30
+      }
+    },
+    "n_states": 1,
+    "n_events": 30,
+    "data_path": "data/backtest/ar_2023_president.csv"
+  },
+  "br_2014": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.04767593237158401,
+        "n": 30
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.02490740110505609,
+        "n": 30
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 0.9333333333333333,
+        "brier": 0.07141178603247941,
+        "n": 30
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.03590759487667702,
+        "n": 30
+      }
+    },
+    "n_states": 1,
+    "n_events": 30,
+    "data_path": "data/backtest/br_2014_president.csv"
+  },
+  "us_2022": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 0.8653846153846154,
+        "brier": 0.10403101543020836,
+        "n": 104
+      },
+      "mrp_w36": {
+        "acc": 0.9615384615384616,
+        "brier": 0.05871689875002524,
+        "n": 104
+      }
+    },
+    "loso": {
+      "no_mrp": {
+        "acc": 0.7788461538461539,
+        "brier": 0.1951668569268315,
+        "n": 104
+      },
+      "mrp_w36": {
+        "acc": 0.7788461538461539,
+        "brier": 0.1951668569268315,
+        "n": 104
+      },
+      "per_state": {
+        "AZ": {
+          "n": 14,
+          "no_mrp_acc": 0.4286,
+          "mrp_acc": 0.4286,
+          "no_mrp_brier": 0.511,
+          "mrp_brier": 0.511
+        },
+        "GA": {
+          "n": 18,
+          "no_mrp_acc": 0.8333,
+          "mrp_acc": 0.8333,
+          "no_mrp_brier": 0.1411,
+          "mrp_brier": 0.1411
+        },
+        "ME": {
+          "n": 2,
+          "no_mrp_acc": 1.0,
+          "mrp_acc": 1.0,
+          "no_mrp_brier": 0.0007,
+          "mrp_brier": 0.0007
+        },
+        "MI": {
+          "n": 24,
+          "no_mrp_acc": 1.0,
+          "mrp_acc": 1.0,
+          "no_mrp_brier": 0.0492,
+          "mrp_brier": 0.0492
+        },
+        "NM": {
+          "n": 2,
+          "no_mrp_acc": 1.0,
+          "mrp_acc": 1.0,
+          "no_mrp_brier": 0.1812,
+          "mrp_brier": 0.1812
+        },
+        "NV": {
+          "n": 10,
+          "no_mrp_acc": 0.0,
+          "mrp_acc": 0.0,
+          "no_mrp_brier": 0.5301,
+          "mrp_brier": 0.5301
+        },
+        "OR": {
+          "n": 10,
+          "no_mrp_acc": 0.8,
+          "mrp_acc": 0.8,
+          "no_mrp_brier": 0.2741,
+          "mrp_brier": 0.2741
+        },
+        "PA": {
+          "n": 16,
+          "no_mrp_acc": 1.0,
+          "mrp_acc": 1.0,
+          "no_mrp_brier": 0.0214,
+          "mrp_brier": 0.0214
+        },
+        "WI": {
+          "n": 8,
+          "no_mrp_acc": 1.0,
+          "mrp_acc": 1.0,
+          "no_mrp_brier": 0.0843,
+          "mrp_brier": 0.0843
+        }
+      }
+    },
+    "n_states": 9,
+    "n_events": 104,
+    "data_path": "data/backtest/us_2022_midterms.csv"
+  },
+  "avg_extended": {
+    "acc_unweighted": 0.9447115384615384,
+    "acc_weighted": 0.93646408839779,
+    "brier_unweighted": 0.07520436694119123,
+    "brier_weighted": 0.06627103849948138,
+    "no_mrp_acc_unweighted": 0.8755196192696192,
+    "no_mrp_brier_unweighted": 0.10319047030334967,
+    "n_total": 362,
+    "cycles_with_loso": 4
+  }
+}

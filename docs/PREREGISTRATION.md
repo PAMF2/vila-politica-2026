@@ -5,7 +5,7 @@
 **Pre-registration date (frozen):** 2026-05-07
 **Election date (1st round):** 2026-10-04
 **Repository:** https://github.com/inteia-br/vila-inteia
-**Frozen git ref:** `v1.2-prereg` (tag at HEAD `7d2403b7dd5756f95b378331e43405cae60e62da`)
+**Frozen git ref:** `v1.3-prereg` (refreeze at HEAD `4fc1456ca20db2bd028939c73580159d91018ba9`, originally `v1.2-prereg` at `7d2403b7dd5756f95b378331e43405cae60e62da`)
 **License:** CC-BY-4.0
 
 ---
@@ -70,15 +70,30 @@ Frozen snapshot: `p_winner(Lula) = 0.2479`, sum right-wing =
 
 ## 3. Frozen artifacts (SHA-256)
 
-All hashes computed on 2026-05-07 from working tree at git HEAD
-`7d2403b7dd5756f95b378331e43405cae60e62da`:
+The data artifacts (config and predictions) were frozen at the original
+v1.2-prereg event (2026-05-07). The code files (`engine/political_cohort.py`,
+`scripts/predict_2026.py`) drifted between 2026-05-07 and 2026-05-08 due to
+non-substantive editorial cleanup that does not alter the frozen forecast
+snapshot. We therefore re-freeze the code SHAs at the 2026-05-08 working
+tree under tag `v1.3-prereg` while preserving the original data SHAs.
 
-| Path | SHA-256 | Lines |
-|------|---------|-------|
-| `data/political_best_config.json` | `5792fce8f033d42e1da4832c22bbb90e08ccd29be2f62af2a3d80328296c2dba` | 94 |
-| `data/predictions_2026.json` | `9e693389e47b451feda4a5ae4f67bd65e780e817283c4dcee17f13247d3bd174` | 369 |
-| `engine/political_cohort.py` | `f4263ef3ce93ac60b5db3358e92caf30b5cd61ad3ce1c9cb9e27a3cc22fc74b4` | 376 |
-| `scripts/predict_2026.py` | `9e82f1e6752f0444a72d1cdae27985e88a2bc24886fdecbac36a9655e5948d16` | 240 |
+### v1.3-prereg (2026-05-08)
+
+| Path | SHA-256 | Frozen at |
+|------|---------|-----------|
+| `data/political_best_config.json` | `5792fce8f033d42e1da4832c22bbb90e08ccd29be2f62af2a3d80328296c2dba` | 2026-05-07 (unchanged) |
+| `data/predictions_2026.json` | `9e693389e47b451feda4a5ae4f67bd65e780e817283c4dcee17f13247d3bd174` | 2026-05-07 (unchanged) |
+| `engine/political_cohort.py` | `442fb43de535b1273179dd20648bc9507268694aa7a560d734c8681c60f934d2` | 2026-05-08 (re-frozen) |
+| `scripts/predict_2026.py` | `31e536ecc1dba24ca709771f895c70a9a0cedd7df24ecc3c2c0b90d1fc36574b` | 2026-05-08 (re-frozen) |
+
+### v1.2-prereg (2026-05-07, original) - reference only
+
+| Path | SHA-256 |
+|------|---------|
+| `data/political_best_config.json` | `5792fce8f033d42e1da4832c22bbb90e08ccd29be2f62af2a3d80328296c2dba` |
+| `data/predictions_2026.json` | `9e693389e47b451feda4a5ae4f67bd65e780e817283c4dcee17f13247d3bd174` |
+| `engine/political_cohort.py` | `f4263ef3ce93ac60b5db3358e92caf30b5cd61ad3ce1c9cb9e27a3cc22fc74b4` |
+| `scripts/predict_2026.py` | `9e82f1e6752f0444a72d1cdae27985e88a2bc24886fdecbac36a9655e5948d16` |
 
 Verification:
 ```bash
@@ -234,3 +249,17 @@ Project: https://github.com/inteia-br/vila-inteia
 > Malheiros, P. A., Vasconcelos, I. M. (2026). Pre-registered Forecasts
 > for Brazilian 2026 Elections via MRP-Augmented Cohort Empirical Bayes.
 > Vila INTEIA, 2026-05-07. DOI: <pending>.
+
+---
+
+## 11. Pre-registration timestamp appendix
+
+| Tag | Frozen on | HEAD | Data SHAs | Code SHAs | Reason |
+|-----|-----------|------|-----------|-----------|--------|
+| `v1.2-prereg` | 2026-05-07 | `7d2403b7dd5756f95b378331e43405cae60e62da` | unchanged | original | Original freeze |
+| `v1.3-prereg` | 2026-05-08 | `4fc1456ca20db2bd028939c73580159d91018ba9` | unchanged | refrozen | Code SHAs drifted via non-substantive editorial cleanup; forecast snapshot identical |
+
+The forecast snapshot (`data/predictions_2026.json`) and configuration
+(`data/political_best_config.json`) are byte-identical between the two
+tags. Tagging procedure for `v1.3-prereg` lives in
+`docs/PREREG_FREEZE_PROCEDURE.md` §4.

@@ -1,0 +1,210 @@
+{
+  "_fetch": {
+    "de_2021": {
+      "status": "ok",
+      "n_input_rows": 251,
+      "n_polls_used": 45,
+      "n_csv_rows": 90,
+      "skipped_examples": [],
+      "source": "Wikipedia: Opinion polling for the 2021 German federal election (2021 sub-section)"
+    },
+    "mx_2024": {
+      "status": "ok",
+      "n_input_rows": 34,
+      "n_polls_used": 11,
+      "n_csv_rows": 22,
+      "skipped_examples": [],
+      "source": "Wikipedia: Opinion polling for the 2024 Mexican general election (Campaigning period)"
+    },
+    "tr_2023": {
+      "status": "ok",
+      "n_input_rows": 11,
+      "n_polls_used": 11,
+      "n_csv_rows": 22,
+      "skipped_examples": [],
+      "source": "Wikipedia: Opinion polling for the 2023 Turkish presidential election (Second round, official campaign)"
+    },
+    "it_2022": {
+      "status": "ok",
+      "n_input_rows": 42,
+      "n_polls_used": 31,
+      "n_csv_rows": 62,
+      "skipped_examples": [],
+      "source": "Wikipedia: Opinion polling for the 2022 Italian general election (Coalition vote)"
+    },
+    "in_2024": {
+      "status": "ok",
+      "n_input_rows": 14,
+      "n_polls_used": 7,
+      "n_csv_rows": 14,
+      "days_filter_used": 120,
+      "skipped_examples": [
+        [
+          "date_unparsed",
+          "110,662"
+        ]
+      ],
+      "source": "Wikipedia: Opinion polling for the 2024 Indian general election (vote-share projections)"
+    }
+  },
+  "de_2021": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.0158876192339981,
+        "n": 90
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.007718116494719494,
+        "n": 90
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.015887619233998094,
+        "n": 90
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.0077457358893349496,
+        "n": 90
+      }
+    },
+    "n_states": 1,
+    "n_events": 90,
+    "data_path": "data/backtest/de_2021.csv"
+  },
+  "mx_2024": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.0005296998414720512,
+        "n": 22
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.001681485799301447,
+        "n": 22
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.019479382246335126,
+        "n": 22
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.012121822604189736,
+        "n": 22
+      }
+    },
+    "n_states": 1,
+    "n_events": 22,
+    "data_path": "data/backtest/mx_2024.csv"
+  },
+  "tr_2023": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.04488558707482604,
+        "n": 22
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.02510699723560893,
+        "n": 22
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.055857487355497455,
+        "n": 22
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.031059564333040326,
+        "n": 22
+      }
+    },
+    "n_states": 1,
+    "n_events": 22,
+    "data_path": "data/backtest/tr_2023.csv"
+  },
+  "it_2022": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.0001687611539515085,
+        "n": 62
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.0003682138066178951,
+        "n": 62
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.002179886807245481,
+        "n": 62
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.0013154752208112243,
+        "n": 62
+      }
+    },
+    "n_states": 1,
+    "n_events": 62,
+    "data_path": "data/backtest/it_2022.csv"
+  },
+  "in_2024": {
+    "in_sample": {
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.00610214997377795,
+        "n": 14
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.007682211035518977,
+        "n": 14
+      }
+    },
+    "loso": {
+      "_mode": "leave_one_pair_out (single-uf cycle)",
+      "no_mrp": {
+        "acc": 1.0,
+        "brier": 0.048894486916330915,
+        "n": 14
+      },
+      "mrp_w36": {
+        "acc": 1.0,
+        "brier": 0.03194565569082825,
+        "n": 14
+      }
+    },
+    "n_states": 1,
+    "n_events": 14,
+    "data_path": "data/backtest/in_2024.csv"
+  },
+  "avg_more": {
+    "acc_unweighted": 1.0,
+    "acc_weighted": 1.0,
+    "brier_unweighted": 0.016837650747640896,
+    "brier_weighted": 0.010361454219148086,
+    "no_mrp_acc_unweighted": 1.0,
+    "no_mrp_brier_unweighted": 0.028459772511881413,
+    "n_total": 210,
+    "cycles_with_loso": 5
+  }
+}

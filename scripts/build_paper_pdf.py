@@ -155,6 +155,10 @@ body_html = re.sub(
 # Wrap tables in figure with caption from preceding text (best effort: just number)
 # Skipping auto-table captions to avoid false positives.
 
+# (intentionally no h3 wrapping; rely on CSS break-after: avoid on h3
+# plus widows/orphans on body paragraphs to prevent orphaning at column
+# breaks. Wrapping in subsec divs caused column-fill reordering.)
+
 # References block hanging indent
 body_html = re.sub(
     r"(<h2>References</h2>)",
@@ -275,12 +279,19 @@ main {{
   column-gap: 22pt;
   column-rule: none;
 }}
-h1 {{ font-size: 12.5pt; font-weight: 700; margin: 14pt 0 5pt 0; }}
+/* (no h3-keep wrapper; rely on widows/orphans + h3 break-after: avoid) */
+h1 {{
+  font-size: 12.5pt; font-weight: 700; margin: 14pt 0 5pt 0;
+  break-after: avoid; page-break-after: avoid;
+  break-inside: avoid;
+}}
 h2 {{
   font-size: 11pt;
   font-weight: 700;
   margin: 11pt 0 3pt 0;
   letter-spacing: 0.005em;
+  break-after: avoid; page-break-after: avoid;
+  break-inside: avoid;
 }}
 h3 {{
   font-size: 10pt;
@@ -293,7 +304,7 @@ p {{
   text-align: justify;
   hyphens: auto;
   text-indent: 0;
-  orphans: 3; widows: 3;
+  orphans: 4; widows: 4;
 }}
 p + p {{ text-indent: 12pt; }}
 p:first-of-type, h1 + p, h2 + p, h3 + p {{ text-indent: 0; }}

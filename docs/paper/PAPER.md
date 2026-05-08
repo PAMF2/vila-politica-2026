@@ -258,6 +258,8 @@ FiveThirtyEight's U.S. election models (Silver 2008-2024) blend polls with funda
 
 On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9% / Marcal 27.8% / Nunes 18.6%, a +11.1 pp Boulos lead two days from the first round; AtlasIntel via CNN Brasil 2024-10-04), the unbiased v1.3 baseline assigned 85.4% to Boulos; the MRP-augmented blend pulled this to 56.0% (still on the wrong side of 0.5, but materially closer to the realized outcome where the first-round split was 26.59% Nunes vs 26.22% Boulos and Nunes won the runoff 59.35% to 40.65%; Wikipedia 2026). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see data/failure_analysis.json::misses.
 
+<div style="break-before: column;"></div>
+
 ### 6.4 Cross-country generalization
 
 To stress-test whether the state-baseline mechanism is BR-specific or generalizes, we replicated the leak-safe MRP protocol (state baseline w=0.36, no_mrp ensemble v1.2) on twelve electoral cycles drawn from eleven countries outside our primary BR cohort. The cycles are: United States 2016, 2020 and 2022 midterm gubernatorial; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014 (federal, separate from the SP municipal training set); Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024. Polls were ingested from Wikipedia poll-aggregation tables and FiveThirtyEight CSVs (see scripts/cross_country_validation.py, scripts/cross_country_extended.py and scripts/cross_country_more.py). The 30-day pre-election filter was applied uniformly except for India 2024, where the 120-day filter compensates for the structurally coarser monthly polling cadence; see data/cross_country_more.json::_fetch::in_2024 for the per-cycle parsing audit.

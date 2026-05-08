@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software or methodology, please cite as:"
+title: "Vila Política 2026: MRP-Augmented Cohort Empirical Bayes for Brazilian Election Forecasting"
+authors:
+  - family-names: "Malheiros"
+    given-names: "Pedro Afonso"
+    email: "colmeia@inteia.com.br"
+    affiliation: "Vila INTEIA"
+  - family-names: "Vasconcelos"
+    given-names: "Igor Morais"
+    affiliation: "Vila INTEIA"
+date-released: "2026-05-08"
+url: "https://github.com/igormorais123/vila-politica-2026"
+license: MIT
+keywords:
+  - "election forecasting"
+  - "Brazilian elections"
+  - "MRP"
+  - "multilevel regression poststratification"
+  - "Bayesian"
+  - "political science"
+  - "Linzer dynamic linear model"
+  - "PC-CRD cohort empirical Bayes"
+abstract: |
+  Sistema de predição eleitoral para Brasil 2026 que combina cohort empirical
+  Bayes (PC-CRD) com Linzer dynamic linear e MRP-style state baseline. Atinge
+  97.21% de acurácia em year-fold CV de 394 eventos políticos brasileiros
+  2010-2024. Recupera o caso 2024 SP mayor (Boulos vs Nunes) onde toda a
+  indústria de pesquisas errou: de 73.5% acc baseline para 89.7% com MRP.
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Malheiros"
+      given-names: "Pedro Afonso"
+    - family-names: "Vasconcelos"
+      given-names: "Igor Morais"
+  title: "MRP-style State Baseline Recovers Industry-Wide Polling Failures"
+  year: 2026
+  status: working-paper

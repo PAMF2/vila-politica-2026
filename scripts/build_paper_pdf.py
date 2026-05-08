@@ -155,9 +155,20 @@ body_html = re.sub(
 # Wrap tables in figure with caption from preceding text (best effort: just number)
 # Skipping auto-table captions to avoid false positives.
 
-# (intentionally no h3 wrapping; rely on CSS break-after: avoid on h3
-# plus widows/orphans on body paragraphs to prevent orphaning at column
-# breaks. Wrapping in subsec divs caused column-fill reordering.)
+# Wrap wide tables (>=5 columns OR >=8 rows) in .wide-table so they
+# span both PDF columns instead of getting crushed in narrow column.
+def wrap_wide_tables(html):
+    def repl(m):
+        tbl = m.group(0)
+        n_cols = len(re.findall(r'<th', tbl[:tbl.find('</thead>')] if '</thead>' in tbl else tbl))
+        n_rows = len(re.findall(r'<tr', tbl))
+        if n_cols >= 5 or n_rows >= 8:
+            return f'<div class="wide-table">{tbl}</div>'
+        return tbl
+    return re.sub(r'<table>.*?</table>', repl, html, flags=re.DOTALL)
+
+
+body_html = wrap_wide_tables(body_html)
 
 # References block hanging indent
 body_html = re.sub(
@@ -311,13 +322,22 @@ p:first-of-type, h1 + p, h2 + p, h3 + p {{ text-indent: 0; }}
 ul, ol {{ margin: 4pt 0 6pt 16pt; padding: 0; }}
 li {{ margin: 0 0 1.5pt 0; text-align: justify; }}
 
-/* Tables - NeurIPS booktabs style */
+/* Tables - NeurIPS booktabs style. Span both columns when wide. */
 table {{
   width: 100%;
   border-collapse: collapse;
-  font-size: 8.6pt;
-  margin: 6pt auto 8pt auto;
+  font-size: 8.4pt;
+  margin: 8pt auto 10pt auto;
   break-inside: avoid;
+}}
+/* Tables wider than ~5 cols: float across both columns */
+.wide-table {{
+  column-span: all;
+  margin: 10pt 0 12pt 0;
+}}
+.wide-table table {{
+  font-size: 9pt;
+  margin: 0 auto;
 }}
 thead tr {{ border-top: 0.8pt solid #111; border-bottom: 0.5pt solid #111; }}
 tbody tr:last-child {{ border-bottom: 0.8pt solid #111; }}

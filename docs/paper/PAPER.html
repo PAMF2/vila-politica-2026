@@ -132,13 +132,22 @@ p:first-of-type, h1 + p, h2 + p, h3 + p { text-indent: 0; }
 ul, ol { margin: 4pt 0 6pt 16pt; padding: 0; }
 li { margin: 0 0 1.5pt 0; text-align: justify; }
 
-/* Tables - NeurIPS booktabs style */
+/* Tables - NeurIPS booktabs style. Span both columns when wide. */
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 8.6pt;
-  margin: 6pt auto 8pt auto;
+  font-size: 8.4pt;
+  margin: 8pt auto 10pt auto;
   break-inside: avoid;
+}
+/* Tables wider than ~5 cols: float across both columns */
+.wide-table {
+  column-span: all;
+  margin: 10pt 0 12pt 0;
+}
+.wide-table table {
+  font-size: 9pt;
+  margin: 0 auto;
 }
 thead tr { border-top: 0.8pt solid #111; border-bottom: 0.5pt solid #111; }
 tbody tr:last-child { border-bottom: 0.8pt solid #111; }
@@ -368,7 +377,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <h2>5 Results</h2>
 <h3>5.1 Headline metrics</h3>
 <p>Year-fold cross-validated accuracy and Brier score across the 394-event dataset. The first row is the pre-MRP v1.2 ensemble (stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) with w=0, kept as an external comparison anchor <sup id="fnref:v12"><a class="footnote-ref" href="#fn:v12">1</a></sup>. The remaining rows are the production v1.3 ensemble (stein=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01) swept over w:</p>
-<table>
+<div class="wide-table"><table>
 <thead>
 <tr>
 <th>Configuration</th>
@@ -421,11 +430,11 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <td style="text-align: right;">0.113</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The headline gain from 94.16% (v1.2) to 97.21% (v1.3 production) decomposes into two stages that we report separately rather than blending. (a) Hyperparameter re-tune: moving from v1.2 to v1.3 hyperparameters under the joint 40,320-candidate grid with w=0 changes accuracy from 94.16% to 91.88%, a regression of -2.28 pp. The v1.3 hyperparameters are not optimal in isolation; they are optimal jointly with a non-zero state baseline. (b) State-baseline blend: holding v1.3 hyperparameters fixed and increasing w from 0 to 0.36 raises accuracy from 91.88% to 97.21%, a marginal gain of +5.33 pp average and +25.00 pp on 2024 Sao Paulo (64.71% to 89.71%). The +3.05 pp net headline thus reflects -2.28 pp from re-tuning and +5.33 pp from the state baseline; the latter is the dominant mechanism on the falsification target. The optimum at w=0.36 has a broad plateau across 0.35 to 0.40, indicating robustness rather than a brittle peak; the optimum is consistent with the convexity argument in Section 3.4. Numbers reproduced via scripts/political_stats_rigor.py and scripts/baseline_gauntlet.py.</p>
 <h3>5.2 Per-cycle ablation</h3>
 <p>Per-cycle accuracy under the v1.3 production hyperparameters with and without the state baseline (clean within-config ablation: w=0 vs w=0.36; Figure 2):</p>
-<table>
+<div class="wide-table"><table>
 <thead>
 <tr>
 <th>Cycle</th>
@@ -486,7 +495,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <td style="text-align: right;">0.107</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The state baseline produces a large gain in 2024 SP (+25.00 pp), a moderate gain in 2016 SP (+15.00 pp), a smaller gain in 2020 SP (+6.67 pp), and a single-event regression in 2018 (-1.43 pp, n=1 miss). The 2010 and 2022 federal cycles are saturated at 100% by the lead-only ensemble and unaffected by the state baseline.</p>
 <figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig2_per_cycle_bar.png" /></p><figcaption>Figure 2.</figcaption></figure>
 <h3>5.3 Statistical significance</h3>
@@ -522,7 +531,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>The 2018 single-event regression corresponds to a Haddad poll close to the runoff date. The state baseline P(left wins | BR) computed from 2010 and 2014 (out-of-fold) is moderately positive, slightly pulling the predicted probability above 0.5 on a -3 pp lead poll where the realized outcome was 0. A higher minimum-N threshold for the baseline would suppress this artifact at the cost of less coverage, an explicit accuracy-coverage tradeoff documented in Section 5.5.</p>
 <h3>5.5 Selective coverage curve</h3>
 <p>Selective prediction (Geifman and El-Yaniv 2017) keeps an event only when |p - 0.5| &gt; tau. Coverage and accuracy on kept events for the v1.3 production model (w=0.36) as tau ranges from 0.05 to 0.40:</p>
-<table>
+<div class="wide-table"><table>
 <thead>
 <tr>
 <th>tau</th>
@@ -569,7 +578,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <td style="text-align: right;">31</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The MRP-augmented model crosses 100% accuracy at tau=0.15 with 55.8% coverage, reflecting the prior pull on tossups: events flagged with |p - 0.5| &gt; 0.15 are uniformly correct in this dataset. For client-facing claims requiring partial coverage, tau=0.40 yields 100% accuracy on the 7.9% most confident predictions.</p>
 <figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig1_selective_curve.png" /></p><figcaption>Figure 3.</figcaption></figure>
 <p>The reliability diagram (Figure 3) supports the Murphy decomposition: predicted probabilities track observed frequencies closely across the ten-bin partition, with the largest support in the extreme bins (n=72 at p approximately 0.04 and n=152 at p approximately 0.95) reflecting the dataset&rsquo;s symmetric paired-event construction.</p>
@@ -585,13 +594,11 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <h3>6.3 Comparison to FiveThirtyEight and Polymarket</h3>
 <p>FiveThirtyEight&rsquo;s U.S. election models (Silver 2008-2024) blend polls with fundamentals via a weighted-average framework; our blend is structurally similar but with explicit empirical-Bayes regularization and a closed-form Linzer drift rather than a Kalman filter. FiveThirtyEight did not publish a Brazilian-municipal model for 2024 SP, so direct head-to-head comparison is not available. Polymarket and Iowa Electronic Markets (Berg et al. 2008) aggregate trader belief and have empirically beaten polls in some U.S. cycles (Wolfers and Zitzewitz 2004); a Polymarket market on the 2024 SP mayoral runoff did exist but cleared at low volume and has not been reanalyzed in the literature. For 2026, Polymarket&rsquo;s Brazil-presidential market on 2026-05-07 priced Flavio Bolsonaro at 45% and Lula at 38% (Polymarket 2026), and the SP-governor market priced Tarcisio at 83%, comparable in direction to our frozen forecasts (Lula 24.79% / Tarcisio-gov 65.09%) although our model is more conservative on Tarcisio because the cohort prior on incumbent-governor reelections is not as concentrated as the market.</p>
 <p>On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9% / Marcal 27.8% / Nunes 18.6%, a +11.1 pp Boulos lead two days from the first round; AtlasIntel via CNN Brasil 2024-10-04), the unbiased v1.3 baseline assigned 85.4% to Boulos; the MRP-augmented blend pulled this to 56.0% (still on the wrong side of 0.5, but materially closer to the realized outcome where the first-round split was 26.59% Nunes vs 26.22% Boulos and Nunes won the runoff 59.35% to 40.65%; Wikipedia 2026). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see data/failure_analysis.json::misses.</p>
-<div style="break-before: column;"></div>
-
 <h3>6.4 Cross-country generalization</h3>
 <p>To stress-test whether the state-baseline mechanism is BR-specific or generalizes, we replicated the leak-safe MRP protocol (state baseline w=0.36, no_mrp ensemble v1.2) on twelve electoral cycles drawn from eleven countries outside our primary BR cohort. The cycles are: United States 2016, 2020 and 2022 midterm gubernatorial; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014 (federal, separate from the SP municipal training set); Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024. Polls were ingested from Wikipedia poll-aggregation tables and FiveThirtyEight CSVs (see scripts/cross_country_validation.py, scripts/cross_country_extended.py and scripts/cross_country_more.py). The 30-day pre-election filter was applied uniformly except for India 2024, where the 120-day filter compensates for the structurally coarser monthly polling cadence; see data/cross_country_more.json::_fetch::in_2024 for the per-cycle parsing audit.</p>
 <p>Multi-state cycles use leave-one-state-out (LOSO) CV; single-uf cycles use leave-one-pair-out by date and pollster. In LOSO across distinct states the (uf, regime) baseline cell is undefined for the held-out state, so MRP and no-MRP coincide by construction; this is a structural property of the leave-one-state-out protocol with country-level uf, not a model degenerate. To recover MRP signal in those cycles requires substituting a finer-grained spatial unit (county, district), which is deferred to a future cycle. The single-uf cycles are the cleanest cross-country test of the MRP mechanism per se.</p>
 <p>Consolidated results across all twelve cross-country cycles (n=6,954 paired events):</p>
-<table>
+<div class="wide-table"><table>
 <thead>
 <tr>
 <th>Cycle</th>
@@ -722,7 +729,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <td style="text-align: right;">+0.14 pp</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The mechanism behaves as theory predicts. Where the (uf, regime) baseline is computable (single-country runoffs and head-to-head: FR, AR, BR, DE, MX, TR, IT, IN), MRP either improves accuracy or maintains 100% while reducing Brier by 35 to 52 percent through prior pull on tossups. The Argentina 2023 cycle is the most striking out-of-sample replication of the BR 2024 SP finding: every poll in our sample had Sergio Massa winning the runoff or trailing by a single percentage point on the eve of voting, while Javier Milei won by approximately twelve points. The no-MRP ensemble achieves 80.00% accuracy on this cycle; the MRP-augmented blend reaches 100% by absorbing the post-2015 right-shift in Argentine national outcomes through the (AR, right) prior. Structurally identical mechanism, different country, different ideological direction.</p>
 <p>Where the LOSO protocol holds out an entire state (US 2016, US 2020, UK 2019, US 2022 midterms), the (uf, regime) baseline is undefined for the held-out state by construction and MRP collapses to no-MRP. The deltas in the table for those cycles are zero by design, not by failure: the in-sample MRP accuracy on US 2016 is 94.89% versus 89.94% no-MRP (data/cross_country_results.json::us_2016::in_sample), so MRP is functioning when training and test share state cells. The UK 2019 result (47.92%) is the closest the architecture has to a structural failure: regional UK polls fragment by Conservative/Labour/SNP/LDP/Plaid/Sinn-Fein in ways the binary regime taxonomy does not absorb; we report this honestly rather than dropping the cycle. India 2024 illustrates a different limitation: the 14-event sample is drawn from monthly aggregator publishing dates, not weekly fieldwork dates, so the per-poll temporal resolution is too coarse to exhibit Linzer-drift signal; the perfect accuracy is a property of the wide NDA-INDIA gap in vote share (43.8% vs 41.5% certified result, 46-50% vs 32-39% in polls), not of the MRP mechanism.</p>
 <p>The Argentina 2023 result and the India 2024 result, qualitatively, function as cross-country corroboration of the central BR claim: when industry-wide polling consensus systematically misprices an outcome that the historical state-regime structure correctly anticipates, the MRP blend recovers. AR is the killer case where the MRP architecture turned an 80% baseline into 100% on a cycle that polls and prediction markets jointly missed; IN is the killer case where polls and seat projections jointly overshot the realized vote share by 5-7 percentage points and where the mechanism remains correctly anchored despite limited per-poll resolution. Pooled across all twelve cross-country cycles, MRP improves weighted Brier from 0.063 to 0.062 and weighted accuracy by +0.14 percentage points; the small headline movement reflects the dominance of the multi-state US 2016 and 2020 cycles in the pooled n, where the LOSO design collapses the comparison by construction. Restricting to the eight single-uf cycles where the protocol exercises MRP per se (n=468), the weighted accuracy moves from 97.86% no-MRP to 100.00% MRP and the weighted Brier from 0.025 to 0.013, a 49.5% reduction.</p>
@@ -799,7 +806,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>Wikipedia contributors. (2024-2026). Opinion polling for the 2021 German federal election; for the 2024 Mexican general election; for the 2023 Turkish presidential election; for the 2022 Italian general election; for the 2024 Indian general election. Wikipedia, the free encyclopedia. Retrieved 2026-05-08. Raw HTML archived under data/cross_country/raw_more/.</p>
 <p>Wolfers, J., and Zitzewitz, E. (2004). Prediction markets. Journal of Economic Perspectives, 18(2), 107-126.</p>
 </div><h2>10 Pre-registration timestamp appendix</h2>
-<table>
+<div class="wide-table"><table>
 <thead>
 <tr>
 <th>Tag</th>
@@ -825,7 +832,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <td>Refrozen with refreshed code-file SHAs after editorial cleanup. Forecast snapshot is byte-identical to <code>v1.2-prereg</code>; only the engine and predict-script SHAs in the SHA-256 table changed.</td>
 </tr>
 </tbody>
-</table>
+</table></div>
 <p>The SHA-256 tables for both tags are recorded in
 <code>docs/PREREGISTRATION.md</code> §3. The shell-command procedure for creating
 <code>v1.3-prereg</code> is in <code>docs/PREREG_FREEZE_PROCEDURE.md</code> §4b. The original

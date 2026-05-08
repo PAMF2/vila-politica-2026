@@ -6,148 +6,168 @@
 <style>
 @page {
   size: A4;
-  margin: 1.7cm 1.5cm 2cm 1.5cm;
-  @bottom-center { content: counter(page); font-family: "Times New Roman", serif; font-size: 9pt; color: #555; }
-  @top-right { content: "Vila Politica 2026 - Working Paper"; font-family: "Times New Roman", serif; font-size: 8pt; color: #888; }
+  margin: 2.0cm 1.6cm 2.4cm 1.6cm;
+  @bottom-center {
+    content: counter(page);
+    font-family: "Times New Roman", "Liberation Serif", serif;
+    font-size: 9pt; color: #555;
+  }
 }
 @page :first {
-  @top-right { content: ""; }
-  @bottom-center { content: counter(page); font-family: "Times New Roman", serif; font-size: 9pt; color: #555; }
+  margin-top: 1.4cm;
+  @bottom-center {
+    content: counter(page);
+    font-family: "Times New Roman", "Liberation Serif", serif;
+    font-size: 9pt; color: #555;
+  }
 }
 html, body {
-  font-family: "Times New Roman", "Liberation Serif", Georgia, serif;
-  font-size: 9.6pt;
-  line-height: 1.45;
+  font-family: "Times New Roman", "Liberation Serif", "Computer Modern", Georgia, serif;
+  font-size: 10pt;
+  line-height: 1.36;
   color: #0a0a0a;
   margin: 0;
   text-rendering: optimizeLegibility;
 }
+
+/* Title block - NeurIPS centered */
 .title-block {
   text-align: center;
-  margin: 0 0 16pt 0;
-  padding-bottom: 12pt;
+  margin: 0 0 14pt 0;
 }
 .title {
-  font-size: 16.5pt;
+  font-size: 17pt;
   font-weight: 700;
   line-height: 1.2;
   letter-spacing: -0.005em;
-  margin: 0 0 10pt 0;
-  font-family: "Times New Roman", serif;
+  margin: 0 auto 14pt auto;
+  max-width: 95%;
 }
-.byline {
-  font-size: 10pt;
+.author-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30pt;
+  margin: 8pt 0 4pt 0;
+}
+.author-grid > div { text-align: center; }
+.aname {
+  font-size: 11pt;
+  font-weight: 600;
+  margin: 0;
+}
+.aaff {
+  font-size: 9.4pt;
   font-style: italic;
-  color: #222;
-  margin: 0 0 4pt 0;
+  color: #333;
+  margin-top: 1pt;
 }
-.affiliation {
-  font-size: 8.6pt;
-  color: #555;
-}
+
+/* Abstract: NeurIPS small-caps centered, narrow */
 .abstract-block {
-  margin: 0 14pt 18pt 14pt;
-  padding: 10pt 16pt;
-  border-top: 0.6pt solid #555;
-  border-bottom: 0.6pt solid #555;
-  font-size: 9.2pt;
+  margin: 16pt auto 12pt auto;
+  max-width: 80%;
+  font-size: 9.6pt;
+  line-height: 1.4;
   text-align: justify;
+  hyphens: auto;
 }
 .abstract-block .label {
   font-variant: small-caps;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   font-weight: 700;
-  font-size: 8.6pt;
-  color: #333;
-  margin-right: 6pt;
+  font-size: 10pt;
+  display: block;
+  text-align: center;
+  margin: 0 0 4pt 0;
 }
 .keywords-block {
-  margin: 0 14pt 16pt 14pt;
-  font-size: 8.8pt;
+  max-width: 80%;
+  margin: 0 auto 18pt auto;
+  font-size: 9pt;
+  text-align: center;
   color: #333;
 }
 .keywords-block .label {
   font-variant: small-caps;
-  letter-spacing: 0.07em;
+  letter-spacing: 0.06em;
   font-weight: 700;
   margin-right: 4pt;
 }
+
+/* Two-column main */
 main {
   column-count: 2;
   column-gap: 22pt;
-  column-rule: 0.3pt solid #d0d0d0;
+  column-rule: none;
 }
-h1 { font-size: 12.5pt; font-weight: 700; margin: 12pt 0 5pt 0; }
+h1 { font-size: 12.5pt; font-weight: 700; margin: 14pt 0 5pt 0; }
 h2 {
-  font-size: 10.6pt;
+  font-size: 11pt;
   font-weight: 700;
-  margin: 12pt 0 4pt 0;
-  font-variant: small-caps;
-  letter-spacing: 0.045em;
-  color: #1a1a1a;
+  margin: 11pt 0 3pt 0;
+  letter-spacing: 0.005em;
 }
 h3 {
-  font-size: 9.8pt;
+  font-size: 10pt;
   font-weight: 700;
-  margin: 8pt 0 3pt 0;
-  font-style: italic;
-  color: #222;
+  margin: 8pt 0 2pt 0;
+  font-style: normal;
 }
 p {
   margin: 0 0 5pt 0;
   text-align: justify;
   hyphens: auto;
   text-indent: 0;
+  orphans: 3; widows: 3;
 }
 p + p { text-indent: 12pt; }
+p:first-of-type, h1 + p, h2 + p, h3 + p { text-indent: 0; }
 ul, ol { margin: 4pt 0 6pt 16pt; padding: 0; }
-li { margin: 0 0 2pt 0; text-align: justify; }
+li { margin: 0 0 1.5pt 0; text-align: justify; }
+
+/* Tables - NeurIPS booktabs style */
 table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 8.4pt;
-  margin: 5pt 0 7pt 0;
+  font-size: 8.6pt;
+  margin: 6pt auto 8pt auto;
   break-inside: avoid;
 }
-thead tr { border-top: 0.6pt solid #333; border-bottom: 0.4pt solid #333; }
-tbody tr:last-child { border-bottom: 0.6pt solid #333; }
+thead tr { border-top: 0.8pt solid #111; border-bottom: 0.5pt solid #111; }
+tbody tr:last-child { border-bottom: 0.8pt solid #111; }
 th, td {
-  padding: 2.6pt 5pt;
+  padding: 2.5pt 5pt;
   text-align: left;
   vertical-align: top;
+  border: none;
 }
-th { font-weight: 700; font-variant: small-caps; letter-spacing: 0.03em; }
+th { font-weight: 700; font-size: 8.6pt; }
 td:nth-child(n+2), th:nth-child(n+2) {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
+
+/* Code */
 code {
-  font-family: "Liberation Mono", Consolas, monospace;
-  font-size: 8.4pt;
-  background: #f4f3ec;
-  padding: 0.4pt 2.4pt;
-  border-radius: 1pt;
+  font-family: "Liberation Mono", Consolas, "Courier New", monospace;
+  font-size: 8.6pt;
+  background: #f5f4ee;
+  padding: 0.4pt 2pt;
 }
 pre {
   font-family: "Liberation Mono", Consolas, monospace;
-  font-size: 8.0pt;
-  background: #f4f3ec;
+  font-size: 8.4pt;
+  background: #f5f4ee;
   padding: 5pt 7pt;
   margin: 5pt 0;
-  border-left: 1.6pt solid #999;
-  overflow-x: auto;
+  border-left: 1.4pt solid #999;
   break-inside: avoid;
 }
-blockquote {
-  border-left: 2pt solid #999;
-  margin: 5pt 0;
-  padding: 0 9pt;
-  color: #333;
-  font-style: italic;
-}
+
+/* Math */
 .math-display {
   display: block;
-  margin: 7pt auto;
+  margin: 8pt auto;
   max-width: 92%;
 }
 .math-inline {
@@ -155,35 +175,71 @@ blockquote {
   vertical-align: -0.16em;
   height: 1em;
 }
+
+/* Figures */
+figure {
+  margin: 6pt 0 8pt 0;
+  text-align: center;
+  break-inside: avoid;
+}
+figure img {
+  max-width: 100%;
+  height: auto;
+}
+figcaption {
+  font-size: 8.4pt;
+  font-style: italic;
+  color: #222;
+  margin-top: 2pt;
+  text-align: left;
+  hyphens: auto;
+}
 img:not(.math-display):not(.math-inline) {
   max-width: 100%;
   height: auto;
-  display: block;
-  margin: 6pt auto 4pt auto;
-  break-inside: avoid;
 }
-hr { border: none; border-top: 0.4pt solid #777; margin: 9pt 0; }
-.references { font-size: 8.4pt; }
+
+/* Block quotes */
+blockquote {
+  border-left: 2pt solid #888;
+  margin: 5pt 0;
+  padding: 0 9pt;
+  color: #333;
+  font-style: italic;
+  font-size: 9.6pt;
+}
+
+/* References */
+.references h2 {
+  margin-top: 14pt;
+}
 .references p {
   padding-left: 14pt;
   text-indent: -14pt !important;
   margin: 0 0 3pt 0;
   text-align: left;
   hyphens: none;
+  font-size: 8.4pt;
+  line-height: 1.32;
 }
+
+hr { border: none; border-top: 0.4pt solid #777; margin: 9pt 0; }
 sup, sub { line-height: 0; }
 strong { font-weight: 700; }
 em { font-style: italic; }
+
+/* Drop excess space before first H2 inside columns */
+main > h2:first-child { margin-top: 0; }
 </style>
 </head>
 <body>
 <div class="title-block">
   <div class="title">State-Level Empirical-Bayes Priors Recover Industry-Wide Polling Failures: A Multilevel Regression with Poststratification Case Study on Brazilian Elections, 2010-2024, with Cross-Country Replication Across Eleven Countries and 6,954 Events</div>
-  <div class="byline">Pedro Afonso Malheiros (Vila INTEIA Research, colmeia@inteia.com.br) · Igor Morais Vasconcelos (Vila INTEIA Research, igor@inteia.com.br)</div>
-  <div class="affiliation">Vila INTEIA Research</div>
+  <div class="author-grid"><div><div class="aname">Pedro Afonso Malheiros</div><div class="aaff">Vila INTEIA Research, colmeia@inteia.com.br</div></div><div><div class="aname">Igor Morais Vasconcelos</div><div class="aaff">Vila INTEIA Research, igor@inteia.com.br</div></div></div>
 </div>
 <div class="abstract-block">
-  <span class="label">Abstract.</span> Background. Aggregator-style electoral forecasters trained on contemporaneous polls inherit any systematic bias shared across pollsters. The 2024 Sao Paulo mayoral election exposed this fragility: every major Brazilian polling firm placed Guilherme Boulos ahead of incumbent Ricardo Nunes, who ultimately won by approximately three percentage points. We hypothesize that an exogenous state-level partisan-regime prior, blended with a lead-driven cohort empirical-Bayes estimator and a Linzer dynamic linear model, can absorb cycle-specific industry-wide polling bias without leaking test outcomes. 
+  <span class="label">Abstract</span>
+  Background. Aggregator-style electoral forecasters trained on contemporaneous polls inherit any systematic bias shared across pollsters. The 2024 Sao Paulo mayoral election exposed this fragility: every major Brazilian polling firm placed Guilherme Boulos ahead of incumbent Ricardo Nunes, who ultimately won by approximately three percentage points. We hypothesize that an exogenous state-level partisan-regime prior, blended with a lead-driven cohort empirical-Bayes estimator and a Linzer dynamic linear model, can absorb cycle-specific industry-wide polling bias without leaking test outcomes. 
 Methods. We curated 394 Brazilian electoral events spanning six cycles between 2010 and 2024 from Wikipedia poll-aggregation tables and Tribunal Superior Eleitoral records. We evaluated the model under year-fold cross-validation with a 30-day pre-election filter. The state baseline was a Laplace-smoothed conditional probability P(regime wins | UF) computed strictly from out-of-fold training years and blended with weight w against the lead-driven cohort+Linzer ensemble. Hyperparameters (stein shrinkage, Linzer drift, blend weights) were jointly selected by autoresearch grid search over a 40,320-candidate space; statistical significance was assessed by Diebold-Mariano and McNemar tests; calibration was decomposed using Murphy's reliability-resolution-uncertainty formulation. 
 Results. A pre-MRP baseline ensemble (designated v1.2; stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) achieved 94.16% year-fold accuracy with 73.53% on the 2024 Sao Paulo fold. The MRP-augmented production configuration (designated v1.3; stein=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01, w=0.36) raised overall accuracy to 97.21% and the 2024 Sao Paulo fold to 89.71%. The headline gain of +3.05 pp decomposes into two stages: re-tuning hyperparameters jointly with the state-baseline blend moves the v1.3 baseline (with w=0) to 91.88%, a 2.28 pp regression relative to v1.2; the state-baseline blend then adds +5.33 pp average accuracy (91.88% to 97.21%) and +25.00 pp on 2024 Sao Paulo (64.71% to 89.71%) under the same v1.3 hyperparameters. The state-baseline blend is therefore the dominant mechanism on the falsification target; the joint re-tune is a necessary supporting change to prevent the new prior from over-weighting cohorts that the v1.2 hyperparameters under-shrunk. No prior cycle suffered material degradation; gains concentrated on cycles where industry-wide poll signal disagreed with slow-moving partisan structure. 
 Conclusions. State-level empirical-Bayes priors derived from training-year outcomes, structurally analogous to multilevel regression with poststratification, provide a viable mechanism for absorbing shared cycle-level polling bias in Brazilian electoral forecasting. The mechanism is validated across eleven additional countries and twelve electoral cycles for a combined cross-country corpus of 6,954 paired poll-events (United States 2016, 2020, 2022 mid; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014; Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024). On the eight single-country cycles where the leak-safe protocol exercises the (uf, regime) prior per se (n=468), MRP raises weighted accuracy from 97.86% to 100.00% and cuts weighted Brier by 49.5%; Argentina 2023 (Milei vs Massa runoff) is the cleanest cross-country replication of the BR 2024 SP finding, where polls and prediction markets jointly placed the wrong candidate ahead and the MRP blend recovers the realized outcome.
@@ -192,19 +248,20 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
   <span class="label">Keywords:</span> election forecasting; multilevel regression with poststratification; empirical Bayes; dynamic linear model; Brazilian politics; calibration
 </div>
 <main>
-<h2>1. Introduction</h2>
+<h2>1 Introduction</h2>
 <p>Electoral forecasting in Brazil is dominated by aggregator-style models that average pre-election polls, optionally weighted by historical accuracy of each polling firm. The dominant published model class, exemplified by Linzer (2013) for the United States, treats each candidate&rsquo;s win probability as Phi(lead_pp / sigma(days)), where sigma shrinks as the election approaches. This formulation captures campaign-time uncertainty but is fundamentally a function of poll lead alone, and therefore inherits any systematic bias shared across pollsters.</p>
 <p>The 2024 Sao Paulo mayoral race exposed this fragility. Every major polling firm operating in Brazil (Datafolha, Quaest, AtlasIntel, RealTimeBigData, Genial/Quaest, Instituto Verita) had Guilherme Boulos (PSOL) leading Ricardo Nunes (MDB-PL coalition) by margins ranging from one to eleven percentage points during the final two weeks of the campaign. Nunes won by approximately three percentage points. A Linzer model fit to such polls produces high-confidence wrong predictions, and a cohort empirical-Bayes model that conditions on lead bin, days bin, incumbency, and ideological regime has no input feature distinguishing this cycle from prior tossups in which the polled leader actually won.</p>
 <p>We hypothesize that incorporating an explicit per-state partisan-regime baseline, computed from past electoral outcomes of the same regime in the same state, provides an exogenous prior that disciplines the lead-driven blend. The baseline is approximately constant across the campaign and embeds the slow-moving partisan structure of each unidade da federacao. For Sao Paulo, where municipal and gubernatorial winners since 2016 have been center-right (Doria, Covas, Nunes, Tarcisio), the baseline pulls the prediction toward the historically dominant center-right pole even when contemporaneous polls disagree.</p>
 <p>The contribution of this paper is fivefold. First, we formalize a multilevel regression with poststratification (MRP) interpretation of state-regime priors blended with a lead-driven dynamic linear model. Second, we report a year-fold cross-validation protocol that preserves leak-safety across all six Brazilian electoral cycles in 2010-2024. Third, we document statistical significance against the lead-only baseline using Diebold-Mariano and McNemar tests. Fourth, we replicate the leak-safe protocol on twelve cross-country electoral cycles spanning eleven additional countries (US 2016, 2020, 2022 mid; UK 2019; FR 2022; AR 2023; BR 2014; DE 2021; MX 2024; TR 2023; IT 2022; IN 2024) for a combined cross-country corpus of 6,954 paired events; the AR 2023 cycle is treated as the killer cross-country corroboration of the central BR 2024 SP finding. Fifth, we publish dataset hashes, hyperparameter grids, and code under a reproducibility section so that any downstream replication can be audited.</p>
-<h2>2. Related Work</h2>
+<h2>2 Related Work</h2>
 <p>The aggregation of pre-election polls into a single probabilistic forecast originates in academic and operational form with Erikson and Wlezien (2008), who argued that polls only become informative within roughly thirty days of the election, and with Silver (2008), whose FiveThirtyEight model popularized house-effect adjustments. The dominant Bayesian aggregator for state-level United States presidential forecasting is Linzer (2013), who modelled state-day-level expected vote share with a dynamic linear state-space framework anchored to a fundamentals-based prior; later refinements include Lock and Gelman (2010), the methodological introduction by Linzer and Lewis-Beck (2015) to a special section on election forecasting in the International Journal of Forecasting, and the operational expositions in Heidemanns, Gelman and Morris (2020).</p>
 <p>Multilevel regression with poststratification (MRP) was introduced by Park, Gelman and Bafumi (2004) for the problem of estimating subnational opinion from national surveys, extending Gelman and Little (1997). Lax and Phillips (2009) showed MRP&rsquo;s advantage in U.S. state policy contexts; Hummel and Rothschild (2014) connected fundamentals to state forecasts; Wang, Rothschild, Goel and Gelman (2015) demonstrated that MRP applied to a non-representative Xbox panel could recover the 2012 U.S. presidential outcome, establishing the method as the standard for survey reweighting. Gelman, Lax, Phillips, Gabry and Trangucci (2018) document best practices for MRP in opinion estimation; Buttice and Highton (2013) discuss the limits of small-area effective sample sizes; Ghitza and Gelman (2013) extend MRP to deep interactions for U.S. turnout and vote choice. The general multilevel regression backbone is Gelman and Hill (2007).</p>
 <p>Cohort empirical-Bayes estimators with Stein-style shrinkage trace to Efron and Morris (1973); applications to risk-stratified count data are reviewed in Carlin and Louis (2008) and Gelman et al. (2013). House-effect models are formalized in Pickup and Johnston (2007) and Jackman (2005), with Brazilian applications in Cesario (2015).</p>
 <p>The fundamentals-based forecasting tradition includes Abramowitz (1988, 2008) for the U.S. and an emerging literature for Brazil, including Almeida (2008) on socioeconomic determinants and Borges and Vidigal (2018) on partisan stability across cycles. Bafumi and Gelman (2007) document partisan polarization that motivates state-baseline persistence. The behavior of polls during the Brazilian 2018 cycle is analyzed by Davi and Vianna (2019); on 2022, Schaefer and Sallum (2024) and Limongi (2023). For the 2024 municipal cycle, Datafolha (2024) and Quaest (2024) released raw datasets that we ingest.</p>
 <p>Calibration assessment follows Murphy (1973) and DeGroot and Fienberg (1983), with Brier (1950) as the canonical proper scoring rule. Selective prediction draws on Geifman and El-Yaniv (2017) and Angelopoulos, Bates, Candes, Jordan and Lei (2022); for forecasting specifically, Gneiting and Raftery (2007) develop the proper scoring framework. The Diebold-Mariano test (Diebold and Mariano, 1995) and the McNemar (1947) test are standard tools for paired forecast comparison.</p>
 <p>For Brazilian electoral systems generally we rely on Nicolau (2017) and Limongi and Cortez (2010); for the Sao Paulo municipal context specifically, Soares and Terron (2008) document partisan persistence across 2000-2008 cycles. The role of incumbent advantage in Brazilian municipal contests is studied by Avelino, Biderman and Barone (2012). Polymarket-style decentralized prediction markets are surveyed by Tziralis and Tatsiopoulos (2007) and Wolfers and Zitzewitz (2004), with empirical assessment in Rothschild (2009) and contemporary updates by Berg, Forsythe, Nelson and Rietz (2008) for Iowa Electronic Markets.</p>
-<h2>3. Theoretical Framework</h2>
+<h2>3 Theoretical Framework</h2>
+<figure><p><img alt="Forecast pipeline. Inputs (top) feed engineered features, which fan out to three estimators (Linzer dynamic linear, cohort empirical Bayes, MRP-style state baseline). The ensemble blend (yellow box) produces the final candidate-level probability." src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig0_architecture.png" /></p><figcaption>Figure 1: Forecast pipeline. Inputs (top) feed engineered features, which fan out to three estimators (Linzer dynamic linear, cohort empirical Bayes, MRP-style state baseline). The ensemble blend (yellow box) produces the final candidate-level probability..</figcaption></figure>
 <h3>3.1 Cohort empirical Bayes</h3>
 <p>Let an electoral event be a tuple e = (cargo, days, lead_pp, incumbente, regime, uf, year, y), where y in {0, 1} is the realized outcome. Each event maps to a cohort key</p>
 <p>k = (cargo, days_bin, lead_bin, incumbente, regime),</p>
@@ -231,7 +288,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>Equivalently, the state baseline can be derived as the ridge-regression mean of a binomial GLM with one indicator per (uf, regime) cell and an L2 penalty driving sparse cells toward the uniform prior. Let X be the design matrix with columns indexed by (u, r) cells and an intercept, and y the binary outcome vector. The ridge estimator</p>
 <p>beta_ridge = argmin_beta || y - X beta ||^2 + lambda || beta - mu ||^2</p>
 <p>with mu = 0.5 across all cell coefficients reproduces the Laplace-smoothed contingency table when lambda = 2 and the cell support is N_{u,r}. The empirical-Bayes shrinkage thus has a familiar penalized-regression interpretation; Hoerl and Kennard (1970) is the canonical reference. This dual perspective clarifies why the blend weight w is bounded in (0, 1) and why broad plateaus in w (Section 5.1) are expected: the ridge solution is convex in lambda, and the blend with p_blend is convex in w.</p>
-<h2>4. Methods</h2>
+<h2>4 Methods</h2>
 <h3>4.1 Dataset</h3>
 <p>A total of 394 events split across six cycles, all sourced from Wikipedia poll-aggregation tables and verified against Tribunal Superior Eleitoral official results. Both winner and runner-up are included as paired complementary events, so each underlying poll generates two rows with opposite outcomes; this preserves cohort symmetry. Counts:</p>
 <table>
@@ -301,7 +358,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>Murphy decomposition (1973). The mean Brier score decomposes as</p>
 <p>BS = REL - RES + UNC,</p>
 <p>where REL is reliability (calibration error per bin, lower is better), RES is resolution (variance of bin means around the unconditional mean, higher is better), and UNC is the unconditional Bernoulli variance (fixed by the marginal outcome rate). We report all three components in Section 5.3.</p>
-<h2>5. Results</h2>
+<h2>5 Results</h2>
 <h3>5.1 Headline metrics</h3>
 <p>Year-fold cross-validated accuracy and Brier score across the 394-event dataset. The first row is the pre-MRP v1.2 ensemble (stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) with w=0, kept as an external comparison anchor <sup id="fnref:v12"><a class="footnote-ref" href="#fn:v12">1</a></sup>. The remaining rows are the production v1.3 ensemble (stein=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01) swept over w:</p>
 <table>
@@ -424,7 +481,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 </tbody>
 </table>
 <p>The state baseline produces a large gain in 2024 SP (+25.00 pp), a moderate gain in 2016 SP (+15.00 pp), a smaller gain in 2020 SP (+6.67 pp), and a single-event regression in 2018 (-1.43 pp, n=1 miss). The 2010 and 2022 federal cycles are saturated at 100% by the lead-only ensemble and unaffected by the state baseline.</p>
-<p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig2_per_cycle_bar.png" /></p>
+<figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig2_per_cycle_bar.png" /></p><figcaption>Figure 2.</figcaption></figure>
 <h3>5.3 Statistical significance</h3>
 <p>The paired comparison in this section uses the v1.3 hyperparameters with w=0 (baseline) versus w=0.36 (MRP-augmented), so that the state baseline is the only varying input. Average Brier 0.073 baseline vs 0.105 MRP; average accuracy 91.88% baseline vs 97.21% MRP.</p>
 <p>Diebold-Mariano on the paired squared-loss series (n=394) yields DM = -4.92 with two-sided p = 8.5e-7, rejecting equal predictive accuracy at alpha = 0.001. The negative DM statistic indicates the cohort+Linzer baseline produces lower mean Brier than the MRP-augmented blend, despite the latter winning on classification accuracy (see McNemar below). This trade-off is a feature of the MRP architecture: it shifts predictions away from extreme probabilities toward state-baseline anchors, increasing decision accuracy at the cost of probabilistic calibration.</p>
@@ -507,12 +564,12 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 </tbody>
 </table>
 <p>The MRP-augmented model crosses 100% accuracy at tau=0.15 with 55.8% coverage, reflecting the prior pull on tossups: events flagged with |p - 0.5| &gt; 0.15 are uniformly correct in this dataset. For client-facing claims requiring partial coverage, tau=0.40 yields 100% accuracy on the 7.9% most confident predictions.</p>
-<p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig1_selective_curve.png" /></p>
+<figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig1_selective_curve.png" /></p><figcaption>Figure 3.</figcaption></figure>
 <p>The reliability diagram (Figure 3) supports the Murphy decomposition: predicted probabilities track observed frequencies closely across the ten-bin partition, with the largest support in the extreme bins (n=72 at p approximately 0.04 and n=152 at p approximately 0.95) reflecting the dataset&rsquo;s symmetric paired-event construction.</p>
-<p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig3_calibration.png" /></p>
+<figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig3_calibration.png" /></p><figcaption>Figure 4.</figcaption></figure>
 <p>The regime-by-outcome contingency (Figure 4) shows that the MRP blend preserves the empirical regime structure of the dataset: predicted and observed regime-conditional outcome distributions are nearly identical across all five regimes, with the largest absolute discrepancies of two events (in pop_left and right cells).</p>
-<p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig4_regime_heatmap.png" /></p>
-<h2>6. Discussion</h2>
+<figure><p><img alt="" src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig4_regime_heatmap.png" /></p><figcaption>Figure 5.</figcaption></figure>
+<h2>6 Discussion</h2>
 <h3>6.1 Why the state baseline absorbs cycle bias</h3>
 <p>The MRP-style baseline encodes slow-moving partisan structure that the lead-driven blend does not access. Sao Paulo elected center-right municipal and gubernatorial executives in every cycle since 2016 (Doria 2016, Covas 2020, Nunes 2024 mayoral; Doria 2018, Tarcisio 2022 gubernatorial). The baseline P(center wins | SP) computed from out-of-fold training years is strongly positive when 2024 is held out. The lead-driven blend has no input distinguishing 2024 SP from any other tossup with a trailing incumbent, and therefore inherits the empirical regularity that &ldquo;trailing incumbents lose,&rdquo; an artifact of the Bolsonaro 2022 cluster dominating the trailing-incumbent subset.</p>
 <p>The state baseline is best understood as an exogenous prior that absorbs shared cycle bias. When all polls in a cycle are wrong by the same sign, the baseline serves as a dissenting voice; when polls are consistent with historical state baseline, the two reinforce.</p>
@@ -660,12 +717,12 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>The mechanism behaves as theory predicts. Where the (uf, regime) baseline is computable (single-country runoffs and head-to-head: FR, AR, BR, DE, MX, TR, IT, IN), MRP either improves accuracy or maintains 100% while reducing Brier by 35 to 52 percent through prior pull on tossups. The Argentina 2023 cycle is the most striking out-of-sample replication of the BR 2024 SP finding: every poll in our sample had Sergio Massa winning the runoff or trailing by a single percentage point on the eve of voting, while Javier Milei won by approximately twelve points. The no-MRP ensemble achieves 80.00% accuracy on this cycle; the MRP-augmented blend reaches 100% by absorbing the post-2015 right-shift in Argentine national outcomes through the (AR, right) prior. Structurally identical mechanism, different country, different ideological direction.</p>
 <p>Where the LOSO protocol holds out an entire state (US 2016, US 2020, UK 2019, US 2022 midterms), the (uf, regime) baseline is undefined for the held-out state by construction and MRP collapses to no-MRP. The deltas in the table for those cycles are zero by design, not by failure: the in-sample MRP accuracy on US 2016 is 94.89% versus 89.94% no-MRP (data/cross_country_results.json::us_2016::in_sample), so MRP is functioning when training and test share state cells. The UK 2019 result (47.92%) is the closest the architecture has to a structural failure: regional UK polls fragment by Conservative/Labour/SNP/LDP/Plaid/Sinn-Fein in ways the binary regime taxonomy does not absorb; we report this honestly rather than dropping the cycle. India 2024 illustrates a different limitation: the 14-event sample is drawn from monthly aggregator publishing dates, not weekly fieldwork dates, so the per-poll temporal resolution is too coarse to exhibit Linzer-drift signal; the perfect accuracy is a property of the wide NDA-INDIA gap in vote share (43.8% vs 41.5% certified result, 46-50% vs 32-39% in polls), not of the MRP mechanism.</p>
 <p>The Argentina 2023 result and the India 2024 result, qualitatively, function as cross-country corroboration of the central BR claim: when industry-wide polling consensus systematically misprices an outcome that the historical state-regime structure correctly anticipates, the MRP blend recovers. AR is the killer case where the MRP architecture turned an 80% baseline into 100% on a cycle that polls and prediction markets jointly missed; IN is the killer case where polls and seat projections jointly overshot the realized vote share by 5-7 percentage points and where the mechanism remains correctly anchored despite limited per-poll resolution. Pooled across all twelve cross-country cycles, MRP improves weighted Brier from 0.063 to 0.062 and weighted accuracy by +0.14 percentage points; the small headline movement reflects the dominance of the multi-state US 2016 and 2020 cycles in the pooled n, where the LOSO design collapses the comparison by construction. Restricting to the eight single-uf cycles where the protocol exercises MRP per se (n=468), the weighted accuracy moves from 97.86% no-MRP to 100.00% MRP and the weighted Brier from 0.025 to 0.013, a 49.5% reduction.</p>
-<h2>7. Limitations</h2>
+<h2>7 Limitations</h2>
 <p>The dataset emphasizes federal presidential contests and Sao Paulo municipal contests; non-Sao Paulo state-level contests are sparsely represented, so the state-baseline coverage in 2018 and 2022 governorships is limited. Extending coverage to all 27 governorships would densify the baseline.</p>
 <p>The baseline conditions only on regime, not on partisan finer-grained signals (party, coalition, candidate experience) or on demographic strata. A genuine MRP would weight by demographic strata (gender, education, income, urban/rural) using PNAD-Continua 4-trimestre 2025 microdata. That release was published by IBGE on 2026-02-20 with the post-2024-Census re-weighting (https://www.ibge.gov.br/estatisticas/sociais/educacao/9173-pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral.html), so demographic poststratification is operationally available; we defer the integration to a follow-up paper because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs.</p>
 <p>The Linzer drift parameters (sigma_0, sigma_1) are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, similar to Heidemanns, Gelman and Morris (2020), would likely improve calibration in high-variance cycles.</p>
 <p>Throughout this work, Jair Bolsonaro is filtered from 2026 forward predictions due to the Tribunal Superior Eleitoral ruling of 2023-06-30 (ineligible until 2030). The filter is applied at the registry level, not at the model level, so historical 2018 and 2022 events involving Bolsonaro remain in the training set; the model learns the partisan structure of pop-right candidates without conflating that with current 2026 viability.</p>
-<h2>8. Reproducibility</h2>
+<h2>8 Reproducibility</h2>
 <p>Code repository. The political forecaster lives at engine/political_cohort.py with the state baseline implemented in fit_cohorts_political and state_baseline_p; the production endpoint is api/rotas_politica.py. The pre-registered code freeze has two tags: the original v1.2-prereg (2026-05-07, HEAD 7d2403b7) and the byte-equivalent re-freeze v1.3-prereg (2026-05-08, HEAD 4fc1456c) with refreshed code SHAs after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in data/predictions_2026.json. See docs/PREREGISTRATION.md and docs/PREREG_FREEZE_PROCEDURE.md for the canonical SHA-256 tables and tag-creation procedure.</p>
 <p>Configuration. data/political_best_config.json (v1.3, fitted_at 2026-05-07) contains the final hyperparameters and per-cycle accuracy block. The v1.2 baseline ensemble (stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) is recoverable from the notes block.</p>
 <p>Data hashes (sha256). data/backtest/eleicoes_br_real_polls.csv 9bc5644028f78b0948979a5657cd986266bfd848adc7b2a6176f29017c29da82; data/backtest/seed_eleicao_municipal_sp_2024.csv 787845ce38524b0f3fc47e9045db00c3aa6e037058e8f5768809d8a2e2cc1935; data/backtest/eleicao_presidencial_br_2022.csv f373e8a4f8b51a017e7bda514b6a16ed0d68d4aeb66f9b011a7004f18f27ac5d.</p>
@@ -673,9 +730,9 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>Dependencies. Python 3.11 with packages pinned in requirements.txt of the repository: numpy 1.26.x, scipy 1.11.x, pandas 2.1.x, pydantic 2.x, fastapi 0.110.x, matplotlib 3.10.x. Reproduction takes approximately three minutes on a single modern x86 core; no GPU is required.</p>
 <p>Smoke tests. scripts/smoke_political.py runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints; all 29 must pass before any change to the forecaster is merged.</p>
 <p>Pre-registration and blind protocol. The blend weight w and the baseline minimum-support threshold N&gt;=3 were specified before observing 2024 outcomes, with the formal pre-registration frozen at docs/PREREGISTRATION.md on 2026-05-07. The pre-specified targets were 97% average and 85% on 2024 SP; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in PREREGISTRATION.md.</p>
-<h2>9. Conclusion</h2>
+<h2>9 Conclusion</h2>
 <p>A Laplace-smoothed (UF, regime) baseline computed only from out-of-fold training years, blended at w=0.36 into a re-tuned cohort+Linzer ensemble, raises the year-fold accuracy of the Vila INTEIA political forecaster from 94.16% (v1.2 baseline, no state baseline) to 97.21% (v1.3 production, with state baseline) and recovers the 2024 Sao Paulo mayoral fold from 73.53% to 89.71%. Holding the v1.3 hyperparameters fixed, the marginal contribution of the state baseline alone (w=0 to w=0.36) is +5.33 pp average and +25.00 pp on 2024 Sao Paulo. The mechanism is a structurally simple proxy for multilevel regression with poststratification, applied not over demographic strata but over partisan-regime baselines per state. The result demonstrates that exogenous state-level priors are a viable mechanism for absorbing cycle-specific industry-wide polling bias in Brazilian electoral forecasting. The 2024 Sao Paulo polling debacle, where every major institute had Boulos leading and Nunes won by approximately three percentage points, is recovered without leaking test outcomes and without overfitting any other cycle. The mechanism&rsquo;s transparency, its connection to ridge regression with state dummies, and its computable confidence intervals make it suitable for operational deployment alongside, rather than in place of, traditional aggregator-style models.</p>
-<h2>References</h2><div class="references">
+<div class="references"><h2>References</h2>
 <p>Abramowitz, A. I. (1988). An improved model for predicting presidential election outcomes. PS: Political Science and Politics, 21(4), 843-847.</p>
 <p>Abramowitz, A. I. (2008). Forecasting the 2008 presidential election with the time-for-change model. PS: Political Science and Politics, 41(4), 691-695.</p>
 <p>Almeida, A. (2008). A cabeca do eleitor brasileiro. Editora Record.</p>
@@ -730,7 +787,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p>Wikipedia contributors. (2026). 2024 Sao Paulo municipal election. Wikipedia, the free encyclopedia. Permanent link to revision oldid=1349369147 (2026-04-17): https://en.wikipedia.org/w/index.php?title=2024_S%C3%A3o_Paulo_municipal_election&amp;oldid=1349369147</p>
 <p>Wikipedia contributors. (2024-2026). Opinion polling for the 2021 German federal election; for the 2024 Mexican general election; for the 2023 Turkish presidential election; for the 2022 Italian general election; for the 2024 Indian general election. Wikipedia, the free encyclopedia. Retrieved 2026-05-08. Raw HTML archived under data/cross_country/raw_more/.</p>
 <p>Wolfers, J., and Zitzewitz, E. (2004). Prediction markets. Journal of Economic Perspectives, 18(2), 107-126.</p>
-</div><h2>10. Pre-registration timestamp appendix</h2>
+</div><h2>10 Pre-registration timestamp appendix</h2>
 <table>
 <thead>
 <tr>

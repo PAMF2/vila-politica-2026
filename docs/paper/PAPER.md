@@ -45,6 +45,8 @@ For Brazilian electoral systems generally we rely on Nicolau (2017) and Limongi 
 
 ## 3. Theoretical Framework
 
+![Forecast pipeline. Inputs (top) feed engineered features, which fan out to three estimators (Linzer dynamic linear, cohort empirical Bayes, MRP-style state baseline). The ensemble blend (yellow box) produces the final candidate-level probability.](figs/fig0_architecture.png)
+
 ### 3.1 Cohort empirical Bayes
 
 Let an electoral event be a tuple e = (cargo, days, lead_pp, incumbente, regime, uf, year, y), where y in {0, 1} is the realized outcome. Each event maps to a cohort key

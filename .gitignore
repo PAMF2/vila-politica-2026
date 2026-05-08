@@ -23,3 +23,5 @@ data/clients.json
 .DS_Store
 .idea/
 .vscode/
+
+!docs/paper/PAPER.pdf

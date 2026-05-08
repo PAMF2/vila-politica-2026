@@ -304,19 +304,120 @@ We explicitly note three concerns raised by review which this revision now addre
 
 ## 8. Reproducibility
 
-Code repository. The political forecaster lives at engine/political_cohort.py with the state baseline implemented in fit_cohorts_political and state_baseline_p; the production endpoint is api/rotas_politica.py. The pre-registered code freeze has two tags: the original v1.2-prereg (2026-05-07, HEAD 7d2403b7) and the byte-equivalent re-freeze v1.3-prereg (2026-05-08, HEAD 4fc1456c) with refreshed code SHAs after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in data/predictions_2026.json. See docs/PREREGISTRATION.md and docs/PREREG_FREEZE_PROCEDURE.md for the canonical SHA-256 tables and tag-creation procedure.
+We provide a four-layer reproducibility stack: (i) a frozen code freeze with both git tag and per-file SHA-256, (ii) a curated corpus of source CSVs each independently hashed, (iii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, and (iv) a containerized environment that lifts the host-Python dependency.
 
-Configuration. data/political_best_config.json (v1.3, fitted_at 2026-05-07) contains the final hyperparameters and per-cycle accuracy block. The v1.2 baseline ensemble (stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) is recoverable from the notes block.
+### 8.1 Code freeze and tag history
 
-Data hashes (sha256). data/backtest/eleicoes_br_real_polls.csv 9bc5644028f78b0948979a5657cd986266bfd848adc7b2a6176f29017c29da82; data/backtest/seed_eleicao_municipal_sp_2024.csv 787845ce38524b0f3fc47e9045db00c3aa6e037058e8f5768809d8a2e2cc1935; data/backtest/eleicao_presidencial_br_2022.csv f373e8a4f8b51a017e7bda514b6a16ed0d68d4aeb66f9b011a7004f18f27ac5d.
+The political forecaster lives at `engine/political_cohort.py` (`fit_cohorts_political`, `state_baseline_p`); the production endpoint is `api/rotas_politica.py`. Two pre-registration tags exist:
 
-Random seed. 42 throughout. Both numpy.random and the Python random module are seeded at module import in engine/political_cohort.py.
+- `v1.2-prereg` at HEAD `7d2403b7` (2026-05-07): original freeze, frozen-snapshot SHAs.
+- `v1.3-prereg` at HEAD `4fc1456c` (2026-05-08): byte-equivalent re-freeze with refreshed code SHAs after non-substantive cleanup. Both tags resolve to identical predictions in `data/predictions_2026.json`.
 
-Dependencies. Python 3.11 with packages pinned in requirements.txt of the repository: numpy 1.26.x, scipy 1.11.x, pandas 2.1.x, pydantic 2.x, fastapi 0.110.x, matplotlib 3.10.x. Reproduction takes approximately three minutes on a single modern x86 core; no GPU is required.
+Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in `docs/PREREGISTRATION.md`):
 
-Smoke tests. scripts/smoke_political.py runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints; all 29 must pass before any change to the forecaster is merged.
+| File | sha256 (first 16) |
+|------|-------------------|
+| `engine/political_cohort.py` | `442fb43de535b127` |
+| `engine/auth_clients.py` | `adca01017bccd09f` |
+| `api/rotas_politica.py` | `b40c0fe413889bbb` |
+| `scripts/predict_2026.py` | `31e536ecc1dba24c` |
+| `scripts/political_stats_rigor.py` | `d8b8294c6a7a5578` |
+| `data/political_best_config.json` | `5792fce8f033d42e` |
+| `data/predictions_2026.json` | `9e693389e47b451f` |
 
-Pre-registration and blind protocol. The blend weight w and the baseline minimum-support threshold N>=3 were specified before observing 2024 outcomes, with the formal pre-registration frozen at docs/PREREGISTRATION.md on 2026-05-07. The pre-specified targets were 97% average and 85% on 2024 SP; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in PREREGISTRATION.md.
+### 8.2 Data provenance and hashes
+
+All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives. The full ingestion provenance is recorded in the per-cycle parsers (`scripts/cross_country_validation.py`, `scripts/cross_country_extended.py`, `scripts/cross_country_more.py`) and the raw HTML inputs preserved under `data/cross_country/raw_*/`. Twenty source CSVs ship in `data/backtest/` with the following SHA-256 (first 16 hex):
+
+| CSV | sha256 (first 16) | n events |
+|-----|-------------------|---------:|
+| `eleicoes_br_real_polls.csv` | `9bc5644028f78b09` | 394 |
+| `governadores_br_historico.csv` | `d50d4e3152d24001` | (BR background) |
+| `eleicao_presidencial_br_2022.csv` | `f373e8a4f8b51a01` | (BR 2022 seed) |
+| `seed_eleicao_municipal_sp_2024.csv` | `787845ce38524b0f` | (SP 2024 seed) |
+| `impeachment_dilma_2016.csv` | `ee451ce91ba657db` | (qualitative) |
+| `lava_jato_2014_2018.csv` | `ee85cf8543a50224` | (qualitative) |
+| `brazil_votes_q1_2026.csv` | `62e08de70bbfb442` | (BR 2026 background) |
+| `us_2016_president.csv` | `9d20622061359661` | 3,130 |
+| `us_2020_president.csv` | `681825e2eee83dba` | 3,060 |
+| `uk_2019_general.csv` | `6228080ea84c02f4` | 192 |
+| `fr_2022_president.csv` | `790a39384cc3132b` | 198 |
+| `ar_2023_president.csv` | `557db26f2143a6b2` | 30 |
+| `br_2014_president.csv` | `a32f8849f9cc4d67` | 30 |
+| `us_2022_midterms.csv` | `f3138110ee5e5acf` | 104 |
+| `de_2021.csv` | `b578c381758414e9` | 90 |
+| `mx_2024.csv` | `b48b0c3d48a2b07e` | 22 |
+| `tr_2023.csv` | `aa5bc2b0dfd4b485` | 22 |
+| `it_2022.csv` | `854c2ad94e8408c5` | 62 |
+| `in_2024.csv` | `fba6e34b1884c7c8` | 14 |
+
+The bibliography lists every primary source page and access date; raw HTML snapshots are preserved in the repository so the reader can re-parse without re-fetching.
+
+### 8.3 Result hashes
+
+Cached cross-validation outputs ship with the repository so that anyone can verify byte-identical reproduction without re-running the full grid:
+
+| JSON | sha256 (first 16) |
+|------|-------------------|
+| `political_stats_v2.json` | `36213c0836ba3791` |
+| `baseline_gauntlet.json` | `ef2f518c179d3439` |
+| `cross_country_results.json` | `c0c8af483d08727b` |
+| `cross_country_extended.json` | `f71a44be974da986` |
+| `cross_country_more.json` | `1482da17da0ce489` |
+| `bench_bart.json` | `2f44643df1232178` |
+| `bench_stan_dlm.json` | `8d38f6270b4d84b8` |
+| `bench_ml_baselines.json` | `8cd592a134c26218` |
+| `failure_analysis.json` | `b1a3fa1107cdd03c` |
+
+### 8.4 Software environment
+
+Python 3.11 with packages pinned in `requirements.txt`:
+
+```
+numpy 1.26.x
+scipy 1.11.x
+pandas 2.1.x
+scikit-learn 1.4.x
+matplotlib 3.10.x
+pymc-bart 0.11.x         (optional: BART benchmark)
+xgboost 3.2.x            (optional: ML baseline)
+fastapi 0.110.x
+uvicorn 0.27.x
+pydantic 2.x
+weasyprint 60.x          (paper PDF compilation)
+```
+
+A pinned `Dockerfile` at the repository root reproduces the environment in a container:
+
+```
+docker build -t vila-politica .
+docker run --rm -v $(pwd)/data:/app/data vila-politica make reproduce
+```
+
+Random seed is `42` everywhere. Both `numpy.random` and the Python `random` module are seeded at script entry points.
+
+### 8.5 One-command reproduction
+
+A `Makefile` ships with the repository:
+
+```
+make smoke        # 29/29 contract tests, ~3 seconds
+make stats        # bootstrap CIs + DM + McNemar + Murphy
+make baselines    # 5 ablation models year-fold CV
+make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
+make cross        # 12-cycle cross-country
+make all          # everything above + paper PDF rebuild
+```
+
+End-to-end reproduction takes approximately three minutes on a single modern x86 core (Intel i7-12700K, 16 GB RAM, no GPU). The dominant cost is the BART benchmark (~140 seconds for 6 folds at 200 trees, 150 draws); without BART, full reproduction is under one minute.
+
+### 8.6 Smoke tests and continuous integration
+
+`scripts/smoke_political.py` runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints. The repository GitHub Actions workflow (`.github/workflows/tests.yml`) runs the smoke test plus a full backtest reproduction on every push, on Python 3.11 and 3.12.
+
+### 8.7 Pre-registration and blind protocol
+
+The blend weight `w` and the baseline minimum-support threshold `N >= 3` were specified before observing 2024 outcomes, with the formal pre-registration frozen at `docs/PREREGISTRATION.md` on 2026-05-07. The pre-specified targets were 97% average and 85% on the 2024 SP fold; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in `PREREGISTRATION.md`.
 
 ## 9. Conclusion
 

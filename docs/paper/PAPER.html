@@ -741,13 +741,242 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <p><strong>Eligibility filtering (operational, not methodological).</strong> Throughout this work, Jair Bolsonaro is filtered from 2026 forward predictions due to the Tribunal Superior Eleitoral ruling of 2023-06-30 (ineligible until 2030). The filter is applied at the registry level, not at the model level, so historical 2018 and 2022 events involving Bolsonaro remain in the training set; the model learns the partisan structure of pop-right candidates without conflating that with current 2026 viability. If a higher court reverses the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this is documented in <code>docs/PREREGISTRATION.md</code> as a contingent re-run rule.</p>
 <p>We explicitly note three concerns raised by review which this revision now addresses: (i) hyperparameter conflation between v1.2 and v1.3 has been disambiguated in §5.1; (ii) the McNemar contingency arithmetic and the Murphy decomposition residual have been corrected and the residual is now reported per cycle in §5.3 with footnote <code>[^murphybin]</code>; (iii) per-fold significance for the 2024 SP falsification target (DM, McNemar) has been added to §5.3.</p>
 <h2>8 Reproducibility</h2>
-<p>Code repository. The political forecaster lives at engine/political_cohort.py with the state baseline implemented in fit_cohorts_political and state_baseline_p; the production endpoint is api/rotas_politica.py. The pre-registered code freeze has two tags: the original v1.2-prereg (2026-05-07, HEAD 7d2403b7) and the byte-equivalent re-freeze v1.3-prereg (2026-05-08, HEAD 4fc1456c) with refreshed code SHAs after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in data/predictions_2026.json. See docs/PREREGISTRATION.md and docs/PREREG_FREEZE_PROCEDURE.md for the canonical SHA-256 tables and tag-creation procedure.</p>
-<p>Configuration. data/political_best_config.json (v1.3, fitted_at 2026-05-07) contains the final hyperparameters and per-cycle accuracy block. The v1.2 baseline ensemble (stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05) is recoverable from the notes block.</p>
-<p>Data hashes (sha256). data/backtest/eleicoes_br_real_polls.csv 9bc5644028f78b0948979a5657cd986266bfd848adc7b2a6176f29017c29da82; data/backtest/seed_eleicao_municipal_sp_2024.csv 787845ce38524b0f3fc47e9045db00c3aa6e037058e8f5768809d8a2e2cc1935; data/backtest/eleicao_presidencial_br_2022.csv f373e8a4f8b51a017e7bda514b6a16ed0d68d4aeb66f9b011a7004f18f27ac5d.</p>
-<p>Random seed. 42 throughout. Both numpy.random and the Python random module are seeded at module import in engine/political_cohort.py.</p>
-<p>Dependencies. Python 3.11 with packages pinned in requirements.txt of the repository: numpy 1.26.x, scipy 1.11.x, pandas 2.1.x, pydantic 2.x, fastapi 0.110.x, matplotlib 3.10.x. Reproduction takes approximately three minutes on a single modern x86 core; no GPU is required.</p>
-<p>Smoke tests. scripts/smoke_political.py runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints; all 29 must pass before any change to the forecaster is merged.</p>
-<p>Pre-registration and blind protocol. The blend weight w and the baseline minimum-support threshold N&gt;=3 were specified before observing 2024 outcomes, with the formal pre-registration frozen at docs/PREREGISTRATION.md on 2026-05-07. The pre-specified targets were 97% average and 85% on 2024 SP; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in PREREGISTRATION.md.</p>
+<p>We provide a four-layer reproducibility stack: (i) a frozen code freeze with both git tag and per-file SHA-256, (ii) a curated corpus of source CSVs each independently hashed, (iii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, and (iv) a containerized environment that lifts the host-Python dependency.</p>
+<h3>8.1 Code freeze and tag history</h3>
+<p>The political forecaster lives at <code>engine/political_cohort.py</code> (<code>fit_cohorts_political</code>, <code>state_baseline_p</code>); the production endpoint is <code>api/rotas_politica.py</code>. Two pre-registration tags exist:</p>
+<ul>
+<li><code>v1.2-prereg</code> at HEAD <code>7d2403b7</code> (2026-05-07): original freeze, frozen-snapshot SHAs.</li>
+<li><code>v1.3-prereg</code> at HEAD <code>4fc1456c</code> (2026-05-08): byte-equivalent re-freeze with refreshed code SHAs after non-substantive cleanup. Both tags resolve to identical predictions in <code>data/predictions_2026.json</code>.</li>
+</ul>
+<p>Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in <code>docs/PREREGISTRATION.md</code>):</p>
+<div class="wide-table"><table>
+<thead>
+<tr>
+<th>File</th>
+<th>sha256 (first 16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engine/political_cohort.py</code></td>
+<td><code>442fb43de535b127</code></td>
+</tr>
+<tr>
+<td><code>engine/auth_clients.py</code></td>
+<td><code>adca01017bccd09f</code></td>
+</tr>
+<tr>
+<td><code>api/rotas_politica.py</code></td>
+<td><code>b40c0fe413889bbb</code></td>
+</tr>
+<tr>
+<td><code>scripts/predict_2026.py</code></td>
+<td><code>31e536ecc1dba24c</code></td>
+</tr>
+<tr>
+<td><code>scripts/political_stats_rigor.py</code></td>
+<td><code>d8b8294c6a7a5578</code></td>
+</tr>
+<tr>
+<td><code>data/political_best_config.json</code></td>
+<td><code>5792fce8f033d42e</code></td>
+</tr>
+<tr>
+<td><code>data/predictions_2026.json</code></td>
+<td><code>9e693389e47b451f</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>8.2 Data provenance and hashes</h3>
+<p>All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives. The full ingestion provenance is recorded in the per-cycle parsers (<code>scripts/cross_country_validation.py</code>, <code>scripts/cross_country_extended.py</code>, <code>scripts/cross_country_more.py</code>) and the raw HTML inputs preserved under <code>data/cross_country/raw_*/</code>. Twenty source CSVs ship in <code>data/backtest/</code> with the following SHA-256 (first 16 hex):</p>
+<div class="wide-table"><table>
+<thead>
+<tr>
+<th>CSV</th>
+<th>sha256 (first 16)</th>
+<th style="text-align: right;">n events</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eleicoes_br_real_polls.csv</code></td>
+<td><code>9bc5644028f78b09</code></td>
+<td style="text-align: right;">394</td>
+</tr>
+<tr>
+<td><code>governadores_br_historico.csv</code></td>
+<td><code>d50d4e3152d24001</code></td>
+<td style="text-align: right;">(BR background)</td>
+</tr>
+<tr>
+<td><code>eleicao_presidencial_br_2022.csv</code></td>
+<td><code>f373e8a4f8b51a01</code></td>
+<td style="text-align: right;">(BR 2022 seed)</td>
+</tr>
+<tr>
+<td><code>seed_eleicao_municipal_sp_2024.csv</code></td>
+<td><code>787845ce38524b0f</code></td>
+<td style="text-align: right;">(SP 2024 seed)</td>
+</tr>
+<tr>
+<td><code>impeachment_dilma_2016.csv</code></td>
+<td><code>ee451ce91ba657db</code></td>
+<td style="text-align: right;">(qualitative)</td>
+</tr>
+<tr>
+<td><code>lava_jato_2014_2018.csv</code></td>
+<td><code>ee85cf8543a50224</code></td>
+<td style="text-align: right;">(qualitative)</td>
+</tr>
+<tr>
+<td><code>brazil_votes_q1_2026.csv</code></td>
+<td><code>62e08de70bbfb442</code></td>
+<td style="text-align: right;">(BR 2026 background)</td>
+</tr>
+<tr>
+<td><code>us_2016_president.csv</code></td>
+<td><code>9d20622061359661</code></td>
+<td style="text-align: right;">3,130</td>
+</tr>
+<tr>
+<td><code>us_2020_president.csv</code></td>
+<td><code>681825e2eee83dba</code></td>
+<td style="text-align: right;">3,060</td>
+</tr>
+<tr>
+<td><code>uk_2019_general.csv</code></td>
+<td><code>6228080ea84c02f4</code></td>
+<td style="text-align: right;">192</td>
+</tr>
+<tr>
+<td><code>fr_2022_president.csv</code></td>
+<td><code>790a39384cc3132b</code></td>
+<td style="text-align: right;">198</td>
+</tr>
+<tr>
+<td><code>ar_2023_president.csv</code></td>
+<td><code>557db26f2143a6b2</code></td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr>
+<td><code>br_2014_president.csv</code></td>
+<td><code>a32f8849f9cc4d67</code></td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr>
+<td><code>us_2022_midterms.csv</code></td>
+<td><code>f3138110ee5e5acf</code></td>
+<td style="text-align: right;">104</td>
+</tr>
+<tr>
+<td><code>de_2021.csv</code></td>
+<td><code>b578c381758414e9</code></td>
+<td style="text-align: right;">90</td>
+</tr>
+<tr>
+<td><code>mx_2024.csv</code></td>
+<td><code>b48b0c3d48a2b07e</code></td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td><code>tr_2023.csv</code></td>
+<td><code>aa5bc2b0dfd4b485</code></td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr>
+<td><code>it_2022.csv</code></td>
+<td><code>854c2ad94e8408c5</code></td>
+<td style="text-align: right;">62</td>
+</tr>
+<tr>
+<td><code>in_2024.csv</code></td>
+<td><code>fba6e34b1884c7c8</code></td>
+<td style="text-align: right;">14</td>
+</tr>
+</tbody>
+</table></div>
+<p>The bibliography lists every primary source page and access date; raw HTML snapshots are preserved in the repository so the reader can re-parse without re-fetching.</p>
+<h3>8.3 Result hashes</h3>
+<p>Cached cross-validation outputs ship with the repository so that anyone can verify byte-identical reproduction without re-running the full grid:</p>
+<div class="wide-table"><table>
+<thead>
+<tr>
+<th>JSON</th>
+<th>sha256 (first 16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>political_stats_v2.json</code></td>
+<td><code>36213c0836ba3791</code></td>
+</tr>
+<tr>
+<td><code>baseline_gauntlet.json</code></td>
+<td><code>ef2f518c179d3439</code></td>
+</tr>
+<tr>
+<td><code>cross_country_results.json</code></td>
+<td><code>c0c8af483d08727b</code></td>
+</tr>
+<tr>
+<td><code>cross_country_extended.json</code></td>
+<td><code>f71a44be974da986</code></td>
+</tr>
+<tr>
+<td><code>cross_country_more.json</code></td>
+<td><code>1482da17da0ce489</code></td>
+</tr>
+<tr>
+<td><code>bench_bart.json</code></td>
+<td><code>2f44643df1232178</code></td>
+</tr>
+<tr>
+<td><code>bench_stan_dlm.json</code></td>
+<td><code>8d38f6270b4d84b8</code></td>
+</tr>
+<tr>
+<td><code>bench_ml_baselines.json</code></td>
+<td><code>8cd592a134c26218</code></td>
+</tr>
+<tr>
+<td><code>failure_analysis.json</code></td>
+<td><code>b1a3fa1107cdd03c</code></td>
+</tr>
+</tbody>
+</table></div>
+<h3>8.4 Software environment</h3>
+<p>Python 3.11 with packages pinned in <code>requirements.txt</code>:</p>
+<pre><code>numpy 1.26.x
+scipy 1.11.x
+pandas 2.1.x
+scikit-learn 1.4.x
+matplotlib 3.10.x
+pymc-bart 0.11.x         (optional: BART benchmark)
+xgboost 3.2.x            (optional: ML baseline)
+fastapi 0.110.x
+uvicorn 0.27.x
+pydantic 2.x
+weasyprint 60.x          (paper PDF compilation)
+</code></pre>
+<p>A pinned <code>Dockerfile</code> at the repository root reproduces the environment in a container:</p>
+<pre><code>docker build -t vila-politica .
+docker run --rm -v $(pwd)/data:/app/data vila-politica make reproduce
+</code></pre>
+<p>Random seed is <code>42</code> everywhere. Both <code>numpy.random</code> and the Python <code>random</code> module are seeded at script entry points.</p>
+<h3>8.5 One-command reproduction</h3>
+<p>A <code>Makefile</code> ships with the repository:</p>
+<pre><code>make smoke        # 29/29 contract tests, ~3 seconds
+make stats        # bootstrap CIs + DM + McNemar + Murphy
+make baselines    # 5 ablation models year-fold CV
+make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
+make cross        # 12-cycle cross-country
+make all          # everything above + paper PDF rebuild
+</code></pre>
+<p>End-to-end reproduction takes approximately three minutes on a single modern x86 core (Intel i7-12700K, 16 GB RAM, no GPU). The dominant cost is the BART benchmark (~140 seconds for 6 folds at 200 trees, 150 draws); without BART, full reproduction is under one minute.</p>
+<h3>8.6 Smoke tests and continuous integration</h3>
+<p><code>scripts/smoke_political.py</code> runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints. The repository GitHub Actions workflow (<code>.github/workflows/tests.yml</code>) runs the smoke test plus a full backtest reproduction on every push, on Python 3.11 and 3.12.</p>
+<h3>8.7 Pre-registration and blind protocol</h3>
+<p>The blend weight <code>w</code> and the baseline minimum-support threshold <code>N &gt;= 3</code> were specified before observing 2024 outcomes, with the formal pre-registration frozen at <code>docs/PREREGISTRATION.md</code> on 2026-05-07. The pre-specified targets were 97% average and 85% on the 2024 SP fold; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in <code>PREREGISTRATION.md</code>.</p>
 <h2>9 Conclusion</h2>
 <p>A Laplace-smoothed (UF, regime) baseline computed only from out-of-fold training years, blended at w=0.36 into a re-tuned cohort+Linzer ensemble, raises the year-fold accuracy of the Vila INTEIA political forecaster from 94.16% (v1.2 baseline, no state baseline) to 97.21% (v1.3 production, with state baseline) and recovers the 2024 Sao Paulo mayoral fold from 73.53% to 89.71%. Holding the v1.3 hyperparameters fixed, the marginal contribution of the state baseline alone (w=0 to w=0.36) is +5.33 pp average and +25.00 pp on 2024 Sao Paulo. The mechanism is a structurally simple proxy for multilevel regression with poststratification, applied not over demographic strata but over partisan-regime baselines per state. The result demonstrates that exogenous state-level priors are a viable mechanism for absorbing cycle-specific industry-wide polling bias in Brazilian electoral forecasting. The 2024 Sao Paulo polling debacle, where every major institute had Boulos leading and Nunes won by approximately three percentage points, is recovered without leaking test outcomes and without overfitting any other cycle. The mechanism&rsquo;s transparency, its connection to ridge regression with state dummies, and its computable confidence intervals make it suitable for operational deployment alongside, rather than in place of, traditional aggregator-style models.</p>
 <div class="references"><h2>References</h2>

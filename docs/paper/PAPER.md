@@ -135,7 +135,7 @@ Two configurations are reported in this paper. The pre-MRP baseline (designated 
 - sigma_0 in {3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
 - sigma_1 in {0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08}.
 
-The pre-MRP best is stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05, yielding 94.16% year-fold accuracy. The MRP-augmented production configuration (designated v1.3) re-tunes (stein, w_linzer, sigma_0, sigma_1) jointly with w over the same grid extended by the 15-point w grid given in Section 3.3 (40,320 candidates). The MRP best is stein=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01, w=0.36, yielding 97.21% year-fold accuracy. The full grid is reproduced in Appendix A. Both configurations are stored in data/political_best_config.json (v1.3 is the current value; v1.2 is reconstructible from the notes block).
+The pre-MRP best is stein=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05, yielding 94.16% year-fold accuracy. The MRP-augmented production configuration (designated v1.3) re-tunes (stein, w_linzer, sigma_0, sigma_1) jointly with w over the same grid extended by the 15-point w grid given in Section 3.3 (40,320 candidates). The MRP best is stein=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01, w=0.36, yielding 97.21% year-fold accuracy. The full grid is reproduced in Appendix A. Both configurations are stored in (supplementary data archive) (v1.3 is the current value; v1.2 is reconstructible from the notes block).
 
 ### 4.4 Statistical tests
 
@@ -169,7 +169,7 @@ Year-fold cross-validated accuracy and Brier score across the 394-event dataset.
 
 [^v12]: The v1.2 row is the production model that operated immediately before the state baseline was added; we retain it for transparency. It uses different hyperparameters from the v1.3 sweep, so it is not within-config comparable to the rows below. The clean within-config ablation of the state baseline is v1.3 with w=0 vs v1.3 with w=0.36 (rows two and six).
 
-The headline gain from 94.16% (v1.2) to 97.21% (v1.3 production) decomposes into two stages that we report separately rather than blending. (a) Hyperparameter re-tune: moving from v1.2 to v1.3 hyperparameters under the joint 40,320-candidate grid with w=0 changes accuracy from 94.16% to 91.88%, a regression of -2.28 pp. The v1.3 hyperparameters are not optimal in isolation; they are optimal jointly with a non-zero state baseline. (b) State-baseline blend: holding v1.3 hyperparameters fixed and increasing w from 0 to 0.36 raises accuracy from 91.88% to 97.21%, a marginal gain of +5.33 pp average and +25.00 pp on 2024 Sao Paulo (64.71% to 89.71%). The +3.05 pp net headline thus reflects -2.28 pp from re-tuning and +5.33 pp from the state baseline; the latter is the dominant mechanism on the falsification target. The optimum at w=0.36 has a broad plateau across 0.35 to 0.40, indicating robustness rather than a brittle peak; the optimum is consistent with the convexity argument in Section 3.4. Numbers reproduced via scripts/political_stats_rigor.py and scripts/baseline_gauntlet.py.
+The headline gain from 94.16% (v1.2) to 97.21% (v1.3 production) decomposes into two stages that we report separately rather than blending. (a) Hyperparameter re-tune: moving from v1.2 to v1.3 hyperparameters under the joint 40,320-candidate grid with w=0 changes accuracy from 94.16% to 91.88%, a regression of -2.28 pp. The v1.3 hyperparameters are not optimal in isolation; they are optimal jointly with a non-zero state baseline. (b) State-baseline blend: holding v1.3 hyperparameters fixed and increasing w from 0 to 0.36 raises accuracy from 91.88% to 97.21%, a marginal gain of +5.33 pp average and +25.00 pp on 2024 Sao Paulo (64.71% to 89.71%). The +3.05 pp net headline thus reflects -2.28 pp from re-tuning and +5.33 pp from the state baseline; the latter is the dominant mechanism on the falsification target. The optimum at w=0.36 has a broad plateau across 0.35 to 0.40, indicating robustness rather than a brittle peak; the optimum is consistent with the convexity argument in Section 3.4. Numbers reproduced via the statistical-rigor and baseline-gauntlet pipelines (supplementary materials).
 
 ### 5.2 Per-cycle ablation
 
@@ -211,7 +211,7 @@ Per-fold significance restricted to the 2024 SP fold (n=68), the explicit falsif
 
 ### 5.4 Failure mode analysis
 
-Of the 24 events misclassified by the v1.3 baseline (w=0) on the 2024 SP fold, MRP recovered 17. The remaining 7 misses are concentrated on AtlasIntel and Instituto Verita polls with extreme Boulos leads (-11.1 pp to +6.5 pp depending on side of the paired complementary event), where the prior pull is insufficient to overcome the lead-driven Linzer signal (see data/failure_analysis.json::misses for per-event detail). These represent the genuinely hardest cases, and would require either (a) an institute-disagreement variance signal (deferred to a subsequent revision), (b) a finer regime taxonomy, or (c) an explicit house-effects layer (Pickup and Johnston 2007), which we tested and found marginally degrading on this dataset (0.9416 to 0.9391 on the v1.2 baseline, see notes block in data/political_best_config.json).
+Of the 24 events misclassified by the v1.3 baseline (w=0) on the 2024 SP fold, MRP recovered 17. The remaining 7 misses are concentrated on AtlasIntel and Instituto Verita polls with extreme Boulos leads (-11.1 pp to +6.5 pp depending on side of the paired complementary event), where the prior pull is insufficient to overcome the lead-driven Linzer signal (see the failure-mode supplementary analysis. These represent the genuinely hardest cases, and would require either (a) an institute-disagreement variance signal (deferred to a subsequent revision), (b) a finer regime taxonomy, or (c) an explicit house-effects layer (Pickup and Johnston 2007), which we tested and found marginally degrading on this dataset (0.9416 to 0.9391 on the v1.2 baseline, see notes block (supplementary materials).
 
 The 2018 single-event regression corresponds to a Haddad poll close to the runoff date. The state baseline P(left wins | BR) computed from 2010 and 2014 (out-of-fold) is moderately positive, slightly pulling the predicted probability above 0.5 on a -3 pp lead poll where the realized outcome was 0. A higher minimum-N threshold for the baseline would suppress this artifact at the cost of less coverage, an explicit accuracy-coverage tradeoff documented in Section 5.5.
 
@@ -256,11 +256,11 @@ MRP-style augmentation fails in three regimes that we surface explicitly. First,
 
 FiveThirtyEight's U.S. election models (Silver 2008-2024) blend polls with fundamentals via a weighted-average framework; our blend is structurally similar but with explicit empirical-Bayes regularization and a closed-form Linzer drift rather than a Kalman filter. FiveThirtyEight did not publish a Brazilian-municipal model for 2024 SP, so direct head-to-head comparison is not available. Polymarket and Iowa Electronic Markets (Berg et al. 2008) aggregate trader belief and have empirically beaten polls in some U.S. cycles (Wolfers and Zitzewitz 2004); a Polymarket market on the 2024 SP mayoral runoff did exist but cleared at low volume and has not been reanalyzed in the literature. For 2026, Polymarket's Brazil-presidential market on 2026-05-07 priced Flavio Bolsonaro at 45% and Lula at 38% (Polymarket 2026), and the SP-governor market priced Tarcisio at 83%, comparable in direction to our frozen forecasts (Lula 24.79% / Tarcisio-gov 65.09%) although our model is more conservative on Tarcisio because the cohort prior on incumbent-governor reelections is not as concentrated as the market.
 
-On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9% / Marcal 27.8% / Nunes 18.6%, a +11.1 pp Boulos lead two days from the first round; AtlasIntel via CNN Brasil 2024-10-04), the unbiased v1.3 baseline assigned 85.4% to Boulos; the MRP-augmented blend pulled this to 56.0% (still on the wrong side of 0.5, but materially closer to the realized outcome where the first-round split was 26.59% Nunes vs 26.22% Boulos and Nunes won the runoff 59.35% to 40.65%; Wikipedia 2026). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see data/failure_analysis.json::misses.
+On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9% / Marcal 27.8% / Nunes 18.6%, a +11.1 pp Boulos lead two days from the first round; AtlasIntel via CNN Brasil 2024-10-04), the unbiased v1.3 baseline assigned 85.4% to Boulos; the MRP-augmented blend pulled this to 56.0% (still on the wrong side of 0.5, but materially closer to the realized outcome where the first-round split was 26.59% Nunes vs 26.22% Boulos and Nunes won the runoff 59.35% to 40.65%; Wikipedia 2026). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see the failure-mode supplementary analysis.
 
 ### 6.4 Cross-country generalization
 
-To stress-test whether the state-baseline mechanism is BR-specific or generalizes, we replicated the leak-safe MRP protocol (state baseline w=0.36, no_mrp ensemble v1.2) on twelve electoral cycles drawn from eleven countries outside our primary BR cohort. The cycles are: United States 2016, 2020 and 2022 midterm gubernatorial; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014 (federal, separate from the SP municipal training set); Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024. Polls were ingested from Wikipedia poll-aggregation tables and FiveThirtyEight CSVs (see scripts/cross_country_validation.py, scripts/cross_country_extended.py and scripts/cross_country_more.py). The 30-day pre-election filter was applied uniformly except for India 2024, where the 120-day filter compensates for the structurally coarser monthly polling cadence; see data/cross_country_more.json::_fetch::in_2024 for the per-cycle parsing audit.
+To stress-test whether the state-baseline mechanism is BR-specific or generalizes, we replicated the leak-safe MRP protocol (state baseline w=0.36, no_mrp ensemble v1.2) on twelve electoral cycles drawn from eleven countries outside our primary BR cohort. The cycles are: United States 2016, 2020 and 2022 midterm gubernatorial; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014 (federal, separate from the SP municipal training set); Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024. Polls were ingested from Wikipedia poll-aggregation tables and FiveThirtyEight CSVs (see the three cross-country validation pipelines (supplementary)). The 30-day pre-election filter was applied uniformly except for India 2024, where the 120-day filter compensates for the structurally coarser monthly polling cadence; see the supplementary cross-country fetch audit.
 
 Multi-state cycles use leave-one-state-out (LOSO) CV; single-uf cycles use leave-one-pair-out by date and pollster. In LOSO across distinct states the (uf, regime) baseline cell is undefined for the held-out state, so MRP and no-MRP coincide by construction; this is a structural property of the leave-one-state-out protocol with country-level uf, not a model degenerate. To recover MRP signal in those cycles requires substituting a finer-grained spatial unit (county, district), which is deferred to a future cycle. The single-uf cycles are the cleanest cross-country test of the MRP mechanism per se.
 
@@ -284,7 +284,7 @@ Consolidated results across all twelve cross-country cycles (n=6,954 paired even
 
 The mechanism behaves as theory predicts. Where the (uf, regime) baseline is computable (single-country runoffs and head-to-head: FR, AR, BR, DE, MX, TR, IT, IN), MRP either improves accuracy or maintains 100% while reducing Brier by 35 to 52 percent through prior pull on tossups. The Argentina 2023 cycle is the most striking out-of-sample replication of the BR 2024 SP finding: every poll in our sample had Sergio Massa winning the runoff or trailing by a single percentage point on the eve of voting, while Javier Milei won by approximately twelve points. The no-MRP ensemble achieves 80.00% accuracy on this cycle; the MRP-augmented blend reaches 100% by absorbing the post-2015 right-shift in Argentine national outcomes through the (AR, right) prior. Structurally identical mechanism, different country, different ideological direction.
 
-Where the LOSO protocol holds out an entire state (US 2016, US 2020, UK 2019, US 2022 midterms), the (uf, regime) baseline is undefined for the held-out state by construction and MRP collapses to no-MRP. The deltas in the table for those cycles are zero by design, not by failure: the in-sample MRP accuracy on US 2016 is 94.89% versus 89.94% no-MRP (data/cross_country_results.json::us_2016::in_sample), so MRP is functioning when training and test share state cells. The UK 2019 result (47.92%) is the closest the architecture has to a structural failure: regional UK polls fragment by Conservative/Labour/SNP/LDP/Plaid/Sinn-Fein in ways the binary regime taxonomy does not absorb; we report this honestly rather than dropping the cycle. India 2024 illustrates a different limitation: the 14-event sample is drawn from monthly aggregator publishing dates, not weekly fieldwork dates, so the per-poll temporal resolution is too coarse to exhibit Linzer-drift signal; the perfect accuracy is a property of the wide NDA-INDIA gap in vote share (43.8% vs 41.5% certified result, 46-50% vs 32-39% in polls), not of the MRP mechanism.
+Where the LOSO protocol holds out an entire state (US 2016, US 2020, UK 2019, US 2022 midterms), the (uf, regime) baseline is undefined for the held-out state by construction and MRP collapses to no-MRP. The deltas in the table for those cycles are zero by design, not by failure: the in-sample MRP accuracy on US 2016 is 94.89% versus 89.94% no-MRP (supplementary US 2016 in-sample results), so MRP is functioning when training and test share state cells. The UK 2019 result (47.92%) is the closest the architecture has to a structural failure: regional UK polls fragment by Conservative/Labour/SNP/LDP/Plaid/Sinn-Fein in ways the binary regime taxonomy does not absorb; we report this honestly rather than dropping the cycle. India 2024 illustrates a different limitation: the 14-event sample is drawn from monthly aggregator publishing dates, not weekly fieldwork dates, so the per-poll temporal resolution is too coarse to exhibit Linzer-drift signal; the perfect accuracy is a property of the wide NDA-INDIA gap in vote share (43.8% vs 41.5% certified result, 46-50% vs 32-39% in polls), not of the MRP mechanism.
 
 The Argentina 2023 result and the India 2024 result, qualitatively, function as cross-country corroboration of the central BR claim: when industry-wide polling consensus systematically misprices an outcome that the historical state-regime structure correctly anticipates, the MRP blend recovers. AR is the killer case where the MRP architecture turned an 80% baseline into 100% on a cycle that polls and prediction markets jointly missed; IN is the killer case where polls and seat projections jointly overshot the realized vote share by 5-7 percentage points and where the mechanism remains correctly anchored despite limited per-poll resolution. Pooled across all twelve cross-country cycles, MRP improves weighted Brier from 0.063 to 0.062 and weighted accuracy by +0.14 percentage points; the small headline movement reflects the dominance of the multi-state US 2016 and 2020 cycles in the pooled n, where the LOSO design collapses the comparison by construction. Restricting to the eight single-uf cycles where the protocol exercises MRP per se (n=468), the weighted accuracy moves from 97.86% no-MRP to 100.00% MRP and the weighted Brier from 0.025 to 0.013, a 49.5% reduction.
 
@@ -298,7 +298,7 @@ We list four genuine remaining limitations, distinguishing those addressed by th
 
 **Heteroscedastic Linzer drift (open).** The Linzer drift parameters $\sigma_0, \sigma_1$ are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil. We treat this as a parameter-doubling extension and reserve it for a follow-up.
 
-**Eligibility filtering (operational, not methodological).** Throughout this work, Jair Bolsonaro is filtered from 2026 forward predictions due to the Tribunal Superior Eleitoral ruling of 2023-06-30 (ineligible until 2030). The filter is applied at the registry level, not at the model level, so historical 2018 and 2022 events involving Bolsonaro remain in the training set; the model learns the partisan structure of pop-right candidates without conflating that with current 2026 viability. If a higher court reverses the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this is documented in `docs/PREREGISTRATION.md` as a contingent re-run rule.
+**Eligibility filtering (operational, not methodological).** Throughout this work, Jair Bolsonaro is filtered from 2026 forward predictions due to the Tribunal Superior Eleitoral ruling of 2023-06-30 (ineligible until 2030). The filter is applied at the registry level, not at the model level, so historical 2018 and 2022 events involving Bolsonaro remain in the training set; the model learns the partisan structure of pop-right candidates without conflating that with current 2026 viability. If a higher court reverses the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this is documented in the supplementary pre-registration document as a contingent re-run rule.
 
 We explicitly note three concerns raised by review which this revision now addresses: (i) hyperparameter conflation between v1.2 and v1.3 has been disambiguated in §5.1; (ii) the McNemar contingency arithmetic and the Murphy decomposition residual have been corrected and the residual is now reported per cycle in §5.3 with footnote `[^murphybin]`; (iii) per-fold significance for the 2024 SP falsification target (DM, McNemar) has been added to §5.3.
 
@@ -308,23 +308,23 @@ We provide a four-layer reproducibility stack: (i) a frozen code freeze with bot
 
 ### 8.1 Code freeze and tag history
 
-The political forecaster lives in `engine/political_cohort.py` with the cohort fit and state baseline implemented in `fit_cohorts_political` and `state_baseline_p`; the production HTTP endpoint is `api/rotas_politica.py`. Two pre-registration git tags exist. The original freeze `v1.2-prereg` was created at commit `7d2403b7` on 2026-05-07; a byte-equivalent re-freeze `v1.3-prereg` was created at commit `4fc1456c` on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in `data/predictions_2026.json`.
+The political forecaster lives in the forecaster source module with the cohort fit and state baseline implemented in the cohort-fit routine and the state-baseline lookup; the production HTTP endpoint is the production REST endpoint module. Two pre-registration git tags exist. The original freeze `v1.2-prereg` was created at commit `7d2403b7` on 2026-05-07; a byte-equivalent re-freeze `v1.3-prereg` was created at commit `4fc1456c` on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in the frozen 2026 forecast snapshot (supplementary).
 
-Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in `docs/PREREGISTRATION.md`):
+Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in the supplementary pre-registration document):
 
 | File | sha256 (first 16) |
 |------|-------------------|
-| `engine/political_cohort.py` | `442fb43de535b127` |
-| `engine/auth_clients.py` | `adca01017bccd09f` |
-| `api/rotas_politica.py` | `b40c0fe413889bbb` |
-| `scripts/predict_2026.py` | `31e536ecc1dba24c` |
-| `scripts/political_stats_rigor.py` | `d8b8294c6a7a5578` |
-| `data/political_best_config.json` | `5792fce8f033d42e` |
-| `data/predictions_2026.json` | `9e693389e47b451f` |
+| the forecaster source module | `442fb43de535b127` |
+| the multi-tenant authentication module | `adca01017bccd09f` |
+| the production REST endpoint module | `b40c0fe413889bbb` |
+| the forecast snapshot script | `31e536ecc1dba24c` |
+| the statistical-rigor pipeline | `d8b8294c6a7a5578` |
+| the canonical hyperparameter configuration (supplementary) | `5792fce8f033d42e` |
+| the frozen 2026 forecast snapshot (supplementary) | `9e693389e47b451f` |
 
 ### 8.2 Data provenance and hashes
 
-All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives. The full ingestion provenance is recorded in the per-cycle parsers (`scripts/cross_country_validation.py`, `scripts/cross_country_extended.py`, `scripts/cross_country_more.py`) and the raw HTML inputs preserved under `data/cross_country/raw_*/`. Twenty source CSVs ship in `data/backtest/` with the following SHA-256 (first 16 hex):
+All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives. The full ingestion provenance is recorded in the per-cycle parsers (the cross-country validation pipeline, the extended cross-country pipeline, the supplementary cross-country pipeline) and the raw HTML inputs preserved under the raw HTML supplementary archive. Twenty source CSVs ship in the supplementary corpus archive with the following SHA-256 (first 16 hex):
 
 | CSV | sha256 (first 16) | n events |
 |-----|-------------------|---------:|
@@ -368,7 +368,7 @@ Cached cross-validation outputs ship with the repository so that anyone can veri
 
 ### 8.4 Software environment
 
-Python 3.11 with packages pinned in `requirements.txt`:
+Python 3.11 with packages pinned in the supplementary requirements file:
 
 ```
 numpy 1.26.x
@@ -384,7 +384,7 @@ pydantic 2.x
 weasyprint 60.x          (paper PDF compilation)
 ```
 
-A pinned `Dockerfile` at the repository root reproduces the environment in a container:
+A pinned the supplementary Dockerfile at the repository root reproduces the environment in a container:
 
 ```
 docker build -t vila-politica .
@@ -395,7 +395,7 @@ Random seed is `42` everywhere. Both `numpy.random` and the Python `random` modu
 
 ### 8.5 One-command reproduction
 
-A `Makefile` ships with the repository:
+A the supplementary Makefile ships with the repository:
 
 ```
 make smoke        # 29/29 contract tests, ~3 seconds
@@ -410,11 +410,11 @@ End-to-end reproduction takes approximately three minutes on a single modern x86
 
 ### 8.6 Smoke tests and continuous integration
 
-`scripts/smoke_political.py` runs 29/29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints. The repository GitHub Actions workflow (`.github/workflows/tests.yml`) runs the smoke test plus a full backtest reproduction on every push, on Python 3.11 and 3.12.
+the smoke-test suite runs all 29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints. The repository GitHub Actions workflow (the continuous-integration workflow (supplementary)) runs the smoke test plus a full backtest reproduction on every push, on Python 3.11 and 3.12.
 
 ### 8.7 Pre-registration and blind protocol
 
-The blend weight `w` and the baseline minimum-support threshold `N >= 3` were specified before observing 2024 outcomes, with the formal pre-registration frozen at `docs/PREREGISTRATION.md` on 2026-05-07. The pre-specified targets were 97% average and 85% on the 2024 SP fold; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in `PREREGISTRATION.md`.
+The blend weight `w` and the baseline minimum-support threshold `N >= 3` were specified before observing 2024 outcomes, with the formal pre-registration frozen at the supplementary pre-registration document on 2026-05-07. The pre-specified targets were 97% average and 85% on the 2024 SP fold; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in `PREREGISTRATION.md`.
 
 ## 9. Conclusion
 
@@ -612,10 +612,10 @@ The production estimator is point-estimated rather than fully Bayesian, with the
 
 | Tag | Frozen on | HEAD | Forecast snapshot | Purpose |
 |-----|-----------|------|-------------------|---------|
-| `v1.2-prereg` | 2026-05-07 | `7d2403b7dd5756f95b378331e43405cae60e62da` | `data/predictions_2026.json` SHA `9e693389...` | Original freeze concurrent with the OSF/arXiv pre-registration. |
+| `v1.2-prereg` | 2026-05-07 | `7d2403b7dd5756f95b378331e43405cae60e62da` | the frozen 2026 forecast snapshot (supplementary) SHA `9e693389...` | Original freeze concurrent with the OSF/arXiv pre-registration. |
 | `v1.3-prereg` | 2026-05-08 | `4fc1456ca20db2bd028939c73580159d91018ba9` | identical to `v1.2-prereg` | Refrozen with refreshed code-file SHAs after editorial cleanup. Forecast snapshot is byte-identical to `v1.2-prereg`; only the engine and predict-script SHAs in the SHA-256 table changed. |
 
 The SHA-256 tables for both tags are recorded in
-`docs/PREREGISTRATION.md` §3. The shell-command procedure for creating
-`v1.3-prereg` is in `docs/PREREG_FREEZE_PROCEDURE.md` §4b. The original
+the supplementary pre-registration document §3. The shell-command procedure for creating
+`v1.3-prereg` is in the pre-registration freeze procedure (supplementary) §4b. The original
 `v1.2-prereg` tag remains in git history; nothing was rewritten.

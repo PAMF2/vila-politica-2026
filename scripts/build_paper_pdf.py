@@ -359,7 +359,11 @@ code {{
   font-size: 8.6pt;
   background: #f5f4ee;
   padding: 0.4pt 2pt;
+  hyphens: none;
+  word-break: keep-all;
+  white-space: nowrap;
 }}
+li code, p code {{ white-space: normal; }}
 pre {{
   font-family: "Liberation Mono", Consolas, monospace;
   font-size: 8.4pt;

@@ -308,10 +308,7 @@ We provide a four-layer reproducibility stack: (i) a frozen code freeze with bot
 
 ### 8.1 Code freeze and tag history
 
-The political forecaster lives at `engine/political_cohort.py` (`fit_cohorts_political`, `state_baseline_p`); the production endpoint is `api/rotas_politica.py`. Two pre-registration tags exist:
-
-- `v1.2-prereg` at HEAD `7d2403b7` (2026-05-07): original freeze, frozen-snapshot SHAs.
-- `v1.3-prereg` at HEAD `4fc1456c` (2026-05-08): byte-equivalent re-freeze with refreshed code SHAs after non-substantive cleanup. Both tags resolve to identical predictions in `data/predictions_2026.json`.
+The political forecaster lives in `engine/political_cohort.py` with the cohort fit and state baseline implemented in `fit_cohorts_political` and `state_baseline_p`; the production HTTP endpoint is `api/rotas_politica.py`. Two pre-registration git tags exist. The original freeze `v1.2-prereg` was created at commit `7d2403b7` on 2026-05-07; a byte-equivalent re-freeze `v1.3-prereg` was created at commit `4fc1456c` on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in `data/predictions_2026.json`.
 
 Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in `docs/PREREGISTRATION.md`):
 

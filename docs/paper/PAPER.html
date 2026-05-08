@@ -169,7 +169,11 @@ code {
   font-size: 8.6pt;
   background: #f5f4ee;
   padding: 0.4pt 2pt;
+  hyphens: none;
+  word-break: keep-all;
+  white-space: nowrap;
 }
+li code, p code { white-space: normal; }
 pre {
   font-family: "Liberation Mono", Consolas, monospace;
   font-size: 8.4pt;
@@ -743,11 +747,7 @@ Conclusions. State-level empirical-Bayes priors derived from training-year outco
 <h2>8 Reproducibility</h2>
 <p>We provide a four-layer reproducibility stack: (i) a frozen code freeze with both git tag and per-file SHA-256, (ii) a curated corpus of source CSVs each independently hashed, (iii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, and (iv) a containerized environment that lifts the host-Python dependency.</p>
 <h3>8.1 Code freeze and tag history</h3>
-<p>The political forecaster lives at <code>engine/political_cohort.py</code> (<code>fit_cohorts_political</code>, <code>state_baseline_p</code>); the production endpoint is <code>api/rotas_politica.py</code>. Two pre-registration tags exist:</p>
-<ul>
-<li><code>v1.2-prereg</code> at HEAD <code>7d2403b7</code> (2026-05-07): original freeze, frozen-snapshot SHAs.</li>
-<li><code>v1.3-prereg</code> at HEAD <code>4fc1456c</code> (2026-05-08): byte-equivalent re-freeze with refreshed code SHAs after non-substantive cleanup. Both tags resolve to identical predictions in <code>data/predictions_2026.json</code>.</li>
-</ul>
+<p>The political forecaster lives in <code>engine/political_cohort.py</code> with the cohort fit and state baseline implemented in <code>fit_cohorts_political</code> and <code>state_baseline_p</code>; the production HTTP endpoint is <code>api/rotas_politica.py</code>. Two pre-registration git tags exist. The original freeze <code>v1.2-prereg</code> was created at commit <code>7d2403b7</code> on 2026-05-07; a byte-equivalent re-freeze <code>v1.3-prereg</code> was created at commit <code>4fc1456c</code> on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in <code>data/predictions_2026.json</code>.</p>
 <p>Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in <code>docs/PREREGISTRATION.md</code>):</p>
 <div class="wide-table"><table>
 <thead>

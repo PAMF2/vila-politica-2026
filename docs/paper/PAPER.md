@@ -418,7 +418,11 @@ The blend weight `w` and the baseline minimum-support threshold `N >= 3` were sp
 
 ## 9. Conclusion
 
-A Laplace-smoothed (UF, regime) baseline computed only from out-of-fold training years, blended at w=0.36 into a re-tuned cohort+Linzer ensemble, raises the year-fold accuracy of the Vila INTEIA political forecaster from 94.16% (v1.2 baseline, no state baseline) to 97.21% (v1.3 production, with state baseline) and recovers the 2024 Sao Paulo mayoral fold from 73.53% to 89.71%. Holding the v1.3 hyperparameters fixed, the marginal contribution of the state baseline alone (w=0 to w=0.36) is +5.33 pp average and +25.00 pp on 2024 Sao Paulo. The mechanism is a structurally simple proxy for multilevel regression with poststratification, applied not over demographic strata but over partisan-regime baselines per state. The result demonstrates that exogenous state-level priors are a viable mechanism for absorbing cycle-specific industry-wide polling bias in Brazilian electoral forecasting. The 2024 Sao Paulo polling debacle, where every major institute had Boulos leading and Nunes won by approximately three percentage points, is recovered without leaking test outcomes and without overfitting any other cycle. The mechanism's transparency, its connection to ridge regression with state dummies, and its computable confidence intervals make it suitable for operational deployment alongside, rather than in place of, traditional aggregator-style models.
+A Laplace-smoothed (UF, regime) baseline computed only from out-of-fold training years, blended at w=0.36 into a re-tuned cohort+Linzer ensemble, raises year-fold accuracy of the Vila INTEIA political forecaster from 94.16% (v1.2 baseline, no state baseline) to 97.21% (v1.3 production, with state baseline). The 2024 Sao Paulo mayoral fold, where every major polling firm had Boulos ahead and Nunes won by approximately three percentage points, is recovered from 73.53% to 89.71% without leaking test outcomes and without overfitting any other cycle. Holding the v1.3 hyperparameters fixed, the marginal contribution of the state baseline alone (w=0 to w=0.36) is +5.33 percentage points average and +25.00 percentage points on the 2024 Sao Paulo fold.
+
+The mechanism is a structurally simple proxy for multilevel regression with poststratification, applied not over demographic strata but over partisan-regime baselines per state. Statistical significance is supported by a Diebold-Mariano test (DM=-4.92, p=8.5e-7) and a paired McNemar test (chi-squared=18.27, p=1.9e-5, b=22 / c=1) on the full 394-event year-fold series, plus a per-fold 2024 Sao Paulo restricted significance test (DM=+7.79, p=6.7e-15; McNemar chi-squared=16.02, p=6.3e-5, b=17 / c=0).
+
+Cross-country replication on twelve cycles drawn from eleven additional countries (n=6,954 events, including United States 2016, 2020, 2022 midterms; United Kingdom 2019; France 2022; Argentina 2023; Brazil 2014; Germany 2021; Mexico 2024; Turkey 2023; Italy 2022; India 2024) demonstrates that the mechanism generalizes beyond Brazil: in the eight single-uf cycles where the protocol exercises the state baseline directly, weighted accuracy moves from 97.86% to 100.00% and weighted Brier from 0.025 to 0.013. The result establishes that exogenous state-level priors are a viable mechanism for absorbing cycle-specific industry-wide polling bias across electoral systems, ideological directions, and party landscapes. The mechanism's transparency, its connection to ridge regression with state dummies, and its computable confidence intervals make it suitable for operational deployment alongside, rather than in place of, traditional aggregator-style models.
 
 ## References
 
@@ -530,18 +534,6 @@ Wikipedia contributors. (2024-2026). Opinion polling for the 2021 German federal
 
 Wolfers, J., and Zitzewitz, E. (2004). Prediction markets. Journal of Economic Perspectives, 18(2), 107-126.
 
-## 10. Pre-registration timestamp appendix
-
-| Tag | Frozen on | HEAD | Forecast snapshot | Purpose |
-|-----|-----------|------|-------------------|---------|
-| `v1.2-prereg` | 2026-05-07 | `7d2403b7dd5756f95b378331e43405cae60e62da` | `data/predictions_2026.json` SHA `9e693389...` | Original freeze concurrent with the OSF/arXiv pre-registration. |
-| `v1.3-prereg` | 2026-05-08 | `4fc1456ca20db2bd028939c73580159d91018ba9` | identical to `v1.2-prereg` | Refrozen with refreshed code-file SHAs after editorial cleanup. Forecast snapshot is byte-identical to `v1.2-prereg`; only the engine and predict-script SHAs in the SHA-256 table changed. |
-
-The SHA-256 tables for both tags are recorded in
-`docs/PREREGISTRATION.md` §3. The shell-command procedure for creating
-`v1.3-prereg` is in `docs/PREREG_FREEZE_PROCEDURE.md` §4b. The original
-`v1.2-prereg` tag remains in git history; nothing was rewritten.
-
 ## Appendix A. Hyperparameter grid
 
 Full search grid for the baseline ensemble and the state-baseline blend weight.
@@ -615,3 +607,15 @@ model {
 ```
 
 The production estimator is point-estimated rather than fully Bayesian, with the cohort base rate p_cohort taken as the Stein-shrunk maximum-likelihood estimate, the state baseline taken as the Laplace-smoothed contingency mean, and (sigma_0, sigma_1, stein_s, w_linzer, w_state) selected by autoresearch grid search rather than HMC. The pseudo-code above documents the implicit generative model for readers wishing to extend the work to full posterior inference.
+
+## Appendix C. Pre-registration timestamp
+
+| Tag | Frozen on | HEAD | Forecast snapshot | Purpose |
+|-----|-----------|------|-------------------|---------|
+| `v1.2-prereg` | 2026-05-07 | `7d2403b7dd5756f95b378331e43405cae60e62da` | `data/predictions_2026.json` SHA `9e693389...` | Original freeze concurrent with the OSF/arXiv pre-registration. |
+| `v1.3-prereg` | 2026-05-08 | `4fc1456ca20db2bd028939c73580159d91018ba9` | identical to `v1.2-prereg` | Refrozen with refreshed code-file SHAs after editorial cleanup. Forecast snapshot is byte-identical to `v1.2-prereg`; only the engine and predict-script SHAs in the SHA-256 table changed. |
+
+The SHA-256 tables for both tags are recorded in
+`docs/PREREGISTRATION.md` §3. The shell-command procedure for creating
+`v1.3-prereg` is in `docs/PREREG_FREEZE_PROCEDURE.md` §4b. The original
+`v1.2-prereg` tag remains in git history; nothing was rewritten.

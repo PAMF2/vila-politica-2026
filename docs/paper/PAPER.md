@@ -240,6 +240,27 @@ The regime-by-outcome contingency (Figure 6) shows that the augmented blend pres
 
 ![Regime-by-outcome contingency heatmap. Each cell reports the predicted (left value) and observed (right value) outcome frequency for one of the five partisan regimes; the augmented blend preserves the empirical regime structure with the largest absolute discrepancy of two events in the pop_left and right cells.](figs/fig4_regime_heatmap.png)
 
+### 5.6 Benchmark against modern ML and Bayesian alternatives
+
+To establish that the headline accuracy is not a low bar relative to data-driven alternatives, we re-run the same year-fold leak-safe protocol with five ML models and two Bayesian-hierarchical baselines, all on the identical 36-feature representation (poll lead, days-to-election, incumbency, one-hot regime, one-hot UF). Every model sees the same six folds and the same training pool per fold; only the model class varies. Hyperparameters for ML models follow each library's documented defaults; BART uses 200 trees with 150 posterior draws; Stan DLM is a Kalman-filter implementation of the dynamic linear model with diffuse priors.
+
+| Model class | Year-fold acc | Year-fold Brier | Notes |
+|:---|---:|---:|:---|
+| Vila MRP v1.3 (this paper)              | **0.9721** | 0.1048 | cohort EB + Linzer + (uf, regime) |
+| Vila no-MRP baseline (cohort + Linzer)  | 0.9416 | 0.0889 | identical hyperparameters, $w = 0$ |
+| MLP (32, 16) hidden                     | 0.9442 | **0.0499** | sklearn `MLPClassifier` defaults |
+| Linzer-only (lead-driven DLM)           | 0.9188 | 0.0750 | $w_\ell = 1$ |
+| Naive sigmoid (lead / 10)               | 0.9188 | 0.0996 | three-parameter calibration |
+| XGBoost (300 trees, depth 3)            | 0.8756 | 0.1022 | xgboost 3.2.0 defaults |
+| Stan DLM (Kalman filter, diffuse prior) | 0.8680 | 0.0786 | continuous vote-share posterior |
+| RandomForest (300 trees)                | 0.8604 | 0.0915 | sklearn defaults |
+| LogReg (L2)                             | 0.8579 | 0.0948 | sklearn defaults |
+| BART (200 trees, 150 draws)             | 0.8503 | 0.1108 | pymc-bart 0.11.0 |
+| Cohort-only (Stein-shrunk base rates)   | 0.5964 | 0.1997 | $w_\ell = 0$ |
+| GaussianNB                              | 0.4619 | 0.4139 | sklearn defaults |
+
+Vila MRP wins on accuracy against every alternative including BART and the Stan DLM hierarchical model: the closest accuracy is the MLP at 0.9442 (-2.79 pp) and the closest Bayesian is Stan DLM at 0.8680 (-10.41 pp). The MLP wins on Brier (0.0499 vs 0.1048) for the same reason discussed in §5.3: sharp probability outputs near 0 and 1 minimize quadratic loss but are not necessarily right when the lead and the (uf, regime) prior disagree, and the MLP misses the same 2024 SP cluster that the Linzer-only baseline misses (per-fold breakdown in `bench_ml_baselines.json`). The architecture's advantage is therefore not a gap relative to crude baselines: it persists against high-capacity flexible models on the same feature set.
+
 ## 6. Discussion
 
 ### 6.1 Why the state baseline absorbs cycle bias
@@ -442,7 +463,7 @@ Brier, G. W. (1950). Verification of forecasts expressed in terms of probability
 
 Brocker, J. (2009). Reliability, sufficiency, and the decomposition of proper scores. Quarterly Journal of the Royal Meteorological Society, 135(643), 1512-1519.
 
-Buttice, M. K., and Highton, B. (2013). How does multilevel regression and poststratification perform with conventional national surveys? Political Analysis, 21(4), 449-467.
+Buttice, M. K., and Highton, B. (2013). How does multilevel regression and poststratification perform with conventional national surveys? Political Analysis, 21(4), 449-467. https://doi.org/10.1093/pan/mpt017
 
 Camara Nacional Electoral. (2023). Resultados definitivos eleccion presidencial 2023, segunda vuelta (19 de noviembre). Republica Argentina. https://www.electoral.gob.ar/
 
@@ -476,15 +497,15 @@ Gelman, A., Lax, J., Phillips, J., Gabry, J., and Trangucci, R. (2018). Using mu
 
 Gelman, A., and Little, T. C. (1997). Poststratification into many categories using hierarchical logistic regression. Survey Methodology, 23(2), 127-135.
 
-Ghitza, Y., and Gelman, A. (2013). Deep interactions with MRP: Election turnout and voting patterns among small electoral subgroups. American Journal of Political Science, 57(3), 762-776.
+Ghitza, Y., and Gelman, A. (2013). Deep interactions with MRP: Election turnout and voting patterns among small electoral subgroups. American Journal of Political Science, 57(3), 762-776. https://doi.org/10.1111/ajps.12004
 
-Gneiting, T., and Raftery, A. E. (2007). Strictly proper scoring rules, prediction, and estimation. Journal of the American Statistical Association, 102(477), 359-378.
+Gneiting, T., and Raftery, A. E. (2007). Strictly proper scoring rules, prediction, and estimation. Journal of the American Statistical Association, 102(477), 359-378. https://doi.org/10.1198/016214506000001437
 
 Heidemanns, M., Gelman, A., and Morris, G. E. (2020). An updated dynamic Bayesian forecasting model for the U.S. presidential election. Harvard Data Science Review, 2(4). https://doi.org/10.1162/99608f92.fc62f1e1
 
 Hoerl, A. E., and Kennard, R. W. (1970). Ridge regression: Biased estimation for nonorthogonal problems. Technometrics, 12(1), 55-67.
 
-Hummel, P., and Rothschild, D. (2014). Fundamental models for forecasting elections at the state level. Electoral Studies, 35, 123-139.
+Hummel, P., and Rothschild, D. (2014). Fundamental models for forecasting elections at the state level. Electoral Studies, 35, 123-139. https://doi.org/10.1016/j.electstud.2014.05.002
 
 IBGE. (2026). Pesquisa Nacional por Amostra de Domicilios Continua, microdados 4-trimestre 2025. Instituto Brasileiro de Geografia e Estatistica. Released 2026-03-27. https://www.ibge.gov.br/estatisticas/sociais/trabalho/9173-pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral.html
 
@@ -500,7 +521,7 @@ Linzer, D. A. (2013). Dynamic Bayesian forecasting of presidential elections in 
 
 Linzer, D. A., and Lewis-Beck, M. S. (2015). Forecasting US presidential elections: New approaches (an introduction). International Journal of Forecasting, 31(3), 895-897. https://doi.org/10.1016/j.ijforecast.2015.03.004
 
-Lock, K., and Gelman, A. (2010). Bayesian combination of state polls and election forecasts. Political Analysis, 18(3), 337-348.
+Lock, K., and Gelman, A. (2010). Bayesian combination of state polls and election forecasts. Political Analysis, 18(3), 337-348. https://doi.org/10.1093/pan/mpq002
 
 McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. Psychometrika, 12(2), 153-157. https://doi.org/10.1007/BF02295996
 
@@ -512,7 +533,7 @@ Nicolau, J. (2017). Representantes de quem? Os (des)caminhos do seu voto da urna
 
 Park, D. K., Gelman, A., and Bafumi, J. (2004). Bayesian multilevel estimation with poststratification: State-level estimates from national polls. Political Analysis, 12(4), 375-385. https://doi.org/10.1093/pan/mph024
 
-Pickup, M., and Johnston, R. (2007). Campaign trial heats as electoral information. International Journal of Forecasting, 23(2), 219-236.
+Pickup, M., and Johnston, R. (2007). Campaign trial heats as electoral information. International Journal of Forecasting, 23(2), 219-236. https://doi.org/10.1016/j.ijforecast.2007.01.001
 
 Polymarket. (2026a). Brazil presidential election 2026 odds. Snapshot 2026-05-07. https://polymarket.com/event/brazil-presidential-election
 

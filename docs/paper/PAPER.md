@@ -51,7 +51,7 @@ The fundamentals tradition in the U.S. is exemplified by Abramowitz (1988, 2008)
 
 ## 3. Theoretical Framework
 
-![Forecast pipeline. Inputs (top) feed engineered features, which fan out to three estimators (Linzer dynamic linear, cohort empirical Bayes, MRP-style state baseline). The ensemble blend (yellow box) produces the final candidate-level probability.](figs/fig0_architecture.png)
+![Forecast pipeline. Four data inputs (top row) each map to a primary engineered feature; features fan via right-angle bus into three estimators: Linzer dynamic linear ($p_{\mathrm{Linz}}$), cohort empirical Bayes with global-prior shrinkage ($p_{\mathrm{coh}}$), and the MRP-style state baseline ($p_{u,r}$). The dashed connection denotes the secondary $\sigma(d)$ pathway from days-to-election into the Linzer drift. The ensemble blend (yellow box) combines the three components with selected weights $w_\ell$ and $w$ to produce the final candidate-level probability.](figs/fig0_architecture.png)
 
 ### 3.1 Cohort empirical Bayes
 

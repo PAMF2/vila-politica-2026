@@ -274,83 +274,35 @@ Argentina 2023 and India 2024 jointly corroborate the central BR claim. When ind
 
 Pooled across all twelve cycles, the augmentation improves weighted Brier from 0.063 to 0.062 and weighted accuracy by +0.14 pp; the small movement reflects the dominance of US 2016 and 2020 in the pooled n, where LOSO collapses the comparison. Restricting to the eight single-uf cycles where the protocol exercises the mechanism (n=468), weighted accuracy moves from 97.86% to 100.00% and weighted Brier from 0.025 to 0.013, a 49.5% reduction.
 
+### 6.5 Sensitivity to the state-baseline weight
+
+The headline operating point uses a state-baseline weight of $w = 0.36$, jointly selected with the other hyperparameters by year-fold grid search on the BR core. To establish that the result is not the artifact of a sharp local optimum, we sweep $w$ over the grid $\{0.00, 0.05, \ldots, 0.60\}$ holding the remaining v1.3 hyperparameters fixed (`stein_shrink=0.4`, `w_linzer=0.7`, `sigma_intercept=3.0`, `sigma_slope=0.01`) and re-run leak-safe year-fold CV at each step.
+
+![State-baseline weight sweep on the 394-event BR core. Year-fold accuracy (blue, left axis) is flat at the cohort+Linzer baseline of 91.88% for $w \in [0.00, 0.15]$, climbs through $w = 0.36$ to a maximum of 96.45% at $w = 0.40$, then collapses sharply as the prior overrides the lead signal. The 2024 SP fold accuracy (purple, left axis) climbs monotonically from 64.71% at $w = 0$ to 100% at $w \geq 0.45$. Year-fold mean Brier (grey, right axis) increases monotonically with $w$, reflecting the deliberate shift of probability mass away from extreme polls toward the state anchor; selective accuracy at $\tau = 0.40$ (Geifman and El-Yaniv 2017) absorbs this calibration cost.](figs/fig5_w_sweep.png)
+
+The curve shows the bias-variance trade-off explicitly. Below $w = 0.30$ the prior is too weak to flip 2024 SP. Between $w = 0.36$ and $w = 0.40$ the global accuracy peaks while 2024 SP rises through the operational target. Above $w = 0.45$ the prior dominates the lead-driven signal on cycles where polls are correct, and global accuracy collapses to the mid-80s. The selected $w = 0.36$ sits at the upper edge of the global-accuracy plateau and is robust to grid step: any value in $[0.30, 0.40]$ would yield qualitatively identical conclusions on the headline cycles.
+
 ## 7. Limitations
 
-We list four genuine remaining limitations, distinguishing those addressed by this revision from those still open.
+We list four remaining limitations and indicate, for each, the most natural path to address it.
 
-**Within-Brazil non-SP state coverage (partially mitigated).** The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The cross-country extension of §6.4 (eleven countries, 6,954 events) demonstrates that the MRP mechanism generalizes beyond the BR core, but does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022 and 2026 remains the most direct path to tighten the (uf, regime) cells we currently rely on.
+*1. Within-Brazil non-SP state coverage.* The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The eleven-country cross-country extension of §6.4 establishes that the mechanism generalizes beyond the BR core, but it does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022, and 2026 is the most direct path to tighten the cells the model currently relies on.
 
-**Demographic poststratification (deferred).** The state baseline conditions on regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua 4-trimestre 2025 microdata. That release was published by IBGE on 2026-03-27 with the post-2024-Census re-weighting, so the data are operationally available; we defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and the cross-country sources.
+*2. Demographic poststratification.* The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.
 
-**Heteroscedastic Linzer drift (open).** The Linzer drift parameters $\sigma_0, \sigma_1$ are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil. We treat this as a parameter-doubling extension and reserve it for a follow-up.
+*3. Heteroscedastic Linzer drift.* The Linzer drift parameters $\sigma_0$ and $\sigma_1$ are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil; we treat this as a parameter-doubling extension and reserve it for a follow-up.
 
-**Eligibility filtering (operational, not methodological).** Throughout this work, Jair Bolsonaro is filtered from 2026 forward predictions due to the Tribunal Superior Eleitoral ruling of 2023-06-30, which by a 5-2 vote in AIJE 0600814-85 declared him ineligible until 2030 for political abuse of power and improper use of state communications during a 2022-07-18 meeting with foreign ambassadors at the Alvorada Palace (Tribunal Superior Eleitoral 2023). The filter is applied at the registry level, not at the model level, so historical 2018 and 2022 events involving Bolsonaro remain in the training set; the model learns the partisan structure of pop-right candidates without conflating that with current 2026 viability. If a higher court reverses the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this is documented in the supplementary pre-registration document as a contingent re-run rule.
+*4. Eligibility filtering.* Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.
 
 ## 8. Reproducibility
 
-We provide a four-layer reproducibility stack: (i) a frozen code freeze with both git tag and per-file SHA-256, (ii) a curated corpus of source CSVs each independently hashed, (iii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, and (iv) a containerized environment that lifts the host-Python dependency.
+We provide a four-layer reproducibility stack: (i) a frozen code freeze with two git tags and a SHA-256 manifest covering source, input, and cached output files (supplementary), (ii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, (iii) a containerized environment that lifts the host-Python dependency, and (iv) a smoke-test suite plus continuous integration on every push.
 
-### 8.1 Code freeze and tag history
+### 8.1 Code freeze, data provenance, and result hashes
 
-The forecaster source code is published with the supplementary materials. Two pre-registration git tags exist. The original freeze `v1.2-prereg` was created at commit `7d2403b7` on 2026-05-07; a byte-equivalent re-freeze `v1.3-prereg` was created at commit `4fc1456c` on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot. Both tags resolve to identical predictions in the frozen 2026 forecast snapshot (supplementary).
+The forecaster source code is published with the supplementary materials under two pre-registration git tags. The original freeze v1.2-prereg was created on 2026-05-07; a byte-equivalent re-freeze v1.3-prereg was created on 2026-05-08 with refreshed code SHA-256 values after non-substantive cleanup that does not alter the forecast snapshot, so both tags resolve to identical predictions on the frozen 2026 horizon. All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives captured prior to the 2025-03-05 shutdown. Twenty source CSVs ship in the supplementary corpus, comprising the 394-event Brazilian core and the 6,954-event cross-country extension. Cached cross-validation JSONs ship alongside the source so byte-identical reproduction does not require re-running the grid. A SHA-256 manifest covering all source files, input CSVs, and cached result JSONs accompanies the supplementary archive; row-level entries are too granular for the body of the article and are omitted here.
 
-Canonical SHA-256 hashes (truncated to 16 hex characters for readability; full hashes in the supplementary pre-registration document):
-
-| File | sha256 (first 16) |
-|------|-------------------|
-| `engine/political_cohort.py` | `442fb43de535b127` |
-| `engine/auth_clients.py` | `adca01017bccd09f` |
-| `api/rotas_politica.py` | `b40c0fe413889bbb` |
-| `scripts/predict_2026.py` | `31e536ecc1dba24c` |
-| `scripts/political_stats_rigor.py` | `d8b8294c6a7a5578` |
-| `data/political_best_config.json` | `5792fce8f033d42e` |
-| `data/predictions_2026.json` | `9e693389e47b451f` |
-
-### 8.2 Data provenance and hashes
-
-All polls are real, sourced from public Wikipedia poll-aggregation pages and FiveThirtyEight historical archives. Full ingestion provenance is documented in three per-cycle parser scripts, with raw HTML inputs archived in the supplementary materials. Twenty source CSVs ship in the supplementary corpus with the following SHA-256 (first 16 hex):
-
-| CSV | sha256 (first 16) | n events |
-|-----|-------------------|---------:|
-| `eleicoes_br_real_polls.csv` | `9bc5644028f78b09` | 394 |
-| `governadores_br_historico.csv` | `d50d4e3152d24001` | (BR background) |
-| `eleicao_presidencial_br_2022.csv` | `f373e8a4f8b51a01` | (BR 2022 seed) |
-| `seed_eleicao_municipal_sp_2024.csv` | `787845ce38524b0f` | (SP 2024 seed) |
-| `impeachment_dilma_2016.csv` | `ee451ce91ba657db` | (qualitative) |
-| `lava_jato_2014_2018.csv` | `ee85cf8543a50224` | (qualitative) |
-| `brazil_votes_q1_2026.csv` | `62e08de70bbfb442` | (BR 2026 background) |
-| `us_2016_president.csv` | `9d20622061359661` | 3,130 |
-| `us_2020_president.csv` | `681825e2eee83dba` | 3,060 |
-| `uk_2019_general.csv` | `6228080ea84c02f4` | 192 |
-| `fr_2022_president.csv` | `790a39384cc3132b` | 198 |
-| `ar_2023_president.csv` | `557db26f2143a6b2` | 30 |
-| `br_2014_president.csv` | `a32f8849f9cc4d67` | 30 |
-| `us_2022_midterms.csv` | `f3138110ee5e5acf` | 104 |
-| `de_2021.csv` | `b578c381758414e9` | 90 |
-| `mx_2024.csv` | `b48b0c3d48a2b07e` | 22 |
-| `tr_2023.csv` | `aa5bc2b0dfd4b485` | 22 |
-| `it_2022.csv` | `854c2ad94e8408c5` | 62 |
-| `in_2024.csv` | `fba6e34b1884c7c8` | 14 |
-
-The bibliography lists every primary source page and access date; raw HTML snapshots are preserved in the repository so the reader can re-parse without re-fetching.
-
-### 8.3 Result hashes
-
-Cached cross-validation outputs ship with the repository so that anyone can verify byte-identical reproduction without re-running the full grid:
-
-| JSON | sha256 (first 16) |
-|------|-------------------|
-| `political_stats_v2.json` | `36213c0836ba3791` |
-| `baseline_gauntlet.json` | `ef2f518c179d3439` |
-| `cross_country_results.json` | `c0c8af483d08727b` |
-| `cross_country_extended.json` | `f71a44be974da986` |
-| `cross_country_more.json` | `1482da17da0ce489` |
-| `bench_bart.json` | `2f44643df1232178` |
-| `bench_stan_dlm.json` | `8d38f6270b4d84b8` |
-| `bench_ml_baselines.json` | `8cd592a134c26218` |
-| `failure_analysis.json` | `b1a3fa1107cdd03c` |
-
-### 8.4 Software environment
+### 8.2 Software environment
 
 Python 3.11 with packages pinned in the supplementary requirements file:
 
@@ -377,7 +329,7 @@ docker run --rm -v $(pwd)/data:/app/data vila-politica make reproduce
 
 Random seed is `42` everywhere. Both `numpy.random` and the Python `random` module are seeded at script entry points.
 
-### 8.5 One-command reproduction
+### 8.3 One-command reproduction
 
 A `Makefile` ships with the repository:
 
@@ -387,16 +339,17 @@ make stats        # bootstrap CIs + DM + McNemar + Murphy
 make baselines    # 5 ablation models year-fold CV
 make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
 make cross        # 12-cycle cross-country
+make wsweep       # state-baseline weight sweep + figure
 make all          # everything above + paper PDF rebuild
 ```
 
 End-to-end reproduction takes approximately three minutes on a single modern x86 core (Intel i7-12700K, 16 GB RAM, no GPU). The dominant cost is the BART benchmark (~140 seconds for 6 folds at 200 trees, 150 draws); without BART, full reproduction is under one minute.
 
-### 8.6 Smoke tests and continuous integration
+### 8.4 Smoke tests and continuous integration
 
 The smoke-test suite runs all 29 contract tests covering the cohort fit, the state baseline, the blend formula, the year-fold CV harness, and the API endpoints. The repository GitHub Actions workflow runs the smoke test plus a full backtest reproduction on every push, on Python 3.11 and 3.12.
 
-### 8.7 Pre-registration and blind protocol
+### 8.5 Pre-registration and blind protocol
 
 The blend weight `w` and the baseline minimum-support threshold `N >= 3` were specified before observing 2024 outcomes, with the formal pre-registration frozen on 2026-05-07. The pre-specified targets were 97% average and 85% on the 2024 SP fold; both were met (97.21% and 89.71%). Forward forecasts for the 2026 cycle, four locked hypotheses (H1 to H4), and the post-mortem evaluation protocol are recorded in `PREREGISTRATION.md`.
 

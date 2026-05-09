@@ -1,4 +1,4 @@
-.PHONY: smoke stats baselines ml cross wsweep hetero paper all reproduce verify clean
+.PHONY: smoke stats baselines ml cross wsweep hetero loso paper all reproduce verify clean
 
 PYTHON ?= python3
 PYTHONPATH := $(PWD)
@@ -46,6 +46,9 @@ wsweep:
 hetero:
 	$(PYTHON) scripts/bench_heteroscedastic_linzer.py
 
+loso:
+	$(PYTHON) scripts/bench_within_br_loso.py
+
 predict:
 	$(PYTHON) scripts/predict_2026.py
 
@@ -57,7 +60,7 @@ paper:
 # ---------------------------------------------------------------------------
 
 # Full reproduction without BART (fast, <1 min)
-reproduce-fast: smoke stats baselines ml stan cross wsweep hetero failure latency consolidate predict
+reproduce-fast: smoke stats baselines ml stan cross wsweep hetero loso failure latency consolidate predict
 	@echo "Fast reproduction complete (no BART). Outputs in data/*.json."
 
 # Full reproduction including BART (~3 min)

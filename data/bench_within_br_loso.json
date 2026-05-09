@@ -1,0 +1,417 @@
+{
+  "config": {
+    "stein_shrink": 0.4,
+    "w_linzer": 0.7,
+    "w_state": 0.36,
+    "sigma_int": 3.0,
+    "sigma_slope": 0.01,
+    "seed": 42
+  },
+  "ufs": [
+    "AC",
+    "AL",
+    "AM",
+    "AP",
+    "BA",
+    "CE",
+    "DF",
+    "ES",
+    "GO",
+    "MA",
+    "MG",
+    "MS",
+    "MT",
+    "PA",
+    "PB",
+    "PE",
+    "PI",
+    "PR",
+    "RJ",
+    "RN",
+    "RO",
+    "RR",
+    "RS",
+    "SC",
+    "SE",
+    "TO"
+  ],
+  "per_uf": {
+    "AC": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "AL": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.013831366298977927
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.004259418199539984
+      },
+      "state_baseline_used_loso": 0
+    },
+    "AM": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.024075712170169607
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.010954209202898238
+      },
+      "state_baseline_used_loso": 0
+    },
+    "AP": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.03466042609988
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.03466029624095539
+      },
+      "state_baseline_used_loso": 0
+    },
+    "BA": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003873959429203054
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0038738295702784396
+      },
+      "state_baseline_used_loso": 0
+    },
+    "CE": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.005125378677335356
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.005125248818410742
+      },
+      "state_baseline_used_loso": 0
+    },
+    "DF": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "ES": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.01272236543214026
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036143170205550114
+      },
+      "state_baseline_used_loso": 0
+    },
+    "GO": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "MA": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.01903842766009206
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.01903829780116744
+      },
+      "state_baseline_used_loso": 0
+    },
+    "MG": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "MS": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.010954339061822853
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.010954209202898238
+      },
+      "state_baseline_used_loso": 0
+    },
+    "MT": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "PA": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "PB": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.01903842766009206
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.01903829780116744
+      },
+      "state_baseline_used_loso": 0
+    },
+    "PE": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.018229101559175755
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.006999231224213982
+      },
+      "state_baseline_used_loso": 0
+    },
+    "PI": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.005125378677335356
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.005125248818410742
+      },
+      "state_baseline_used_loso": 0
+    },
+    "PR": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144468786470387
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317019722425
+      },
+      "state_baseline_used_loso": 0
+    },
+    "RJ": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036146486487895917
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614518789864978
+      },
+      "state_baseline_used_loso": 0
+    },
+    "RN": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.010954339061822853
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.010954209202898238
+      },
+      "state_baseline_used_loso": 0
+    },
+    "RO": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036144485878760145
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036143187289514006
+      },
+      "state_baseline_used_loso": 0
+    },
+    "RR": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614446923880639
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003614317064956025
+      },
+      "state_baseline_used_loso": 0
+    },
+    "RS": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.05512043203504514
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.03466029624095539
+      },
+      "state_baseline_used_loso": 0
+    },
+    "SC": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.018229101559175755
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.006999231224213982
+      },
+      "state_baseline_used_loso": 0
+    },
+    "SE": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036251084611374673
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036249786022128534
+      },
+      "state_baseline_used_loso": 0
+    },
+    "TO": {
+      "n": 2,
+      "loso": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.003615274220228579
+      },
+      "full": {
+        "n": 2,
+        "acc": 1.0,
+        "brier": 0.0036151443613039657
+      },
+      "state_baseline_used_loso": 0
+    }
+  },
+  "totals": {
+    "n": 52,
+    "loso": {
+      "acc": 1.0,
+      "brier": 0.011321685014411907
+    },
+    "full_train": {
+      "acc": 1.0,
+      "brier": 0.008447686048227286
+    },
+    "state_baseline_used": 0,
+    "state_baseline_undefined_loso": 52
+  }
+}

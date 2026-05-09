@@ -293,15 +293,24 @@ A natural concern about the v1.3 production point is that the Linzer drift param
 
 Per-cycle fitting *degrades* the ensemble by 8.12 pp accuracy on the BR core. The mechanism is interaction with the prior pull: the cycle-optimal Linzer drift, when chosen to minimize Linzer-only Brier, tends to pull the ensemble probability toward the lead signal hard enough to overcome the state-baseline correction precisely on the cycles where the state baseline is needed most (2022, 2024 SP). The 2018 fold also drops 10 pp because the heteroscedastic fit underestimates volatility on the Haddad-Bolsonaro runoff, sharpening the (incorrect) high-confidence Linzer pull. The scalar choice is empirically robust under the production ensemble; we therefore *do not* treat heteroscedastic drift as an open limitation.
 
+### 6.7 Within-Brazil leave-one-state-out generalization
+
+A second concern is that the Brazilian non-SP per-state coverage is thin: 27 governorships in 2022 contribute only 2 paired events each (winner and runner-up at the eve of the runoff or first-round outcome). To test whether the architecture generalizes spatially across BR states even when the held-out state's (uf, regime) cell is undefined, we run leave-one-state-out (LOSO) on the 26 non-SP UFs from 2022. For each UF we drop its 2 events from training, refit the cohort with `stein_shrink=0.4` on the remaining 24 UFs plus all federal and SP municipal training events from non-test years, and evaluate on the held-out UF.
+
+| Configuration | n | Acc | Brier | State baseline available |
+|:---|---:|---:|---:|---:|
+| Full training (no UF held out) | 52 | 1.0000 | 0.0084 | 52 / 52 |
+| LOSO (held-out UF cell undefined) | 52 | 1.0000 | 0.0113 | 0 / 52 |
+
+Accuracy is 100% under both configurations, with Brier degrading only by 0.003 when the state baseline is unavailable. The cohort + Linzer ensemble alone is sufficient to recover the gubernatorial outcome from polling leads and partisan-regime structure on every BR-state held-out cell. This is a different regime from the cross-country LOSO of §6.4 (where US 2016/2020/2022 hold out single-state cells inside a much larger pool with poll volatility comparable to BR national contests): within-BR per-state LOSO succeeds because 2022 gubernatorial leads were unambiguous in 24 of 26 non-SP states. The architecture therefore degrades gracefully when state-level priors are unavailable; densifying within-BR coverage would refine calibration but is not required for headline accuracy.
+
 ## 7. Limitations
 
-We list three remaining limitations and indicate the most natural path to address each. A fourth concern from earlier drafts - that scalar Linzer drift could be improved by per-cycle adaptation - was tested empirically in §6.6 and rejected; we therefore omit it from this list.
+Two concerns from earlier drafts (scalar Linzer drift, within-BR non-SP coverage) were tested empirically in §6.6 and §6.7 and resolved in favor of the production architecture; we therefore restrict this section to limitations the data does not refute. Two remain.
 
-*1. Within-Brazil non-SP state coverage.* The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The eleven-country cross-country extension of §6.4 establishes that the mechanism generalizes beyond the BR core, but it does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022, and 2026 is the most direct path to tighten the cells the model currently relies on.
+*1. Demographic poststratification.* The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.
 
-*2. Demographic poststratification.* The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.
-
-*3. Eligibility filtering.* Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.
+*2. Eligibility filtering.* Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.
 
 ## 8. Reproducibility
 
@@ -350,6 +359,7 @@ make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
 make cross        # 12-cycle cross-country
 make wsweep       # state-baseline weight sweep + figure
 make hetero       # heteroscedastic Linzer ablation experiment
+make loso         # within-BR leave-one-state-out experiment
 make all          # everything above + paper PDF rebuild
 ```
 

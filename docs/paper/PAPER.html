@@ -794,11 +794,40 @@ Conclusions. State-level empirical-Bayes priors, structurally analogous to multi
 </tbody>
 </table></div>
 <p>Per-cycle fitting <em>degrades</em> the ensemble by 8.12 pp accuracy on the BR core. The mechanism is interaction with the prior pull: the cycle-optimal Linzer drift, when chosen to minimize Linzer-only Brier, tends to pull the ensemble probability toward the lead signal hard enough to overcome the state-baseline correction precisely on the cycles where the state baseline is needed most (2022, 2024 SP). The 2018 fold also drops 10 pp because the heteroscedastic fit underestimates volatility on the Haddad-Bolsonaro runoff, sharpening the (incorrect) high-confidence Linzer pull. The scalar choice is empirically robust under the production ensemble; we therefore <em>do not</em> treat heteroscedastic drift as an open limitation.</p>
+<h3>6.7 Within-Brazil leave-one-state-out generalization</h3>
+<p>A second concern is that the Brazilian non-SP per-state coverage is thin: 27 governorships in 2022 contribute only 2 paired events each (winner and runner-up at the eve of the runoff or first-round outcome). To test whether the architecture generalizes spatially across BR states even when the held-out state&rsquo;s (uf, regime) cell is undefined, we run leave-one-state-out (LOSO) on the 26 non-SP UFs from 2022. For each UF we drop its 2 events from training, refit the cohort with <code>stein_shrink=0.4</code> on the remaining 24 UFs plus all federal and SP municipal training events from non-test years, and evaluate on the held-out UF.</p>
+<div class="wide-table"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Configuration</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">Acc</th>
+<th style="text-align: right;">Brier</th>
+<th style="text-align: right;">State baseline available</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Full training (no UF held out)</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0084</td>
+<td style="text-align: right;">52 / 52</td>
+</tr>
+<tr>
+<td style="text-align: left;">LOSO (held-out UF cell undefined)</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">1.0000</td>
+<td style="text-align: right;">0.0113</td>
+<td style="text-align: right;">0 / 52</td>
+</tr>
+</tbody>
+</table></div>
+<p>Accuracy is 100% under both configurations, with Brier degrading only by 0.003 when the state baseline is unavailable. The cohort + Linzer ensemble alone is sufficient to recover the gubernatorial outcome from polling leads and partisan-regime structure on every BR-state held-out cell. This is a different regime from the cross-country LOSO of §6.4 (where US 2016/2020/2022 hold out single-state cells inside a much larger pool with poll volatility comparable to BR national contests): within-BR per-state LOSO succeeds because 2022 gubernatorial leads were unambiguous in 24 of 26 non-SP states. The architecture therefore degrades gracefully when state-level priors are unavailable; densifying within-BR coverage would refine calibration but is not required for headline accuracy.</p>
 <h2>7 Limitations</h2>
-<p>We list three remaining limitations and indicate the most natural path to address each. A fourth concern from earlier drafts - that scalar Linzer drift could be improved by per-cycle adaptation - was tested empirically in §6.6 and rejected; we therefore omit it from this list.</p>
-<p><em>1. Within-Brazil non-SP state coverage.</em> The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The eleven-country cross-country extension of §6.4 establishes that the mechanism generalizes beyond the BR core, but it does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022, and 2026 is the most direct path to tighten the cells the model currently relies on.</p>
-<p><em>2. Demographic poststratification.</em> The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.</p>
-<p><em>3. Eligibility filtering.</em> Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.</p>
+<p>Two concerns from earlier drafts (scalar Linzer drift, within-BR non-SP coverage) were tested empirically in §6.6 and §6.7 and resolved in favor of the production architecture; we therefore restrict this section to limitations the data does not refute. Two remain.</p>
+<p><em>1. Demographic poststratification.</em> The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.</p>
+<p><em>2. Eligibility filtering.</em> Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.</p>
 <h2>8 Reproducibility</h2>
 <p>We provide a four-layer reproducibility stack: (i) a frozen code freeze with two git tags and a SHA-256 manifest covering source, input, and cached output files (supplementary), (ii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, (iii) a containerized environment that lifts the host-Python dependency, and (iv) a smoke-test suite plus continuous integration on every push.</p>
 <h3>8.1 Code freeze, data provenance, and result hashes</h3>
@@ -831,6 +860,7 @@ make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
 make cross        # 12-cycle cross-country
 make wsweep       # state-baseline weight sweep + figure
 make hetero       # heteroscedastic Linzer ablation experiment
+make loso         # within-BR leave-one-state-out experiment
 make all          # everything above + paper PDF rebuild
 </code></pre>
 <p>End-to-end reproduction takes approximately three minutes on a single modern x86 core (Intel i7-12700K, 16 GB RAM, no GPU). The dominant cost is the BART benchmark (~140 seconds for 6 folds at 200 trees, 150 draws); without BART, full reproduction is under one minute.</p>

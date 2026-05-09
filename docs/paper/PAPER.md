@@ -553,58 +553,9 @@ Auxiliary thresholds (fixed, not searched):
 
 Selection criterion: maximize average year-fold accuracy weighted by per-cycle event count, with a tiebreak on minimum 2024 SP accuracy. The chosen production v1.3 point (s=0.40, w_linzer=0.70, sigma_0=3.0, sigma_1=0.01, w=0.36) is unique under this criterion across the joint 2,688 x 15 = 40,320 candidate configurations. The pre-MRP v1.2 best (s=0.05, w_linzer=0.50, sigma_0=4.0, sigma_1=0.05, w=0) is the unique optimum under the same criterion when w is constrained to 0.
 
-## Appendix B. Stan-equivalent pseudo-code
+## Appendix B. Implicit hierarchical model
 
-The model is implemented in pure Python (numpy + scipy.stats) for production, but is equivalent to the following Stan program in spirit. The pseudo-code expresses the cohort, Linzer, and state-baseline components as a unified hierarchical model.
-
-```
-data {
-  int N;                                  // events
-  int K;                                  // cohorts
-  int U;                                  // states
-  int R;                                  // regimes
-  array[N] int<lower=1, upper=K> k;       // cohort index
-  array[N] int<lower=1, upper=U> u;       // state index
-  array[N] int<lower=1, upper=R> r;       // regime index
-  array[N] real lead;                     // poll lead (pp)
-  array[N] real days;                     // days to election
-  array[N] int<lower=0, upper=1> y;       // outcome
-  real<lower=0, upper=1> p_global;        // global rate
-  real<lower=0, upper=1> w_linzer;        // blend weight
-  real<lower=0, upper=1> w_state;         // MRP blend weight
-}
-parameters {
-  vector<lower=0, upper=1>[K] p_cohort;
-  array[U, R] real<lower=0, upper=1> p_state;
-  real<lower=0> sigma_0;
-  real<lower=0> sigma_1;
-  real<lower=0, upper=1> stein_s;
-}
-transformed parameters {
-  vector[N] p_blend;
-  vector[N] p_final;
-  for (n in 1:N) {
-    real p_lin = Phi(lead[n] / (sigma_0 + sigma_1 * days[n]));
-    real p_coh = (1 - stein_s) * p_cohort[k[n]] + stein_s * p_global;
-    p_blend[n] = (1 - w_linzer) * p_coh + w_linzer * p_lin;
-    p_final[n] = (1 - w_state) * p_blend[n] + w_state * p_state[u[n], r[n]];
-  }
-}
-model {
-  // Laplace prior on the state baseline (informationless).
-  for (uu in 1:U) for (rr in 1:R) p_state[uu, rr] ~ beta(1, 1);
-  // Stein-shrunk cohort prior.
-  for (kk in 1:K) p_cohort[kk] ~ beta(1 + p_global * 4, 1 + (1 - p_global) * 4);
-  // Linzer drift parameters.
-  sigma_0 ~ normal(4.0, 1.0) T[0, ];
-  sigma_1 ~ normal(0.05, 0.02) T[0, ];
-  stein_s ~ beta(1, 19);
-  // Likelihood.
-  y ~ bernoulli(p_final);
-}
-```
-
-The production estimator is point-estimated rather than fully Bayesian, with the cohort base rate p_cohort taken as the Stein-shrunk maximum-likelihood estimate, the state baseline taken as the Laplace-smoothed contingency mean, and (sigma_0, sigma_1, stein_s, w_linzer, w_state) selected by autoresearch grid search rather than HMC. The pseudo-code above documents the implicit generative model for readers wishing to extend the work to full posterior inference.
+The blend $p_{\text{final}} = (1-w)\,[(1-w_\ell)\,\tilde p_k + w_\ell\,\Phi(\ell/\sigma(d))] + w\,p_{u,r}$ is a point-estimator analogue of a unified hierarchical Bayesian model. In that model, the cohort base rate $p_k$ would receive a Stein-shrunk Beta prior centred on the global rate; the state baseline $p_{u,r}$ would receive an informationless $\mathrm{Beta}(1,1)$ prior consistent with our Laplace smoothing with min-N threshold three; the Linzer drift parameters $\sigma_0, \sigma_1$ would receive truncated-normal hyperpriors anchored at the values selected by autoresearch grid search; and the binary outcome $y$ would follow $\mathrm{Bernoulli}(p_{\text{final}})$. Our production estimator replaces full posterior inference (Hamiltonian Monte Carlo over this structure) with point estimates: the cohort rate is the Stein-shrunk maximum-likelihood estimate, the state baseline is the Laplace-smoothed contingency mean, and $(\sigma_0, \sigma_1, s, w_\ell, w)$ are selected by grid search. The fully Bayesian implementation is left for follow-up work; the point estimator captures the same conditional structure with substantially lower compute cost and matches the $\mathrm{Beta}(1,1)$ Laplace prior on the state baseline exactly.
 
 ## Appendix C. Pre-registration timestamp
 

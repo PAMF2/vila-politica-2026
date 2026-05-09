@@ -1,4 +1,4 @@
-.PHONY: smoke stats baselines ml cross wsweep hetero loso paper all reproduce verify clean
+.PHONY: smoke stats baselines ml cross wsweep hetero loso dropone autoresearch paper all reproduce verify clean
 
 PYTHON ?= python3
 PYTHONPATH := $(PWD)
@@ -49,6 +49,12 @@ hetero:
 loso:
 	$(PYTHON) scripts/bench_within_br_loso.py
 
+dropone:
+	$(PYTHON) scripts/bench_drop_one_cycle.py
+
+autoresearch:
+	HOUSE_EFFECTS=0 W_STATE=0.36 $(PYTHON) scripts/autoresearch_political.py
+
 predict:
 	$(PYTHON) scripts/predict_2026.py
 
@@ -60,7 +66,7 @@ paper:
 # ---------------------------------------------------------------------------
 
 # Full reproduction without BART (fast, <1 min)
-reproduce-fast: smoke stats baselines ml stan cross wsweep hetero loso failure latency consolidate predict
+reproduce-fast: smoke stats baselines ml stan cross wsweep hetero loso dropone failure latency consolidate predict
 	@echo "Fast reproduction complete (no BART). Outputs in data/*.json."
 
 # Full reproduction including BART (~3 min)

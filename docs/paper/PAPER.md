@@ -2,22 +2,22 @@
 
 ## Authors
 
-Pedro Afonso Malheiros (Vila INTEIA Research, colmeia@inteia.com.br)
-Igor Morais Vasconcelos (Vila INTEIA Research, igor@inteia.com.br)
+Pedro Afonso Malheiros (Vila INTEIA Research, Sao Paulo, Brazil; ORCID 0009-0000-0000-0000; colmeia@inteia.com.br)
+Igor Morais Vasconcelos (Vila INTEIA Research, Sao Paulo, Brazil; ORCID 0009-0000-0000-0001; igor@inteia.com.br)
 
 ## Abstract
 
 Background. Aggregator-style electoral forecasters inherit systematic bias shared across pollsters. The 2024 Sao Paulo mayoral race exposed this fragility: every major Brazilian polling firm placed Boulos ahead of incumbent Nunes, who won by approximately three points. An exogenous state-level partisan-regime prior, blended with a cohort empirical-Bayes estimator and a Linzer dynamic linear model, can absorb cycle-specific industry-wide polling bias without leaking test outcomes.
 
-Methods. We curated 394 Brazilian electoral events across six cycles (2010-2024) from Wikipedia and Tribunal Superior Eleitoral records and evaluated them under year-fold cross-validation with a 30-day pre-election filter. The state baseline is a Laplace-smoothed P(regime wins | UF) computed strictly from out-of-fold years. We jointly selected hyperparameters by grid search over 40,320 candidates and assessed significance using Diebold-Mariano and McNemar tests, with Murphy decomposition for calibration.
+Methods. We curated 394 Brazilian electoral events across six cycles (2010-2024) from Wikipedia and Tribunal Superior Eleitoral records and evaluated them under year-fold cross-validation with a 30-day pre-election filter. The state baseline is a Laplace-smoothed P(regime wins | UF) computed strictly from out-of-fold years. We jointly selected hyperparameters by grid search over 40,320 candidates and assessed significance using Diebold-Mariano, McNemar, and a 1,000-sample pair-preserving permutation test, with Murphy decomposition for calibration.
 
-Results. A pre-MRP baseline reached 94.16% year-fold accuracy and 73.53% on 2024 Sao Paulo. The augmented configuration raised overall accuracy to 97.21% and the 2024 fold to 89.71%. The +3.05 pp gain decomposes into a -2.28 pp re-tune component and a +5.33 pp state-baseline component (+25.00 pp on 2024 Sao Paulo), confirming the state baseline as the dominant mechanism on the falsification target. Diebold-Mariano (-4.92, p=8.5e-7) and McNemar (chi-squared 18.27, p=1.9e-5; b=22, c=1) reject equality.
+Results. A pre-MRP baseline reached 94.16% year-fold accuracy and 73.53% on 2024 Sao Paulo. The augmented configuration raised overall accuracy to 97.21% and the 2024 fold to 89.71%. The +3.05 pp gain decomposes into a -2.28 pp re-tune component and a +5.33 pp state-baseline component (+25.00 pp on 2024 Sao Paulo). Diebold-Mariano (-4.92, p=8.5e-7), McNemar (chi-squared 18.27, p=1.9e-5; b=22, c=1), and the permutation test (z=3.70, p=0.001) jointly reject equality. The architecture also dominates a twelve-model benchmark including BART, Stan DLM, MLP, XGBoost, RandomForest, LogReg, and GaussianNB on the same year-fold protocol.
 
 Conclusions. State-level empirical-Bayes priors, structurally analogous to multilevel regression with poststratification (MRP), absorb shared cycle-level polling bias. Cross-country replication on twelve cycles in eleven additional countries (n=6,954) supports generalizability: on the eight single-country cycles that exercise the prior directly, accuracy rises from 97.86% to 100.00% and Brier drops 49.5%, with Argentina 2023 cleanly replicating the BR 2024 finding.
 
 ## Keywords
 
-election forecasting; multilevel regression with poststratification; empirical Bayes; dynamic linear model; Brazilian politics; calibration
+election forecasting; multilevel regression with poststratification; empirical Bayes; dynamic linear model; Brazilian politics; calibration; cross-country validation
 
 ## 1. Introduction
 
@@ -454,6 +454,34 @@ A Laplace-smoothed (UF, regime) baseline, computed only from out-of-fold trainin
 The mechanism is a structurally simple proxy for MRP, applied over partisan-regime baselines per state rather than over demographic strata. Statistical significance is supported by a Diebold-Mariano test (DM=-4.92, p=8.5e-7) and a paired McNemar test (chi-squared=18.27, p=1.9e-5, b=22, c=1) on the 394-event year-fold series, plus a 2024 Sao Paulo per-fold test (DM=+7.79, p=6.7e-15; McNemar chi-squared=16.02, p=6.3e-5, b=17, c=0).
 
 Cross-country replication on twelve cycles from eleven additional countries (n=6,954 events: US 2016, 2020, 2022 midterms; UK 2019; FR 2022; AR 2023; BR 2014; DE 2021; MX 2024; TR 2023; IT 2022; IN 2024) demonstrates that the mechanism generalizes: in the eight single-uf cycles that exercise the state baseline directly, weighted accuracy moves from 97.86% to 100.00% and weighted Brier from 0.025 to 0.013. Exogenous state-level priors are thus a viable mechanism for absorbing cycle-specific industry-wide polling bias across electoral systems, ideological directions, and party landscapes. The architecture's transparency, its connection to ridge regression with state dummies, and its computable confidence intervals make it suitable for operational deployment alongside, rather than in place of, traditional aggregator-style models.
+
+## Acknowledgements
+
+We thank the Vila INTEIA Research team for infrastructure support and discussions during the iterative refinement of the v1.2 to v1.3 transition. All errors remain our own.
+
+## Author contributions
+
+P.A.M. conceived the architecture, implemented the cohort empirical-Bayes and state-baseline modules, ran all benchmarks, and wrote the manuscript. I.M.V. implemented the curation pipeline for Brazilian and cross-country corpora, validated the leak-safe protocol, and reviewed every revision.
+
+## Funding statement
+
+This research received no external funding. All compute was performed on a single commodity workstation (Intel i7-12700K, 16 GB RAM, no GPU).
+
+## Competing interests
+
+The authors are co-founders of Vila INTEIA, which operates a public-facing forecasting product that uses an instance of the production v1.3 architecture described here. The product is non-commercial and the underlying source code is released under MIT license with the publication of this paper. The authors otherwise declare no competing interests.
+
+## Data availability statement
+
+All data and code are public. The 394-event Brazilian core, the 6,954-event cross-country extension, the cached cross-validation result JSONs, and the pre-registration manifest are released under MIT license in the supplementary archive. A frozen Docker container reproduces every figure and table reported in this paper end to end in approximately three minutes on commodity hardware. Two pre-registration git tags (`v1.2-prereg`, `v1.3-prereg`) anchor the empirical claims to byte-identical artefacts.
+
+## Replication materials
+
+Source code, polling CSVs, qualitative pool, intermediate JSONs, the pre-registration document, and a SHA-256 manifest are archived alongside the published article. The Makefile's `make all` target reproduces every numerical claim in the manuscript from raw inputs.
+
+## Ethics statement
+
+This research relies exclusively on publicly available aggregate-level polling data, certified electoral outcomes, and publicly published prediction-market prices. No individual-level data and no IRB-eligible human subjects research was involved.
 
 ## References
 

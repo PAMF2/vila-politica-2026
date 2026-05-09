@@ -71,25 +71,56 @@ if authors_m:
     # NeurIPS format: name on one line, affiliation on next
     parsed = []
     for ln in lines:
-        # "Name (Affiliation, email)"
-        m = re.match(r"(.+?)\s*\((.+?)\)", ln)
+        # "Name (Affiliation, ...; ORCID xxxx; email)" - split on ; if present
+        m = re.match(r"(.+?)\s*\((.+?)\)\s*$", ln)
         if m:
             name = m.group(1).strip()
-            aff = m.group(2).strip()
-            parsed.append((name, aff))
+            content = m.group(2).strip()
+            parts = [p.strip() for p in content.split(";")]
+            aff = parts[0] if parts else ""
+            orcid = ""
+            email = ""
+            for p in parts[1:]:
+                if "@" in p:
+                    email = p
+                elif p.lower().startswith("orcid"):
+                    orcid = p
+                else:
+                    aff = (aff + "; " + p) if aff else p
+            parsed.append((name, aff, orcid, email))
         else:
-            parsed.append((ln, ""))
-    if len(parsed) == 2:
+            parsed.append((ln, "", "", ""))
+
+    def _author_html(name, aff, orcid, email, marker=""):
+        marker_html = f"<sup>{marker}</sup>" if marker else ""
+        bits = [f'<div class="aname">{name}{marker_html}</div>']
+        if aff:
+            bits.append(f'<div class="aaff">{aff}</div>')
+        if orcid:
+            bits.append(f'<div class="aorcid">{orcid}</div>')
+        if email:
+            bits.append(f'<div class="aemail">{email}</div>')
+        return f'<div>{"".join(bits)}</div>'
+
+    if len(parsed) >= 1:
+        # First author = corresponding author (mark with *)
+        markers = ["1,*"] + [str(i) for i in range(2, len(parsed) + 1)]
+        author_cells = [
+            _author_html(parsed[i][0], parsed[i][1], parsed[i][2], parsed[i][3],
+                         marker=markers[i] if i < len(markers) else "")
+            for i in range(len(parsed))
+        ]
+        corresponding_email = parsed[0][3] or ""
+        corr_block = (
+            f'<div class="corresponding"><sup>*</sup> Corresponding author. '
+            f'Email: <code>{corresponding_email}</code></div>'
+            if corresponding_email else ""
+        )
         authors_html = (
-            f'<div class="author-grid">'
-            f'<div><div class="aname">{parsed[0][0]}</div>'
-            f'<div class="aaff">{parsed[0][1]}</div></div>'
-            f'<div><div class="aname">{parsed[1][0]}</div>'
-            f'<div class="aaff">{parsed[1][1]}</div></div>'
-            f'</div>'
+            f'<div class="author-grid">{"".join(author_cells)}</div>{corr_block}'
         )
     else:
-        authors_html = " · ".join(f"{n}, {a}" if a else n for n, a in parsed)
+        authors_html = ""
     md_src = md_src[:authors_m.start()] + md_src[authors_m.end():]
 
 # Abstract
@@ -196,18 +227,30 @@ html = f"""<!doctype html>
 <style>
 @page {{
   size: A4;
-  margin: 2.0cm 1.6cm 2.4cm 1.6cm;
+  margin: 2.2cm 1.6cm 2.4cm 1.6cm;
+  @top-left {{
+    content: "Empirical-Bayes Priors and Polling Failures";
+    font-family: "Liberation Serif", "Times New Roman", serif;
+    font-size: 8.5pt; color: #666; font-style: italic;
+  }}
+  @top-right {{
+    content: "Malheiros and Vasconcelos";
+    font-family: "Liberation Serif", "Times New Roman", serif;
+    font-size: 8.5pt; color: #666; font-style: italic;
+  }}
   @bottom-center {{
     content: counter(page);
-    font-family: "Times New Roman", "Liberation Serif", serif;
+    font-family: "Liberation Serif", "Times New Roman", serif;
     font-size: 9pt; color: #555;
   }}
 }}
 @page :first {{
   margin-top: 1.4cm;
+  @top-left {{ content: ""; }}
+  @top-right {{ content: ""; }}
   @bottom-center {{
     content: counter(page);
-    font-family: "Times New Roman", "Liberation Serif", serif;
+    font-family: "Liberation Serif", "Times New Roman", serif;
     font-size: 9pt; color: #555;
   }}
 }}
@@ -252,6 +295,26 @@ html, body {{
   font-style: italic;
   color: #333;
   margin-top: 1pt;
+}}
+.aorcid {{
+  font-size: 8.4pt;
+  color: #666;
+  font-family: "Liberation Mono", Consolas, monospace;
+  margin-top: 1pt;
+}}
+.aemail {{
+  font-size: 8.6pt;
+  color: #444;
+  font-family: "Liberation Mono", Consolas, monospace;
+  margin-top: 1pt;
+}}
+.corresponding {{
+  text-align: center;
+  font-size: 8.8pt;
+  color: #444;
+  margin: 4pt auto 12pt auto;
+  max-width: 80%;
+  font-style: italic;
 }}
 
 /* Abstract: NeurIPS small-caps centered, narrow */

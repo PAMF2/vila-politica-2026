@@ -524,7 +524,7 @@ Tribunal Superior Eleitoral. (2024a, October 6). Ricardo Nunes e Guilherme Boulo
 
 Tribunal Superior Eleitoral. (2024b, October 27). Ricardo Nunes e reeleito prefeito de Sao Paulo (SP). Brasilia, TSE. https://www.tse.jus.br/comunicacao/noticias/2024/Outubro/ricardo-nunes-mdb-e-reeleito-prefeito-de-sao-paulo
 
-Tziralis, G., and Tatsiopoulos, I. (2007). Prediction markets: An extended literature review. Journal of Prediction Markets, 1(1), 75-91.
+Tziralis, G., and Tatsiopoulos, I. (2007). Prediction markets: An extended literature review. Journal of Prediction Markets, 1(1), 75-91. https://doi.org/10.5750/jpm.v1i1.421
 
 Wang, W., Rothschild, D., Goel, S., and Gelman, A. (2015). Forecasting elections with non-representative polls. International Journal of Forecasting, 31(3), 980-991. https://doi.org/10.1016/j.ijforecast.2014.06.001
 
@@ -532,7 +532,7 @@ Wikipedia contributors. (2026). 2024 Sao Paulo municipal election. Wikipedia, th
 
 Wikipedia contributors. (2024-2026). Opinion polling for the 2021 German federal election; for the 2024 Mexican general election; for the 2023 Turkish presidential election; for the 2022 Italian general election; for the 2024 Indian general election. Wikipedia, the free encyclopedia. Retrieved 2026-05-08. Raw HTML archived under data/cross_country/raw_more/.
 
-Wolfers, J., and Zitzewitz, E. (2004). Prediction markets. Journal of Economic Perspectives, 18(2), 107-126.
+Wolfers, J., and Zitzewitz, E. (2004). Prediction markets. Journal of Economic Perspectives, 18(2), 107-126. https://doi.org/10.1257/0895330041371321
 
 ## Appendix A. Hyperparameter grid
 

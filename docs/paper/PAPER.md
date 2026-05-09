@@ -280,7 +280,7 @@ We list four genuine remaining limitations, distinguishing those addressed by th
 
 **Within-Brazil non-SP state coverage (partially mitigated).** The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The cross-country extension of §6.4 (eleven countries, 6,954 events) demonstrates that the MRP mechanism generalizes beyond the BR core, but does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022 and 2026 remains the most direct path to tighten the (uf, regime) cells we currently rely on.
 
-**Demographic poststratification (deferred).** The state baseline conditions on regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua 4-trimestre 2025 microdata. That release was published by IBGE on 2026-02-20 with the post-2024-Census re-weighting, so the data are operationally available; we defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and the cross-country sources.
+**Demographic poststratification (deferred).** The state baseline conditions on regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua 4-trimestre 2025 microdata. That release was published by IBGE on 2026-03-27 with the post-2024-Census re-weighting, so the data are operationally available; we defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and the cross-country sources.
 
 **Heteroscedastic Linzer drift (open).** The Linzer drift parameters $\sigma_0, \sigma_1$ are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil. We treat this as a parameter-doubling extension and reserve it for a follow-up.
 
@@ -468,7 +468,7 @@ Hoerl, A. E., and Kennard, R. W. (1970). Ridge regression: Biased estimation for
 
 Hummel, P., and Rothschild, D. (2014). Fundamental models for forecasting elections at the state level. Electoral Studies, 35, 123-139.
 
-IBGE. (2026). Pesquisa Nacional por Amostra de Domicilios Continua, microdados 4-trimestre 2025. Instituto Brasileiro de Geografia e Estatistica. Released 2026-02-20. https://www.ibge.gov.br/estatisticas/sociais/educacao/9173-pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral.html
+IBGE. (2026). Pesquisa Nacional por Amostra de Domicilios Continua, microdados 4-trimestre 2025. Instituto Brasileiro de Geografia e Estatistica. Released 2026-03-27. https://www.ibge.gov.br/estatisticas/sociais/trabalho/9173-pesquisa-nacional-por-amostra-de-domicilios-continua-trimestral.html
 
 Jackman, S. (2005). Pooling the polls over an election campaign. Australian Journal of Political Science, 40(4), 499-517.
 

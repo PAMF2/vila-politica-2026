@@ -342,7 +342,23 @@ A final concern is whether the headline 97.21% is dominated by any single cycle 
 
 Headline accuracy stays in [0.9396, 0.9785] across the six drop-one configurations (range 3.89 pp); the largest single-cycle effect is 2020 SP at $-3.25$ pp (its 30/30 events are all classified correctly, so removing them lowers the average) and the most surprising is 2024 SP at $+0.64$ pp (dropping the hardest cycle from the test pool eliminates the seven AtlasIntel and Instituto Verita misses). The mechanism's headline accuracy is therefore not inflated by any easy cycle, and the +5.33 pp MRP-component contribution reported in §5.1 is not a 2024-specific artifact.
 
-### 6.9 Differentiation from prior work
+### 6.9 Comparison to non-poll forecasting paradigms
+
+The §5.6 benchmark restricts comparison to alternative model classes that consume the same poll-driven feature set. Election forecasting also includes paradigms that do not start from polls. We summarize how each paradigm sits relative to the production architecture.
+
+*Citizen forecasting.* Lewis-Beck and Tien (1999) showed that asking voters who they think will win - rather than how they will vote - produces aggregate forecasts that beat vote-intention surveys; eleven cycles of ANES data 1956-1996 called nine of eleven presidential winners. Murr (2011) generalized the result to UK constituency races and Graefe (2014) confirmed it across 217 surveys in seven countries. The advantage relative to poll-based aggregators is robustness to systematic vote-intention bias of exactly the kind §6.1 absorbs through the (uf, regime) prior; the disadvantage is dependence on dedicated expectation surveys, which are absent from BR municipal cycles. Our architecture provides a structural alternative when expectation surveys are unavailable: state-regime priors substitute as a public exogenous signal that the poll panel does not see.
+
+*Prediction markets.* Wolfers and Zitzewitz (2004) and Berg, Forsythe, Nelson and Rietz (2008) document that decentralized markets aggregate trader belief and have empirically beaten polls in some U.S. cycles. As detailed in §6.3, Polymarket's BR 2026 presidential market priced Flavio Bolsonaro at 45% and Lula at 38% on 2026-05-07, comparable in direction to our frozen forecasts. Markets and our model aggregate orthogonal signals; the architecture does not compete with markets so much as offer a transparent counterfactual when markets clear at low volume (as in 2024 SP municipal).
+
+*Large-language-model forecasting.* Halawi et al. (2024) demonstrate that GPT-4 with retrieval reaches Brier 0.179 against a human-crowd baseline of 0.149 on a 900-question forecasting benchmark; subsequent o3-class models reportedly reach Brier 0.135 (Lu 2025) but remain below curated superforecaster panels. Our v1.3 ensemble's pooled Brier of 0.105 is not directly comparable because the question class differs (electoral binary vs general-purpose forecasting) and our 30-day filter eliminates the longest-horizon bin where LLMs underperform most; the qualitative point is that domain-specific structure (state-regime prior + Linzer drift) outperforms a general-purpose foundation model on the events for which the structure is well-calibrated.
+
+*Ensemble combiners.* Graefe et al. (2014, 2024) PollyVote averages polls, fundamentals, expectation surveys, prediction markets, and expert judgement; it called nine of ten U.S. presidential cycles 2004-2024 with mean absolute error roughly 1.7 percentage points on popular-vote share. Our architecture is structurally simpler: one blend weight $w$ between the lead-driven ensemble and the state-regime prior, no aggregation across paradigms. PollyVote-style combination of Vila MRP with citizen forecasting and prediction markets in BR cycles is a natural extension when the underlying paradigm-specific data become available.
+
+*Expert panels and superforecasters.* The Good Judgment Project (Tetlock and Gardner 2015) showed that aggregated expert judgement under accountability and feedback achieves Brier scores roughly 30 percent below random-trader markets in geopolitical questions. We do not directly compare; the relevant benchmark is whether structural priors plus polls match human expert teams on the same questions, and the literature does not currently contain such a matched benchmark on the BR municipal cycles. We note as a methodological observation that the architecture's selective coverage at $\tau = 0.40$ (§5.5) achieves 100% accuracy on the 7.9% most confident events, comparable in spirit to the high-confidence subset that drives Tetlock's calibration claims.
+
+*Social-media-based forecasting.* Tumasjan et al. (2010) launched a wave of Twitter-based vote-share predictions that subsequent reanalysis (Gayo-Avello 2012) showed could be made to predict any election by retroactive parameter selection. We exclude this paradigm from comparison: the leak-safe protocol used here would invalidate most of the published claims in that literature.
+
+### 6.10 Differentiation from prior work
 
 We summarize how the production architecture differs from five canonical references in the empirical-political-forecasting literature.
 
@@ -501,6 +517,16 @@ Ghitza, Y., and Gelman, A. (2013). Deep interactions with MRP: Election turnout 
 
 Gneiting, T., and Raftery, A. E. (2007). Strictly proper scoring rules, prediction, and estimation. Journal of the American Statistical Association, 102(477), 359-378. https://doi.org/10.1198/016214506000001437
 
+Graefe, A. (2014). Accuracy of vote expectation surveys in forecasting elections. Public Opinion Quarterly, 78(S1), 204-232. https://doi.org/10.1093/poq/nfu008
+
+Graefe, A., Armstrong, J. S., Jones, R. J., and Cuzan, A. G. (2014). Accuracy of combined forecasts for the 2012 presidential election: The PollyVote. PS: Political Science and Politics, 47(2), 427-431. https://doi.org/10.1017/S1049096514000341
+
+Graefe, A., Kuper, S., Sturm, R. M., and Armstrong, J. S. (2024). The PollyVote forecast for the 2024 US presidential election. PS: Political Science and Politics. https://doi.org/10.1017/S1049096524000829
+
+Gayo-Avello, D. (2012). I wanted to predict elections with Twitter and all I got was this lousy paper: A balanced survey on election prediction using Twitter data. arXiv:1204.6441.
+
+Halawi, D., Wei, J., Lifland, P., Lichtenstein, A., and Steinhardt, J. (2024). Approaching human-level forecasting with language models. Advances in Neural Information Processing Systems, 37. arXiv:2402.18563
+
 Heidemanns, M., Gelman, A., and Morris, G. E. (2020). An updated dynamic Bayesian forecasting model for the U.S. presidential election. Harvard Data Science Review, 2(4). https://doi.org/10.1162/99608f92.fc62f1e1
 
 Hoerl, A. E., and Kennard, R. W. (1970). Ridge regression: Biased estimation for nonorthogonal problems. Technometrics, 12(1), 55-67.
@@ -521,6 +547,10 @@ Linzer, D. A. (2013). Dynamic Bayesian forecasting of presidential elections in 
 
 Linzer, D. A., and Lewis-Beck, M. S. (2015). Forecasting US presidential elections: New approaches (an introduction). International Journal of Forecasting, 31(3), 895-897. https://doi.org/10.1016/j.ijforecast.2015.03.004
 
+Lewis-Beck, M. S., and Tien, C. (1999). Voters as forecasters: A micromodel of election prediction. International Journal of Forecasting, 15(2), 175-184. https://doi.org/10.1016/S0169-2070(98)00063-6
+
+Lu, J. (2025). Evaluating LLMs on real-world forecasting against expert forecasters. arXiv:2507.04562
+
 Lock, K., and Gelman, A. (2010). Bayesian combination of state polls and election forecasts. Political Analysis, 18(3), 337-348. https://doi.org/10.1093/pan/mpq002
 
 McNemar, Q. (1947). Note on the sampling error of the difference between correlated proportions or percentages. Psychometrika, 12(2), 153-157. https://doi.org/10.1007/BF02295996
@@ -528,6 +558,8 @@ McNemar, Q. (1947). Note on the sampling error of the difference between correla
 Mullin, B., and Robertson, K. (2025, March 5). FiveThirtyEight is shutting down as part of broader cuts at ABC and Disney. Nieman Journalism Lab. https://www.niemanlab.org/2025/03/fivethirtyeight-is-shutting-down-as-part-of-broader-cuts-at-abc-and-disney/
 
 Murphy, A. H. (1973). A new vector partition of the probability score. Journal of Applied Meteorology, 12(4), 595-600. https://doi.org/10.1175/1520-0450(1973)012<0595:ANVPOT>2.0.CO;2
+
+Murr, A. E. (2011). Wisdom of crowds? A decentralised election forecasting model that uses citizens' local expectations. Electoral Studies, 30(4), 771-783. https://doi.org/10.1016/j.electstud.2011.07.005
 
 Nicolau, J. (2017). Representantes de quem? Os (des)caminhos do seu voto da urna a Camara dos Deputados. Zahar.
 
@@ -554,6 +586,10 @@ Tribunal Superior Eleitoral. (2023, June 30). Por maioria de votos, TSE declara 
 Tribunal Superior Eleitoral. (2024a, October 6). Ricardo Nunes e Guilherme Boulos vao disputar o 2o turno para a Prefeitura de Sao Paulo. Brasilia, TSE. https://www.tse.jus.br/comunicacao/noticias/2024/Outubro/ricardo-nunes-mdb-e-guilherme-boulos-psol-vao-disputar-o-2o-turno-para-a-prefeitura-de-sao-paulo
 
 Tribunal Superior Eleitoral. (2024b, October 27). Ricardo Nunes e reeleito prefeito de Sao Paulo (SP). Brasilia, TSE. https://www.tse.jus.br/comunicacao/noticias/2024/Outubro/ricardo-nunes-mdb-e-reeleito-prefeito-de-sao-paulo
+
+Tetlock, P. E., and Gardner, D. (2015). Superforecasting: The Art and Science of Prediction. Crown Publishing. ISBN 978-0804136716.
+
+Tumasjan, A., Sprenger, T. O., Sandner, P. G., and Welpe, I. M. (2010). Predicting elections with Twitter: What 140 characters reveal about political sentiment. Proceedings of the International AAAI Conference on Weblogs and Social Media, 4(1), 178-185. https://doi.org/10.1609/icwsm.v4i1.14009
 
 Tziralis, G., and Tatsiopoulos, I. (2007). Prediction markets: An extended literature review. Journal of Prediction Markets, 1(1), 75-91. https://doi.org/10.5750/jpm.v1i1.421
 

@@ -240,7 +240,7 @@ The augmentation fails in three regimes. First, when the (uf, regime) cell has f
 
 FiveThirtyEight's U.S. models (Silver 2008-2024) blend polls with fundamentals in a weighted-average framework; our architecture is structurally similar but adds explicit empirical-Bayes regularization and a closed-form Linzer drift in place of a Kalman filter. FiveThirtyEight did not publish a Brazilian-municipal model for 2024 SP, so direct head-to-head comparison is unavailable. Polymarket and Iowa Electronic Markets (Berg et al. 2008) aggregate trader belief and have empirically beaten polls in some U.S. cycles (Wolfers and Zitzewitz 2004); the 2024 SP mayoral runoff market existed but cleared at low volume and has not been reanalyzed in the literature. For 2026, Polymarket's Brazil-presidential market on 2026-05-07 priced Flavio Bolsonaro at 45% and Lula at 38% (Polymarket 2026a), and the SP-governor market priced Tarcisio at 83% (Polymarket 2026b), comparable in direction to our frozen forecasts (Lula 24.79%, Tarcisio-gov 65.09%). Our model is more conservative on Tarcisio because the cohort prior on incumbent-governor reelections is less concentrated than the market.
 
-On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9%, Marcal 27.8%, Nunes 18.6%; +11.1 pp Boulos lead two days before the first round; AtlasIntel via CNN Brasil 2024-10-04), the v1.3 baseline assigned 85.4% to Boulos; the augmented blend pulled this to 56.0%. The latter is still on the wrong side of 0.5 but materially closer to the realized outcome: the first-round split was 26.59% Nunes vs 26.22% Boulos as a share of total ballots cast (1,801,139 vs 1,776,127, equivalent to 29.48% and 29.07% of valid votes; Tribunal Superior Eleitoral 2024a), and Nunes won the runoff 59.35% to 40.65% (Tribunal Superior Eleitoral 2024b). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see the failure-mode supplementary analysis.
+On the AtlasIntel late-cycle 2024 SP poll covering 2024-10-04 to 2024-10-05 (Boulos 29.9%, Marcal 27.8%, Nunes 18.6%; +11.3 pp Boulos-over-Nunes lead the day before the first round; AtlasIntel 2024), the v1.3 baseline assigned 85.4% to Boulos; the augmented blend pulled this to 56.0%. The latter is still on the wrong side of 0.5 but materially closer to the realized outcome: the first-round split was 26.59% Nunes vs 26.22% Boulos as a share of total ballots cast (1,801,139 vs 1,776,127, equivalent to 29.48% and 29.07% of valid votes; Tribunal Superior Eleitoral 2024a), and Nunes won the runoff 59.35% to 40.65% (Tribunal Superior Eleitoral 2024b). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see the failure-mode supplementary analysis.
 
 ### 6.4 Cross-country generalization
 
@@ -417,6 +417,8 @@ Abramowitz, A. I. (2008). Forecasting the 2008 presidential election with the ti
 Almeida, A. (2008). A cabeca do eleitor brasileiro. Editora Record.
 
 Angelopoulos, A. N., Bates, S., Candes, E. J., Jordan, M. I., and Lei, L. (2022). Conformal risk control. arXiv:2208.02814.
+
+AtlasIntel. (2024, October 5). Pesquisa AtlasIntel para prefeito de Sao Paulo, fieldwork 2024-10-04 to 2024-10-05. Atlas Intelligence. https://www.cnnbrasil.com.br/eleicoes/eleicao-em-sp-boulos-tem-323-marcal30-e-nunes-20-em-votos-validos-diz-atlasintel/
 
 Avelino, G., Biderman, C., and Barone, L. S. (2012). Articulacoes intrapartidarias e desempenho eleitoral no Brasil. Dados, 55(4), 987-1013.
 

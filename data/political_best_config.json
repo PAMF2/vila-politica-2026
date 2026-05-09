@@ -44,7 +44,7 @@
         "avg": {
           "n": 394,
           "acc": 0.9721,
-          "brier": 0.095
+          "brier": 0.105
         }
       },
       "selective": {
@@ -82,6 +82,7 @@
     }
   },
   "notes": [
+    "v1.3.1 (data layer): avg.brier 0.095 -> 0.105 to match canonical political_stats_v2.json::summary::mrp::brier (paired with avg.acc 0.9721)",
     "v1.3 fix: hyperparams alinhados com autoresearch best (97.21% MRP). Anteriormente shrink=0.05/wlin=0.5 era pre-MRP baseline",
     "Onda 4: MRP state baseline (UF, regime) Laplace-smoothed -> avg 97.21%, 2024 SP 89.71%",
     "Federal presidential elections 2010, 2018, 2022: 100% acc within T<=30 (full coverage)",

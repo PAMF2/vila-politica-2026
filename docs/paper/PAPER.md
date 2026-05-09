@@ -39,7 +39,7 @@ This paper makes five contributions:
 
 ### 2.1 Poll-aggregation models
 
-Probabilistic poll aggregation in academic and operational form originates with Erikson and Wlezien (2008), who argued polls only become informative within roughly thirty days of the election, and with Silver (2008), whose FiveThirtyEight model popularized house-effect adjustments. The dominant Bayesian aggregator for state-level U.S. presidential forecasting is Linzer (2013), who modelled state-day-level expected vote share with a dynamic linear state-space framework anchored to a fundamentals-based prior. Refinements include Lock and Gelman (2010), Linzer and Lewis-Beck (2015), and the operational exposition in Heidemanns, Gelman and Morris (2020). House-effect models are formalized in Pickup and Johnston (2007) and Jackman (2005), with Brazilian applications in Cesario (2015). Decentralized prediction markets, surveyed by Tziralis and Tatsiopoulos (2007), Wolfers and Zitzewitz (2004), and Rothschild (2009), have empirically beaten polls in some U.S. cycles (Berg, Forsythe, Nelson and Rietz 2008).
+Probabilistic poll aggregation in academic and operational form originates with Erikson and Wlezien (2008, 2012), who showed that early-cycle polls have negligible predictive power and that poll informativeness consolidates as Election Day approaches, and with Silver (2008), whose FiveThirtyEight model popularized house-effect adjustments. The dominant Bayesian aggregator for state-level U.S. presidential forecasting is Linzer (2013), who modelled state-day-level expected vote share with a dynamic linear state-space framework anchored to a fundamentals-based prior. Refinements include Lock and Gelman (2010), Linzer and Lewis-Beck (2015), and the operational exposition in Heidemanns, Gelman and Morris (2020). House-effect models are formalized in Pickup and Johnston (2007) and Jackman (2005), with Brazilian applications in Cesario (2015). Decentralized prediction markets, surveyed by Tziralis and Tatsiopoulos (2007), Wolfers and Zitzewitz (2004), and Rothschild (2009), have empirically beaten polls in some U.S. cycles (Berg, Forsythe, Nelson and Rietz 2008).
 
 ### 2.2 MRP and empirical-Bayes shrinkage
 
@@ -453,6 +453,8 @@ Efron, B., and Morris, C. (1973). Stein's estimation rule and its competitors. J
 Election Commission of India. (2024). General election to Lok Sabha 2024: detailed results. https://results.eci.gov.in/PcResultGenJune2024/
 
 Erikson, R. S., and Wlezien, C. (2008). Are political markets really superior to polls as election predictors? Public Opinion Quarterly, 72(2), 190-215. https://doi.org/10.1093/poq/nfn004
+
+Erikson, R. S., and Wlezien, C. (2012). The Timeline of Presidential Elections: How Campaigns Do (and Do Not) Matter. University of Chicago Press.
 
 Geifman, Y., and El-Yaniv, R. (2017). Selective classification for deep neural networks. Advances in Neural Information Processing Systems, 30.
 

@@ -212,9 +212,9 @@ html = f"""<!doctype html>
   }}
 }}
 html, body {{
-  font-family: "Times New Roman", "Liberation Serif", "Computer Modern", Georgia, serif;
-  font-size: 10pt;
-  line-height: 1.36;
+  font-family: "Liberation Serif", "Times New Roman", "Computer Modern", Georgia, serif;
+  font-size: 9.7pt;
+  line-height: 1.40;
   color: #0a0a0a;
   margin: 0;
   text-rendering: optimizeLegibility;
@@ -226,12 +226,14 @@ html, body {{
   margin: 0 0 14pt 0;
 }}
 .title {{
-  font-size: 17pt;
+  font-family: "Liberation Sans", "Helvetica Neue", "Arial", sans-serif;
+  font-size: 16pt;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.22;
   letter-spacing: -0.005em;
   margin: 0 auto 14pt auto;
   max-width: 95%;
+  color: #0a0a0a;
 }}
 .author-grid {{
   display: flex;
@@ -291,24 +293,33 @@ main {{
   column-rule: none;
 }}
 /* (no h3-keep wrapper; rely on widows/orphans + h3 break-after: avoid) */
+/* Cambridge Medium aesthetic: sans-serif headings, serif body */
+h1, h2, h3 {{
+  font-family: "Liberation Sans", "Helvetica Neue", "Arial", sans-serif;
+  letter-spacing: 0.005em;
+}}
 h1 {{
-  font-size: 12.5pt; font-weight: 700; margin: 14pt 0 5pt 0;
+  font-size: 11pt; font-weight: 700; margin: 14pt 0 5pt 0;
+  text-transform: none;
   break-after: avoid; page-break-after: avoid;
   break-inside: avoid;
+  color: #0a0a0a;
 }}
 h2 {{
-  font-size: 11pt;
-  font-weight: 700;
-  margin: 11pt 0 3pt 0;
-  letter-spacing: 0.005em;
-  break-after: avoid; page-break-after: avoid;
-  break-inside: avoid;
-}}
-h3 {{
   font-size: 10pt;
   font-weight: 700;
+  font-style: italic;
+  margin: 10pt 0 3pt 0;
+  break-after: avoid; page-break-after: avoid;
+  break-inside: avoid;
+  color: #0a0a0a;
+}}
+h3 {{
+  font-size: 9.6pt;
+  font-weight: 600;
+  font-style: italic;
   margin: 8pt 0 2pt 0;
-  font-style: normal;
+  color: #1a1a1a;
 }}
 p {{
   margin: 0 0 5pt 0;

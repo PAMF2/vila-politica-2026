@@ -22,9 +22,9 @@
   }
 }
 html, body {
-  font-family: "Times New Roman", "Liberation Serif", "Computer Modern", Georgia, serif;
-  font-size: 10pt;
-  line-height: 1.36;
+  font-family: "Liberation Serif", "Times New Roman", "Computer Modern", Georgia, serif;
+  font-size: 9.7pt;
+  line-height: 1.40;
   color: #0a0a0a;
   margin: 0;
   text-rendering: optimizeLegibility;
@@ -36,12 +36,14 @@ html, body {
   margin: 0 0 14pt 0;
 }
 .title {
-  font-size: 17pt;
+  font-family: "Liberation Sans", "Helvetica Neue", "Arial", sans-serif;
+  font-size: 16pt;
   font-weight: 700;
-  line-height: 1.2;
+  line-height: 1.22;
   letter-spacing: -0.005em;
   margin: 0 auto 14pt auto;
   max-width: 95%;
+  color: #0a0a0a;
 }
 .author-grid {
   display: flex;
@@ -101,24 +103,33 @@ main {
   column-rule: none;
 }
 /* (no h3-keep wrapper; rely on widows/orphans + h3 break-after: avoid) */
+/* Cambridge Medium aesthetic: sans-serif headings, serif body */
+h1, h2, h3 {
+  font-family: "Liberation Sans", "Helvetica Neue", "Arial", sans-serif;
+  letter-spacing: 0.005em;
+}
 h1 {
-  font-size: 12.5pt; font-weight: 700; margin: 14pt 0 5pt 0;
+  font-size: 11pt; font-weight: 700; margin: 14pt 0 5pt 0;
+  text-transform: none;
   break-after: avoid; page-break-after: avoid;
   break-inside: avoid;
+  color: #0a0a0a;
 }
 h2 {
-  font-size: 11pt;
-  font-weight: 700;
-  margin: 11pt 0 3pt 0;
-  letter-spacing: 0.005em;
-  break-after: avoid; page-break-after: avoid;
-  break-inside: avoid;
-}
-h3 {
   font-size: 10pt;
   font-weight: 700;
+  font-style: italic;
+  margin: 10pt 0 3pt 0;
+  break-after: avoid; page-break-after: avoid;
+  break-inside: avoid;
+  color: #0a0a0a;
+}
+h3 {
+  font-size: 9.6pt;
+  font-weight: 600;
+  font-style: italic;
   margin: 8pt 0 2pt 0;
-  font-style: normal;
+  color: #1a1a1a;
 }
 p {
   margin: 0 0 5pt 0;
@@ -750,12 +761,44 @@ Conclusions. State-level empirical-Bayes priors, structurally analogous to multi
 <p>The headline operating point uses a state-baseline weight of <img src="file:///tmp/paper_math_svg_v3/m_427c047692e143.svg" class="math-inline" alt="w = 0.36">, jointly selected with the other hyperparameters by year-fold grid search on the BR core. To establish that the result is not the artifact of a sharp local optimum, we sweep <img src="file:///tmp/paper_math_svg_v3/m_f37ec798cf4671.svg" class="math-inline" alt="w"> over the grid <img src="file:///tmp/paper_math_svg_v3/m_dd3f19b4369d0d.svg" class="math-inline" alt="\{0.00, 0.05, \ldots, 0.60\}"> holding the remaining v1.3 hyperparameters fixed (<code>stein_shrink=0.4</code>, <code>w_linzer=0.7</code>, <code>sigma_intercept=3.0</code>, <code>sigma_slope=0.01</code>) and re-run leak-safe year-fold CV at each step.</p>
 <figure><p><img alt="State-baseline weight sweep on the 394-event BR core. Year-fold accuracy (blue, left axis) is flat at the cohort+Linzer baseline of 91.88% for &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_7e7f7b3e4aa4f4.svg&quot; class=&quot;math-inline&quot; alt=&quot;w \in [0.00, 0.15]&quot;&gt;, climbs through &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_427c047692e143.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0.36&quot;&gt; to a maximum of 96.45% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_3dd52f12296153.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0.40&quot;&gt;, then collapses sharply as the prior overrides the lead signal. The 2024 SP fold accuracy (purple, left axis) climbs monotonically from 64.71% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_b08ca0ae8e4b00.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0&quot;&gt; to 100% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_ecf3b1374ef0a7.svg&quot; class=&quot;math-inline&quot; alt=&quot;w \geq 0.45&quot;&gt;. Year-fold mean Brier (grey, right axis) increases monotonically with &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_f37ec798cf4671.svg&quot; class=&quot;math-inline&quot; alt=&quot;w&quot;&gt;, reflecting the deliberate shift of probability mass away from extreme polls toward the state anchor; selective accuracy at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_8ffe585dbf0ec4.svg&quot; class=&quot;math-inline&quot; alt=&quot;\tau = 0.40&quot;&gt; (Geifman and El-Yaniv 2017) absorbs this calibration cost." src="file:///home/pedroafonso/vila-politica-2026/docs/paper/figs/fig5_w_sweep.png" /></p><figcaption>Figure 6: State-baseline weight sweep on the 394-event BR core. Year-fold accuracy (blue, left axis) is flat at the cohort+Linzer baseline of 91.88% for &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_7e7f7b3e4aa4f4.svg&quot; class=&quot;math-inline&quot; alt=&quot;w \in [0.00, 0.15]&quot;&gt;, climbs through &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_427c047692e143.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0.36&quot;&gt; to a maximum of 96.45% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_3dd52f12296153.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0.40&quot;&gt;, then collapses sharply as the prior overrides the lead signal. The 2024 SP fold accuracy (purple, left axis) climbs monotonically from 64.71% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_b08ca0ae8e4b00.svg&quot; class=&quot;math-inline&quot; alt=&quot;w = 0&quot;&gt; to 100% at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_ecf3b1374ef0a7.svg&quot; class=&quot;math-inline&quot; alt=&quot;w \geq 0.45&quot;&gt;. Year-fold mean Brier (grey, right axis) increases monotonically with &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_f37ec798cf4671.svg&quot; class=&quot;math-inline&quot; alt=&quot;w&quot;&gt;, reflecting the deliberate shift of probability mass away from extreme polls toward the state anchor; selective accuracy at &lt;img src=&quot;file:///tmp/paper_math_svg_v3/m_8ffe585dbf0ec4.svg&quot; class=&quot;math-inline&quot; alt=&quot;\tau = 0.40&quot;&gt; (Geifman and El-Yaniv 2017) absorbs this calibration cost..</figcaption></figure>
 <p>The curve shows the bias-variance trade-off explicitly. Below <img src="file:///tmp/paper_math_svg_v3/m_6382adc8b2dd5d.svg" class="math-inline" alt="w = 0.30"> the prior is too weak to flip 2024 SP. Between <img src="file:///tmp/paper_math_svg_v3/m_427c047692e143.svg" class="math-inline" alt="w = 0.36"> and <img src="file:///tmp/paper_math_svg_v3/m_3dd52f12296153.svg" class="math-inline" alt="w = 0.40"> the global accuracy peaks while 2024 SP rises through the operational target. Above <img src="file:///tmp/paper_math_svg_v3/m_3b223ec92043df.svg" class="math-inline" alt="w = 0.45"> the prior dominates the lead-driven signal on cycles where polls are correct, and global accuracy collapses to the mid-80s. The selected <img src="file:///tmp/paper_math_svg_v3/m_427c047692e143.svg" class="math-inline" alt="w = 0.36"> sits at the upper edge of the global-accuracy plateau and is robust to grid step: any value in <img src="file:///tmp/paper_math_svg_v3/m_40458f688515c8.svg" class="math-inline" alt="[0.30, 0.40]"> would yield qualitatively identical conclusions on the headline cycles.</p>
+<h3>6.6 Heteroscedastic drift does not improve the ensemble</h3>
+<p>A natural concern about the v1.3 production point is that the Linzer drift parameters <img src="file:///tmp/paper_math_svg_v3/m_2df143cd677386.svg" class="math-inline" alt="(\sigma_0, \sigma_1)"> are scalar, so cycles with very different polling volatility share a single drift. We test whether allowing <img src="file:///tmp/paper_math_svg_v3/m_2df143cd677386.svg" class="math-inline" alt="(\sigma_0, \sigma_1)"> to vary by cycle improves out-of-fold accuracy. For each test year <img src="file:///tmp/paper_math_svg_v3/m_eaa324e0baad4d.svg" class="math-inline" alt="y"> we grid-search <img src="file:///tmp/paper_math_svg_v3/m_1ee068bca77883.svg" class="math-inline" alt="\sigma_0 \in \{1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0\}"> and <img src="file:///tmp/paper_math_svg_v3/m_bdb9a4823f77ea.svg" class="math-inline" alt="\sigma_1 \in \{0, 0.005, 0.01, 0.02, 0.05, 0.10\}"> on the training events to minimize Linzer-only training Brier, then blend the per-cycle-fitted Linzer at <img src="file:///tmp/paper_math_svg_v3/m_9321fbded9fd6f.svg" class="math-inline" alt="w_\ell = 0.7"> with cohort and state baseline at <img src="file:///tmp/paper_math_svg_v3/m_427c047692e143.svg" class="math-inline" alt="w = 0.36"> and evaluate on the held-out year.</p>
+<div class="wide-table"><table>
+<thead>
+<tr>
+<th style="text-align: left;">Configuration</th>
+<th style="text-align: right;">Year-fold acc</th>
+<th style="text-align: right;">Year-fold Brier</th>
+<th style="text-align: right;">2024 SP acc</th>
+<th style="text-align: right;">2018 acc</th>
+<th style="text-align: right;">2022 acc</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Scalar (production v1.3, <img src="file:///tmp/paper_math_svg_v3/m_ee64f76db2cd10.svg" class="math-inline" alt="\sigma_0=3.0">, <img src="file:///tmp/paper_math_svg_v3/m_9b7883954ed5a7.svg" class="math-inline" alt="\sigma_1=0.01">)</td>
+<td style="text-align: right;">0.9721</td>
+<td style="text-align: right;">0.1048</td>
+<td style="text-align: right;">0.8971</td>
+<td style="text-align: right;">0.9857</td>
+<td style="text-align: right;">1.0000</td>
+</tr>
+<tr>
+<td style="text-align: left;">Per-cycle (fitted on Linzer-only training Brier)</td>
+<td style="text-align: right;">0.8909</td>
+<td style="text-align: right;">0.1206</td>
+<td style="text-align: right;">0.7500</td>
+<td style="text-align: right;">0.8857</td>
+<td style="text-align: right;">0.8750</td>
+</tr>
+</tbody>
+</table></div>
+<p>Per-cycle fitting <em>degrades</em> the ensemble by 8.12 pp accuracy on the BR core. The mechanism is interaction with the prior pull: the cycle-optimal Linzer drift, when chosen to minimize Linzer-only Brier, tends to pull the ensemble probability toward the lead signal hard enough to overcome the state-baseline correction precisely on the cycles where the state baseline is needed most (2022, 2024 SP). The 2018 fold also drops 10 pp because the heteroscedastic fit underestimates volatility on the Haddad-Bolsonaro runoff, sharpening the (incorrect) high-confidence Linzer pull. The scalar choice is empirically robust under the production ensemble; we therefore <em>do not</em> treat heteroscedastic drift as an open limitation.</p>
 <h2>7 Limitations</h2>
-<p>We list four remaining limitations and indicate, for each, the most natural path to address it.</p>
+<p>We list three remaining limitations and indicate the most natural path to address each. A fourth concern from earlier drafts - that scalar Linzer drift could be improved by per-cycle adaptation - was tested empirically in §6.6 and rejected; we therefore omit it from this list.</p>
 <p><em>1. Within-Brazil non-SP state coverage.</em> The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The eleven-country cross-country extension of §6.4 establishes that the mechanism generalizes beyond the BR core, but it does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022, and 2026 is the most direct path to tighten the cells the model currently relies on.</p>
 <p><em>2. Demographic poststratification.</em> The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.</p>
-<p><em>3. Heteroscedastic Linzer drift.</em> The Linzer drift parameters <img src="file:///tmp/paper_math_svg_v3/m_7724a776db4176.svg" class="math-inline" alt="\sigma_0"> and <img src="file:///tmp/paper_math_svg_v3/m_df54fcd9f3d530.svg" class="math-inline" alt="\sigma_1"> are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil; we treat this as a parameter-doubling extension and reserve it for a follow-up.</p>
-<p><em>4. Eligibility filtering.</em> Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.</p>
+<p><em>3. Eligibility filtering.</em> Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.</p>
 <h2>8 Reproducibility</h2>
 <p>We provide a four-layer reproducibility stack: (i) a frozen code freeze with two git tags and a SHA-256 manifest covering source, input, and cached output files (supplementary), (ii) a deterministic single-seed pipeline that runs end-to-end in three minutes on commodity hardware, (iii) a containerized environment that lifts the host-Python dependency, and (iv) a smoke-test suite plus continuous integration on every push.</p>
 <h3>8.1 Code freeze, data provenance, and result hashes</h3>
@@ -787,6 +830,7 @@ make baselines    # 5 ablation models year-fold CV
 make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
 make cross        # 12-cycle cross-country
 make wsweep       # state-baseline weight sweep + figure
+make hetero       # heteroscedastic Linzer ablation experiment
 make all          # everything above + paper PDF rebuild
 </code></pre>
 <p>End-to-end reproduction takes approximately three minutes on a single modern x86 core (Intel i7-12700K, 16 GB RAM, no GPU). The dominant cost is the BART benchmark (~140 seconds for 6 folds at 200 trees, 150 draws); without BART, full reproduction is under one minute.</p>

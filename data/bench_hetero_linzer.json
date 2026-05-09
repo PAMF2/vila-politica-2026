@@ -1,0 +1,138 @@
+{
+  "config": {
+    "stein_shrink": 0.4,
+    "w_linzer": 0.7,
+    "w_state": 0.36,
+    "sigma_int_fixed": 3.0,
+    "sigma_slope_fixed": 0.01,
+    "sigma_int_grid": [
+      1.5,
+      2.0,
+      2.5,
+      3.0,
+      3.5,
+      4.0,
+      5.0,
+      6.0,
+      8.0
+    ],
+    "sigma_slope_grid": [
+      0.0,
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1
+    ],
+    "seed": 42
+  },
+  "per_year": {
+    "2010": {
+      "n": 86,
+      "fixed": {
+        "n": 86,
+        "acc": 1.0,
+        "brier": 0.10149056998280491
+      },
+      "hetero": {
+        "n": 86,
+        "acc": 1.0,
+        "brier": 0.10149169679770402
+      },
+      "fitted_sigma_int": 4.0,
+      "fitted_sigma_slope": 0.0,
+      "train_brier_at_fit": 0.11600323317062139
+    },
+    "2016": {
+      "n": 20,
+      "fixed": {
+        "n": 20,
+        "acc": 0.85,
+        "brier": 0.08456920383388132
+      },
+      "hetero": {
+        "n": 20,
+        "acc": 0.85,
+        "brier": 0.08467455635052235
+      },
+      "fitted_sigma_int": 3.5,
+      "fitted_sigma_slope": 0.0,
+      "train_brier_at_fit": 0.08390983551990563
+    },
+    "2018": {
+      "n": 70,
+      "fixed": {
+        "n": 70,
+        "acc": 0.9857142857142858,
+        "brier": 0.18427653388873938
+      },
+      "hetero": {
+        "n": 70,
+        "acc": 0.8857142857142857,
+        "brier": 0.1964416834691714
+      },
+      "fitted_sigma_int": 5.0,
+      "fitted_sigma_slope": 0.0,
+      "train_brier_at_fit": 0.1101142675126716
+    },
+    "2020": {
+      "n": 30,
+      "fixed": {
+        "n": 30,
+        "acc": 1.0,
+        "brier": 0.017056949728164385
+      },
+      "hetero": {
+        "n": 30,
+        "acc": 1.0,
+        "brier": 0.018064003953231805
+      },
+      "fitted_sigma_int": 4.0,
+      "fitted_sigma_slope": 0.0,
+      "train_brier_at_fit": 0.09822941638826654
+    },
+    "2022": {
+      "n": 120,
+      "fixed": {
+        "n": 120,
+        "acc": 1.0,
+        "brier": 0.08483460703307433
+      },
+      "hetero": {
+        "n": 120,
+        "acc": 0.875,
+        "brier": 0.12735991839374422
+      },
+      "fitted_sigma_int": 8.0,
+      "fitted_sigma_slope": 0.05,
+      "train_brier_at_fit": 0.12338049974381719
+    },
+    "2024": {
+      "n": 68,
+      "fixed": {
+        "n": 68,
+        "acc": 0.8970588235294118,
+        "brier": 0.1073109382943009
+      },
+      "hetero": {
+        "n": 68,
+        "acc": 0.75,
+        "brier": 0.11059938392766237
+      },
+      "fitted_sigma_int": 1.5,
+      "fitted_sigma_slope": 0.02,
+      "train_brier_at_fit": 0.05180050407783965
+    }
+  },
+  "totals": {
+    "n": 394,
+    "fixed": {
+      "acc": 0.9720812182741116,
+      "brier": 0.1048424761604998
+    },
+    "hetero": {
+      "acc": 0.8908629441624365,
+      "brier": 0.12060549067863527
+    }
+  }
+}

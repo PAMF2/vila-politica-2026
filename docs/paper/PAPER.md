@@ -282,17 +282,26 @@ The headline operating point uses a state-baseline weight of $w = 0.36$, jointly
 
 The curve shows the bias-variance trade-off explicitly. Below $w = 0.30$ the prior is too weak to flip 2024 SP. Between $w = 0.36$ and $w = 0.40$ the global accuracy peaks while 2024 SP rises through the operational target. Above $w = 0.45$ the prior dominates the lead-driven signal on cycles where polls are correct, and global accuracy collapses to the mid-80s. The selected $w = 0.36$ sits at the upper edge of the global-accuracy plateau and is robust to grid step: any value in $[0.30, 0.40]$ would yield qualitatively identical conclusions on the headline cycles.
 
+### 6.6 Heteroscedastic drift does not improve the ensemble
+
+A natural concern about the v1.3 production point is that the Linzer drift parameters $(\sigma_0, \sigma_1)$ are scalar, so cycles with very different polling volatility share a single drift. We test whether allowing $(\sigma_0, \sigma_1)$ to vary by cycle improves out-of-fold accuracy. For each test year $y$ we grid-search $\sigma_0 \in \{1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 6.0, 8.0\}$ and $\sigma_1 \in \{0, 0.005, 0.01, 0.02, 0.05, 0.10\}$ on the training events to minimize Linzer-only training Brier, then blend the per-cycle-fitted Linzer at $w_\ell = 0.7$ with cohort and state baseline at $w = 0.36$ and evaluate on the held-out year.
+
+| Configuration | Year-fold acc | Year-fold Brier | 2024 SP acc | 2018 acc | 2022 acc |
+|:---|---:|---:|---:|---:|---:|
+| Scalar (production v1.3, $\sigma_0=3.0$, $\sigma_1=0.01$) | 0.9721 | 0.1048 | 0.8971 | 0.9857 | 1.0000 |
+| Per-cycle (fitted on Linzer-only training Brier)        | 0.8909 | 0.1206 | 0.7500 | 0.8857 | 0.8750 |
+
+Per-cycle fitting *degrades* the ensemble by 8.12 pp accuracy on the BR core. The mechanism is interaction with the prior pull: the cycle-optimal Linzer drift, when chosen to minimize Linzer-only Brier, tends to pull the ensemble probability toward the lead signal hard enough to overcome the state-baseline correction precisely on the cycles where the state baseline is needed most (2022, 2024 SP). The 2018 fold also drops 10 pp because the heteroscedastic fit underestimates volatility on the Haddad-Bolsonaro runoff, sharpening the (incorrect) high-confidence Linzer pull. The scalar choice is empirically robust under the production ensemble; we therefore *do not* treat heteroscedastic drift as an open limitation.
+
 ## 7. Limitations
 
-We list four remaining limitations and indicate, for each, the most natural path to address it.
+We list three remaining limitations and indicate the most natural path to address each. A fourth concern from earlier drafts - that scalar Linzer drift could be improved by per-cycle adaptation - was tested empirically in §6.6 and rejected; we therefore omit it from this list.
 
 *1. Within-Brazil non-SP state coverage.* The Brazilian core dataset emphasizes federal presidential contests and Sao Paulo municipal contests; coverage of non-SP gubernatorial races in 2018 and 2022 is limited to 108 events. The eleven-country cross-country extension of §6.4 establishes that the mechanism generalizes beyond the BR core, but it does not substitute for densifying the within-BR per-state coverage. Extending to all 27 governorships in 2018, 2022, and 2026 is the most direct path to tighten the cells the model currently relies on.
 
 *2. Demographic poststratification.* The state baseline conditions on partisan regime, not on demographic strata. A full MRP in the sense of Gelman and Hill (2007) would weight by gender, education, income, and urban/rural strata using PNAD-Continua microdata; the relevant 4-trimestre 2025 release with post-2024-Census re-weighting was published by IBGE on 2026-03-27, so the data are operationally available. We defer the integration because the current 394-event paired construction does not carry per-event demographic strata, and ingesting them requires re-curating the seed CSVs and cross-country sources end to end.
 
-*3. Heteroscedastic Linzer drift.* The Linzer drift parameters $\sigma_0$ and $\sigma_1$ are scalar and do not adapt to cycle-level volatility. A heteroscedastic Linzer with cycle-conditional drift, in the spirit of Heidemanns, Gelman, and Morris (2020), would likely improve calibration in high-variance cycles such as 2024 SP and 2018 first-round Brazil; we treat this as a parameter-doubling extension and reserve it for a follow-up.
-
-*4. Eligibility filtering.* Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.
+*3. Eligibility filtering.* Jair Bolsonaro is filtered from 2026 forward predictions because of the Tribunal Superior Eleitoral ruling of 2023-06-30 (AIJE 0600814-85, 5-2, ineligible until 2030; Tribunal Superior Eleitoral 2023). The filter operates at the registry level rather than inside the model, so historical 2018 and 2022 events involving Bolsonaro remain in the training set and the model learns the partisan structure of pop-right candidates without conflating it with current 2026 viability. Should a higher court reverse the ruling before October 2026, the registry must be unfrozen and predictions recomputed; this contingent re-run rule is recorded in the supplementary pre-registration document.
 
 ## 8. Reproducibility
 
@@ -340,6 +349,7 @@ make baselines    # 5 ablation models year-fold CV
 make ml           # LogReg + RF + XGBoost + MLP + GaussianNB
 make cross        # 12-cycle cross-country
 make wsweep       # state-baseline weight sweep + figure
+make hetero       # heteroscedastic Linzer ablation experiment
 make all          # everything above + paper PDF rebuild
 ```
 

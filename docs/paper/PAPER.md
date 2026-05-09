@@ -238,7 +238,7 @@ The augmentation fails in three regimes. First, when the (uf, regime) cell has f
 
 ### 6.3 Comparison to FiveThirtyEight and Polymarket
 
-FiveThirtyEight's U.S. models (Silver 2008-2024) blend polls with fundamentals in a weighted-average framework; our architecture is structurally similar but adds explicit empirical-Bayes regularization and a closed-form Linzer drift in place of a Kalman filter. FiveThirtyEight did not publish a Brazilian-municipal model for 2024 SP, so direct head-to-head comparison is unavailable. Polymarket and Iowa Electronic Markets (Berg et al. 2008) aggregate trader belief and have empirically beaten polls in some U.S. cycles (Wolfers and Zitzewitz 2004); the 2024 SP mayoral runoff market existed but cleared at low volume and has not been reanalyzed in the literature. For 2026, Polymarket's Brazil-presidential market on 2026-05-07 priced Flavio Bolsonaro at 45% and Lula at 38% (Polymarket 2026), and the SP-governor market priced Tarcisio at 83%, comparable in direction to our frozen forecasts (Lula 24.79%, Tarcisio-gov 65.09%). Our model is more conservative on Tarcisio because the cohort prior on incumbent-governor reelections is less concentrated than the market.
+FiveThirtyEight's U.S. models (Silver 2008-2024) blend polls with fundamentals in a weighted-average framework; our architecture is structurally similar but adds explicit empirical-Bayes regularization and a closed-form Linzer drift in place of a Kalman filter. FiveThirtyEight did not publish a Brazilian-municipal model for 2024 SP, so direct head-to-head comparison is unavailable. Polymarket and Iowa Electronic Markets (Berg et al. 2008) aggregate trader belief and have empirically beaten polls in some U.S. cycles (Wolfers and Zitzewitz 2004); the 2024 SP mayoral runoff market existed but cleared at low volume and has not been reanalyzed in the literature. For 2026, Polymarket's Brazil-presidential market on 2026-05-07 priced Flavio Bolsonaro at 45% and Lula at 38% (Polymarket 2026a), and the SP-governor market priced Tarcisio at 83% (Polymarket 2026b), comparable in direction to our frozen forecasts (Lula 24.79%, Tarcisio-gov 65.09%). Our model is more conservative on Tarcisio because the cohort prior on incumbent-governor reelections is less concentrated than the market.
 
 On the AtlasIntel late-cycle 2024 SP poll covering 2024-09-29 to 2024-10-04 (Boulos 29.9%, Marcal 27.8%, Nunes 18.6%; +11.1 pp Boulos lead two days before the first round; AtlasIntel via CNN Brasil 2024-10-04), the v1.3 baseline assigned 85.4% to Boulos; the augmented blend pulled this to 56.0%. The latter is still on the wrong side of 0.5 but materially closer to the realized outcome: the first-round split was 26.59% Nunes vs 26.22% Boulos, and Nunes won the runoff 59.35% to 40.65% (Tribunal Superior Eleitoral 2024). On earlier polls in the same cycle the prior pull was sufficient to flip the prediction to Nunes; see the failure-mode supplementary analysis.
 
@@ -496,7 +496,9 @@ Park, D. K., Gelman, A., and Bafumi, J. (2004). Bayesian multilevel estimation w
 
 Pickup, M., and Johnston, R. (2007). Campaign trial heats as electoral information. International Journal of Forecasting, 23(2), 219-236.
 
-Polymarket. (2026). Brazil presidential election 2026 odds and Sao Paulo governor election 2026 odds. Snapshot 2026-05-07. https://polymarket.com/politics/brazil
+Polymarket. (2026a). Brazil presidential election 2026 odds. Snapshot 2026-05-07. https://polymarket.com/event/brazil-presidential-election
+
+Polymarket. (2026b). Sao Paulo governor election 2026 odds. Snapshot 2026-05-07. https://polymarket.com/politics/brazil
 
 Quaest. (2024). Pesquisas Genial/Quaest: prefeitura de Sao Paulo 2024. Genial Investimentos and Quaest Pesquisa, raw datasets BR-Q24-MUN-SP-W1 to W14.
 

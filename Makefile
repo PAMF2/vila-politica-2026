@@ -1,4 +1,4 @@
-.PHONY: smoke stats baselines ml cross wsweep hetero loso dropone houseeffects calibration permutation paperfigs autoresearch paper all reproduce verify clean
+.PHONY: smoke stats baselines ml cross wsweep hetero loso dropone houseeffects calibration permutation paperfigs autoresearch paper paper-tex all reproduce verify clean
 
 PYTHON ?= python3
 PYTHONPATH := $(PWD)
@@ -73,6 +73,12 @@ predict:
 
 paper:
 	$(PYTHON) scripts/build_paper_pdf.py
+
+paper-tex:
+	$(PYTHON) scripts/build_paper_tex.py
+	@echo
+	@echo "Now compile with:"
+	@echo "  cd docs/paper && pdflatex PAPER.tex && pdflatex PAPER.tex"
 
 # ---------------------------------------------------------------------------
 # Aggregate targets

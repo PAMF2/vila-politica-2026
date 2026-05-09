@@ -1,0 +1,192 @@
+{
+  "config": {
+    "stein_shrink": 0.4,
+    "w_linzer": 0.7,
+    "w_state": 0.36,
+    "sigma_int": 3.0,
+    "sigma_slope": 0.01,
+    "seed": 42
+  },
+  "per_institute": {
+    "Other": {
+      "n_total": 148,
+      "n_2024_sp": 20,
+      "all_data": {
+        "mean_bias_baseline": 0.011836655626116193,
+        "mean_bias_mrp": 0.03188180208137158,
+        "bias_reduction": -0.020045146455255382,
+        "brier_baseline": 0.03985813244697002,
+        "brier_mrp": 0.08325199294012058,
+        "acc_baseline": 0.9864864864864865,
+        "acc_mrp": 1.0
+      },
+      "sp_2024_slice": {
+        "n": 20,
+        "mean_bias_baseline": 0.0044680851063829945,
+        "mean_bias_mrp": 0.00262147922998986,
+        "acc_baseline": 1.0,
+        "acc_mrp": 1.0
+      }
+    },
+    "Datafolha": {
+      "n_total": 64,
+      "n_2024_sp": 10,
+      "all_data": {
+        "mean_bias_baseline": 0.007827893035169103,
+        "mean_bias_mrp": 0.03500352767880472,
+        "bias_reduction": -0.027175634643635618,
+        "brier_baseline": 0.07856991575749007,
+        "brier_mrp": 0.10974033017063839,
+        "acc_baseline": 0.90625,
+        "acc_mrp": 0.96875
+      },
+      "sp_2024_slice": {
+        "n": 10,
+        "mean_bias_baseline": -0.013531914893617025,
+        "mean_bias_mrp": -0.008898520770010146,
+        "acc_baseline": 0.6,
+        "acc_mrp": 0.9
+      }
+    },
+    "Vox Populi": {
+      "n_total": 62,
+      "n_2024_sp": 4,
+      "all_data": {
+        "mean_bias_baseline": 0.007218566312504091,
+        "mean_bias_mrp": 0.048902159302924644,
+        "bias_reduction": -0.04168359299042056,
+        "brier_baseline": 0.022551093990765565,
+        "brier_mrp": 0.09691515925214338,
+        "acc_baseline": 1.0,
+        "acc_mrp": 1.0
+      },
+      "sp_2024_slice": {
+        "n": 4,
+        "mean_bias_baseline": 0.004468085106382979,
+        "mean_bias_mrp": 0.0026214792299898426,
+        "acc_baseline": 1.0,
+        "acc_mrp": 1.0
+      }
+    },
+    "Ipec": {
+      "n_total": 48,
+      "n_2024_sp": 0,
+      "all_data": {
+        "mean_bias_baseline": 0.014090202016412602,
+        "mean_bias_mrp": 0.043139819727754984,
+        "bias_reduction": -0.02904961771134238,
+        "brier_baseline": 0.047292993387720084,
+        "brier_mrp": 0.10923163575696825,
+        "acc_baseline": 0.9583333333333334,
+        "acc_mrp": 0.9583333333333334
+      },
+      "sp_2024_slice": {
+        "n": null,
+        "mean_bias_baseline": null,
+        "mean_bias_mrp": null,
+        "acc_baseline": null,
+        "acc_mrp": null
+      }
+    },
+    "Quaest": {
+      "n_total": 18,
+      "n_2024_sp": 10,
+      "all_data": {
+        "mean_bias_baseline": 0.005411796252517287,
+        "mean_bias_mrp": 0.04558735573103064,
+        "bias_reduction": -0.040175559478513354,
+        "brier_baseline": 0.0879949929296322,
+        "brier_mrp": 0.09166197716622053,
+        "acc_baseline": 0.8888888888888888,
+        "acc_mrp": 1.0
+      },
+      "sp_2024_slice": {
+        "n": 10,
+        "mean_bias_baseline": -0.004531914893617031,
+        "mean_bias_mrp": -0.003138520770010161,
+        "acc_baseline": 0.8,
+        "acc_mrp": 1.0
+      }
+    },
+    "RealTimeBigData": {
+      "n_total": 18,
+      "n_2024_sp": 10,
+      "all_data": {
+        "mean_bias_baseline": -0.005011681085033655,
+        "mean_bias_mrp": 0.0015542296516963723,
+        "bias_reduction": 0.003457451433337283,
+        "brier_baseline": 0.1675069591662215,
+        "brier_mrp": 0.11001919496668795,
+        "acc_baseline": 0.6666666666666666,
+        "acc_mrp": 1.0
+      },
+      "sp_2024_slice": {
+        "n": 10,
+        "mean_bias_baseline": -0.013531914893617037,
+        "mean_bias_mrp": -0.008898520770010163,
+        "acc_baseline": 0.6,
+        "acc_mrp": 1.0
+      }
+    },
+    "AtlasIntel": {
+      "n_total": 16,
+      "n_2024_sp": 8,
+      "all_data": {
+        "mean_bias_baseline": 0.00904538514578409,
+        "mean_bias_mrp": 0.05320809029366076,
+        "bias_reduction": -0.04416270514787667,
+        "brier_baseline": 0.3319882246324733,
+        "brier_mrp": 0.2030584332136535,
+        "acc_baseline": 0.5,
+        "acc_mrp": 0.75
+      },
+      "sp_2024_slice": {
+        "n": 8,
+        "mean_bias_baseline": 0.004468085106382996,
+        "mean_bias_mrp": 0.0026214792299898704,
+        "acc_baseline": 0.0,
+        "acc_mrp": 0.5
+      }
+    },
+    "CNT/MDA": {
+      "n_total": 12,
+      "n_2024_sp": 0,
+      "all_data": {
+        "mean_bias_baseline": 0.010242614463914718,
+        "mean_bias_mrp": 0.049238604162750256,
+        "bias_reduction": -0.03899598969883554,
+        "brier_baseline": 0.030860888798777252,
+        "brier_mrp": 0.15851908726502725,
+        "acc_baseline": 1.0,
+        "acc_mrp": 0.9166666666666666
+      },
+      "sp_2024_slice": {
+        "n": null,
+        "mean_bias_baseline": null,
+        "mean_bias_mrp": null,
+        "acc_baseline": null,
+        "acc_mrp": null
+      }
+    },
+    "Instituto Verita": {
+      "n_total": 8,
+      "n_2024_sp": 6,
+      "all_data": {
+        "mean_bias_baseline": 0.00720133120946638,
+        "mean_bias_mrp": 0.009956822869733803,
+        "bias_reduction": -0.002755491660267423,
+        "brier_baseline": 0.459432019452053,
+        "brier_mrp": 0.24124700677746427,
+        "acc_baseline": 0.25,
+        "acc_mrp": 0.75
+      },
+      "sp_2024_slice": {
+        "n": 6,
+        "mean_bias_baseline": 0.004468085106382987,
+        "mean_bias_mrp": 0.0026214792299898426,
+        "acc_baseline": 0.0,
+        "acc_mrp": 0.6666666666666666
+      }
+    }
+  }
+}

@@ -193,9 +193,25 @@ Murphy decomposition of the Brier score (k=10 empirical-quantile bins, pooled ac
 
 Per-fold significance restricted to the 2024 SP fold (n=68), the explicit falsification target: DM = +7.79 with two-sided p = 6.7e-15. The positive sign reverses the pooled DM: the augmented model outperforms baseline under quadratic loss on this fold. The pooled DM is dominated by 2010 and 2022, where both models score 100% but the augmented blend is slightly less calibrated. McNemar on the 2024 SP fold gives chi-squared = 16.02 with p = 6.3e-5, b=17, c=0: every flipped event flipped in the augmented-correct direction. Per-fold DM and McNemar for all six cycles are stored under the `per_fold_significance` key in the supplementary statistical-rigor result file.
 
-### 5.4 Failure mode analysis
+A pair-preserving permutation test complements DM and McNemar by attacking the null that the +5.33 pp gain could be obtained under random label assignment with predictions held fixed. Resampling 1,000 outcome vectors that flip each of the 101 (winner, runner-up) pairs independently with probability 0.5 yields a null with mean $-0.0022$ and standard deviation $0.0150$; the observed gain has $z = 3.70$ and two-sided $p = 0.001$ (zero of 1,000 permuted gains as extreme). Reliability diagrams under equal-width 10-bin binning confirm the design trade-off: the no-MRP baseline has Expected Calibration Error ECE = 0.116 and Maximum Calibration Error MCE = 0.593, while the v1.3 ensemble has ECE = 0.262 and MCE = 0.383 - higher average error but lower worst-case bin gap (Figure 5).
+
+![Reliability diagram, 394-event BR core, 10 equal-width bins (marker size proportional to bin count). Cohort + Linzer baseline (red circles) is sharper but accumulates a larger worst-case bin gap; the v1.3 MRP ensemble (blue squares) is more conservative on extreme probabilities and has lower MCE.](figs/fig6_calibration_curves.png)
+
+### 5.4 Failure mode analysis and per-institute house effects
 
 Of the 24 events misclassified by the v1.3 baseline (w=0) on the 2024 SP fold, the augmented model recovered 17. The remaining 7 misses concentrate on AtlasIntel and Instituto Verita polls with absolute Boulos lead between 5.8 and 11.1 pp (winner-side; paired runner-up rows mirror the sign), where the prior pull is insufficient to overcome the lead-driven Linzer signal. The supplementary failure-mode analysis contains the full per-event breakdown. These are the genuinely hardest cases and would require either (a) an institute-disagreement variance signal, (b) a finer regime taxonomy, or (c) an explicit house-effects layer (Pickup and Johnston 2007), which we tested and found marginally degrading on this dataset (0.9416 to 0.9391 on the v1.2 baseline; see supplementary configuration notes). Option (a) is deferred to a subsequent revision.
+
+To quantify which institutes the architecture absorbs most, we partition the 394-event corpus by polling firm and report per-institute year-fold accuracy under both the cohort+Linzer baseline (no MRP) and the v1.3 ensemble. The table below shows the firms with the largest accuracy swings; the eight remaining BR institutes (and the Other catch-all bin) are listed in the supplementary house-effects file.
+
+| Institute | n | Acc base | Acc MRP | Delta | Acc base SP24 | Acc MRP SP24 |
+|:---|---:|---:|---:|---:|---:|---:|
+| AtlasIntel       | 16 | 0.500 | 0.750 | +0.250 | 0.000 | 0.500 |
+| Instituto Verita |  8 | 0.250 | 0.750 | +0.500 | 0.000 | 0.667 |
+| RealTimeBigData  | 18 | 0.667 | 1.000 | +0.333 | 0.600 | 1.000 |
+| Quaest           | 18 | 0.889 | 1.000 | +0.111 | 0.800 | 1.000 |
+| Datafolha        | 64 | 0.906 | 0.969 | +0.063 | 0.600 | 0.900 |
+
+The gain concentrates on AtlasIntel, Instituto Verita, and RealTimeBigData - the firms whose 2024 SP fieldwork showed the largest pro-Boulos lead. The state baseline therefore acts as an institute-agnostic correction for systematic pro-left polling deviation when historical (uf, regime) regularity contradicts it; per-institute calibration of $w$ is unnecessary at this corpus size.
 
 The 2018 single-event regression corresponds to a Haddad poll close to the runoff date. The state baseline P(left wins | BR) computed from 2010 and 2014 (out-of-fold) is moderately positive, pulling the predicted probability slightly above 0.5 on a -3 pp lead poll where the realized outcome was 0. Raising the minimum-N threshold would suppress this artifact at the cost of coverage - the explicit accuracy-coverage tradeoff documented in §5.5.
 
@@ -297,28 +313,13 @@ Per-cycle fitting *degrades* the ensemble by 8.12 pp accuracy on the BR core. Th
 
 A second concern is that the Brazilian non-SP per-state coverage is thin: 27 governorships in 2022 contribute only 2 paired events each (winner and runner-up at the eve of the runoff or first-round outcome). To test whether the architecture generalizes spatially across BR states even when the held-out state's (uf, regime) cell is undefined, we run leave-one-state-out (LOSO) on the 26 non-SP UFs from 2022. For each UF we drop its 2 events from training, refit the cohort with `stein_shrink=0.4` on the remaining 24 UFs plus all federal and SP municipal training events from non-test years, and evaluate on the held-out UF.
 
-| Configuration | n | Acc | Brier | State baseline available |
-|:---|---:|---:|---:|---:|
-| Full training (no UF held out) | 52 | 1.0000 | 0.0084 | 52 / 52 |
-| LOSO (held-out UF cell undefined) | 52 | 1.0000 | 0.0113 | 0 / 52 |
-
-Accuracy is 100% under both configurations, with Brier degrading only by 0.003 when the state baseline is unavailable. The cohort + Linzer ensemble alone is sufficient to recover the gubernatorial outcome from polling leads and partisan-regime structure on every BR-state held-out cell. This is a different regime from the cross-country LOSO of §6.4 (where US 2016/2020/2022 hold out single-state cells inside a much larger pool with poll volatility comparable to BR national contests): within-BR per-state LOSO succeeds because 2022 gubernatorial leads were unambiguous in 24 of 26 non-SP states. The architecture therefore degrades gracefully when state-level priors are unavailable; densifying within-BR coverage would refine calibration but is not required for headline accuracy.
+Accuracy is 100% under both full-train and LOSO (52 events from 26 UFs); Brier degrades from 0.0084 to 0.0113 ($+0.003$) when the state baseline is unavailable, and 0 of 52 LOSO events have a defined UF cell because the held-out UF is removed from training. The cohort + Linzer ensemble alone is sufficient to recover the gubernatorial outcome from polling leads and partisan-regime structure on every BR-state held-out cell. This is a different regime from the cross-country LOSO of §6.4 (where US 2016/2020/2022 hold out single-state cells inside a much larger pool with poll volatility comparable to BR national contests): within-BR per-state LOSO succeeds because 2022 gubernatorial leads were unambiguous in 24 of 26 non-SP states. The architecture therefore degrades gracefully when state-level priors are unavailable; densifying within-BR coverage would refine calibration but is not required for headline accuracy.
 
 ### 6.8 Drop-one-cycle robustness
 
 A final concern is whether the headline 97.21% is dominated by any single cycle in the training pool. We re-run the year-fold CV after dropping each Brazilian cycle in turn from both training and test, holding all other v1.3 hyperparameters fixed.
 
-| Configuration | n events | Acc | Brier | Delta acc vs baseline |
-|:---|---:|---:|---:|---:|
-| Baseline (no cycle dropped) | 394 | 0.9721 | 0.1048 |  ---  |
-| Drop 2010 federal           | 308 | 0.9643 | 0.1151 | -0.0078 |
-| Drop 2016 SP municipal      | 374 | 0.9626 | 0.1087 | -0.0095 |
-| Drop 2018 federal           | 324 | 0.9691 | 0.0698 | -0.0029 |
-| Drop 2020 SP municipal      | 364 | 0.9396 | 0.1154 | -0.0325 |
-| Drop 2022 federal+gov       | 274 | 0.9526 | 0.1105 | -0.0195 |
-| Drop 2024 SP municipal      | 326 | 0.9785 | 0.1063 | +0.0064 |
-
-The headline accuracy stays in [93.96%, 97.85%] across all six drop-one configurations, a range of 3.89 pp. Two specific findings: (i) dropping 2020 SP loses the most because 2020 has 30 events all classified correctly, so its removal drops high-confidence events from the average; (ii) dropping 2024 SP *improves* the average by +0.64 pp because 2024 SP is the hardest cycle (89.71% accuracy at the production point) and removing it from the test pool eliminates the seven AtlasIntel and Instituto Verita misses analyzed in §6.2. The mechanism's headline accuracy therefore is not inflated by any easy cycle, and the +5.33 pp MRP-component contribution reported in §5.1 is not a 2024-specific artifact.
+Headline accuracy stays in [0.9396, 0.9785] across the six drop-one configurations (range 3.89 pp); the largest single-cycle effect is 2020 SP at $-3.25$ pp (its 30/30 events are all classified correctly, so removing them lowers the average) and the most surprising is 2024 SP at $+0.64$ pp (dropping the hardest cycle from the test pool eliminates the seven AtlasIntel and Instituto Verita misses). The mechanism's headline accuracy is therefore not inflated by any easy cycle, and the +5.33 pp MRP-component contribution reported in §5.1 is not a 2024-specific artifact.
 
 ## 7. Limitations
 
@@ -377,6 +378,9 @@ make wsweep       # state-baseline weight sweep + figure
 make hetero       # heteroscedastic Linzer ablation experiment
 make loso         # within-BR leave-one-state-out experiment
 make dropone      # drop-one-cycle robustness experiment
+make houseeffects # per-institute bias decomposition
+make calibration  # reliability diagram + ECE/MCE
+make permutation  # permutation test on the MRP gain
 make autoresearch # full 2,688-combo grid search (verify v1.3 production)
 make all          # everything above + paper PDF rebuild
 ```

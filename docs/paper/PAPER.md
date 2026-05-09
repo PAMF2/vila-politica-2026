@@ -506,7 +506,7 @@ Silver, N. (2008-2024). FiveThirtyEight Politics: U.S. presidential election mod
 
 Soares, G. A. D., and Terron, S. L. (2008). Dois Lulas: A geografia eleitoral da reeleicao. Opiniao Publica, 14(2), 269-301.
 
-Tribunal Superior Eleitoral. (2023). Acordao de 2023-06-30: Inelegibilidade de Jair Messias Bolsonaro ate 2030. Brasilia, TSE.
+Tribunal Superior Eleitoral. (2023, June 30). Por maioria de votos, TSE declara Bolsonaro inelegivel por 8 anos. Brasilia, TSE. https://www.tse.jus.br/comunicacao/noticias/2023/Junho/por-maioria-de-votos-tse-declara-bolsonaro-inelegivel-por-8-anos
 
 Tziralis, G., and Tatsiopoulos, I. (2007). Prediction markets: An extended literature review. Journal of Prediction Markets, 1(1), 75-91.
 

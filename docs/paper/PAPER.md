@@ -311,6 +311,8 @@ Argentina 2023 and India 2024 jointly corroborate the central BR claim. When ind
 
 Pooled across all twelve cycles, the augmentation improves weighted Brier from 0.063 to 0.062 and weighted accuracy by +0.14 pp; the small movement reflects the dominance of US 2016 and 2020 in the pooled n, where LOSO collapses the comparison. Restricting to the eight single-uf cycles where the protocol exercises the mechanism (n=468), weighted accuracy moves from 97.86% to 100.00% and weighted Brier from 0.025 to 0.013, a 49.5% reduction.
 
+![Cross-country leak-safe accuracy by cycle. Each row reports the no-MRP baseline (top bar) and the MRP-augmented blend at $w = 0.36$ (bottom bar) for one of the twelve cycles, sorted by accuracy delta. Argentina 2023 (+20.00 pp), Brazil 2014 (+6.67 pp), and France 2022 (+1.01 pp) show the mechanism's gain on cycles where the (uf, regime) cell is well-supported. US 2016/2020/2022 and UK 2019 are LOSO with held-out state cells, so the augmented blend collapses to baseline by construction. Sample size $n$ shown beside each row.](figs/fig7_cross_country.png)
+
 ### 6.5 Sensitivity to the state-baseline weight
 
 The headline operating point uses a state-baseline weight of $w = 0.36$, jointly selected with the other hyperparameters by year-fold grid search on the BR core. To establish that the result is not the artifact of a sharp local optimum, we sweep $w$ over the grid $\{0.00, 0.05, \ldots, 0.60\}$ holding the remaining v1.3 hyperparameters fixed (`stein_shrink=0.4`, `w_linzer=0.7`, `sigma_intercept=3.0`, `sigma_slope=0.01`) and re-run leak-safe year-fold CV at each step.

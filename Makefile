@@ -1,4 +1,4 @@
-.PHONY: smoke stats baselines ml cross wsweep hetero loso dropone houseeffects calibration permutation autoresearch paper all reproduce verify clean
+.PHONY: smoke stats baselines ml cross wsweep hetero loso dropone houseeffects calibration permutation paperfigs autoresearch paper all reproduce verify clean
 
 PYTHON ?= python3
 PYTHONPATH := $(PWD)
@@ -60,6 +60,10 @@ calibration:
 
 permutation:
 	$(PYTHON) scripts/bench_permutation_test.py
+
+paperfigs:
+	$(PYTHON) scripts/make_paper_figs.py
+	$(PYTHON) scripts/make_architecture_fig.py
 
 autoresearch:
 	HOUSE_EFFECTS=0 W_STATE=0.36 $(PYTHON) scripts/autoresearch_political.py
